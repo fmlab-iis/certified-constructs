@@ -1,0 +1,29 @@
+
+Consider any predicates $q, q' \in Q$ and well-formed program $p \in
+P$. Let $\theta_0 (v) = 0$ for every $v \in V$. By
+Theorem~\ref{theorem:program-slicing}, \ref{theorem:ssa}, and
+\ref{theorem:program-to-q-soundness}, we have the following deduction:
+\begin{equation*}
+  \begin{array}{cll}
+    & \models \hoaretriple{q}{p}{q'}\\
+    \Leftrightarrow
+    & \models 
+      \hoaretriple{q}{\textsc{SliceProgram}(\textsc{VarsInQ}(q'), p)}{q'}
+    & \textmd{ (Theorem~\ref{theorem:program-slicing})}\\
+    \Leftrightarrow
+    & \models
+      \hoaretriple{\textsc{SSAQ}(\theta_0, q)}
+      {\hat{p}}
+      {\textsc{SSAQ}(\hat{\theta}, q')}
+    & \textmd{ (Theorem~\ref{theorem:ssa})}\\
+    &
+      \textmd{where } \langle \hat{\theta}, \hat{p} \rangle = 
+      \textsc{SSAProgram} (\theta_0, \textsc{SliceProgram}
+      (\textsc{VarsInQ}(q'), p))\\
+    \Leftarrow
+    & \Pi (\hoaretriple{\textsc{SSAQ}(\theta_0, q)}
+      {\hat{p}}
+      {\textsc{SSAQ}(\hat{\theta}, q')})
+    & \textmd{ (Theorem~\ref{theorem:program-to-q-soundness})}
+  \end{array}
+\end{equation*}

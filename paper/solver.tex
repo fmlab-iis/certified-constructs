@@ -1,0 +1,183 @@
+
+By Theorem~\ref{theorem:program-to-q-soundness}, it remains to show 
+that 
+\[
+\begin{array}{l}
+  \forall \vx \in \bbfZ^{|\vx|}.
+  \bigwedge\limits_{i \in [I]} e_i (\vx) = e'_i (\vx) \wedge
+  \bigwedge\limits_{j \in [J]} f_j (\vx) \equiv f'_j (\vx) \mod n_j
+  \implies
+  \\
+  \hspace{.3\textwidth}
+  \bigwedge\limits_{k \in [K]} g_k (\vx) = g'_k (\vx) \wedge
+  \bigwedge\limits_{l \in [L]} h_l (\vx) \equiv h'_l (\vx) \mod m_l
+\end{array}
+\]
+where
+$e_i (\vx), e'_i (\vx), f_j (\vx), f'_j (\vx),
+ g_k (\vx), g'_k (\vx), h_l (\vx), h'_l (\vx) \in
+ \bbfZ[\vx]$, $n_j, m_l \in \bbfN$ for $i \in [I]$, $j \in [J]$, $k
+ \in [K]$, and $l \in [L]$. Since the
+implicant is a conjunction of (modulo) equations, it suffces to 
+prove one conjunct at a time. That is, we aim to show that 
+\begin{equation}
+  \label{eq:polynomial-equation-implicant}
+  \forall \vx \in \bbfZ^{|\vx|}.
+  \bigwedge\limits_{i \in [I]} e_i (\vx) = e'_i (\vx) \wedge
+  \bigwedge\limits_{j \in [J]} f_j (\vx) \equiv f'_j (\vx) \mod n_j
+  \implies
+  g (\vx) = g' (\vx)
+\end{equation}
+where $e_i (\vx), e'_i (\vx), f_j (\vx), f'_j (\vx), g (\vx), g' (\vx)
+\in \bbfZ[\vx]$ for $i \in [I], j \in [J]$; or, 
+ \begin{equation}
+   \label{eq:modular-polynomial-equation-implicant}
+   \forall \vx \in \bbfZ^{|\vx|}.
+   \bigwedge\limits_{i \in [I]} e_i (\vx) = e'_i (\vx) \wedge
+   \bigwedge\limits_{j \in [J]} f_j (\vx) \equiv f'_j (\vx) \mod n_j
+   \implies
+   h (\vx) \equiv h' (\vx) \mod m
+ \end{equation}
+where $e_i (\vx), e'_i (\vx), f_j (\vx), f'_j (\vx), h (\vx), h' (\vx)
+\in \bbfZ[\vx]$ for $i \in [I], j \in [J]$, and $m \in \bbfN$. 
+
+It is not hard to rewrite modular polynomial equations in antecedents
+in (\ref{eq:polynomial-equation-implicant}) and 
+(\ref{eq:modular-polynomial-equation-implicant}) to polynomial
+equations~\cite{H:07:AENTP}. By definition of modular polynomial equations,
+(\ref{eq:polynomial-equation-implicant}) is equivalent to
+\[
+\forall \vx \in \bbfZ^{|\vx|}.
+\bigwedge\limits_{i \in [I]} e_i (\vx) = e'_i (\vx) \wedge
+\bigwedge\limits_{j \in [J]} [\exists d_j. f_j (\vx) = f'_j (\vx) + d_j \cdot n_j]
+\implies
+g (\vx) = g' (\vx),
+\]
+which in turn is equivalent to
+\[
+\forall \vx \in \bbfZ^{|\vx|} \vd \in \bbfZ^{J}.
+\bigwedge\limits_{i \in [I]} e_i (\vx) = e'_i (\vx) \wedge
+\bigwedge\limits_{j \in [J]} f_j (\vx) = f'_j (\vx) + d_j \cdot n_j
+\implies
+g (\vx) = g' (\vx).
+\]
+
+\hide{
+Consider the following system of $r + s$ (modulo) equations:
+\begin{equation}
+  \label{equation:modulo-polynomials}
+  \begin{array}{rclcrcl}
+    e_1 (\vx) & = & e'_1 (\vx) 
+    & \hspace{.05\textwidth} &
+    f_1 (\vx) & \equiv & f'_1 (\vx) \mod n_1\\
+    & \vdots & & & & \vdots \\
+    e_i (\vx) & = & e'_i (\vx) & &
+    f_j (\vx) & \equiv & f'_j (\vx) \mod n_j\\
+    & \vdots & & & & \vdots \\
+    e_r (\vx) & = & e'_r (\vx) & &
+    f_s (\vx) & \equiv & f'_s (\vx) \mod n_s
+  \end{array}
+\end{equation}
+Our goal is to establish $g (\vx) = g' (\vx)$ or $h (\vx)
+\equiv h (\vx) \mod m$ for every $\vx$ satisfying the system
+of equations~(\ref{equation:modulo-polynomials}). In order to prove it
+in \coq, we first rewrite modulo equations $f_j (\vx) \equiv f'_j
+(\vx) \mod n_j$ to existentially quantified equations $\exists d_j
+\in \bbfZ, f_j (\vx) = f'_j (\vx) + n_j \times d_j$. In other
+words, we want to show that for every $\vx \in \bbfZ^{|\vx|}$
+satisfying 
+\begin{equation}
+  \label{equation:polynomials}
+  \begin{array}{rclcrcl}
+    e_1 (\vx) & = & e'_1 (\vx) 
+    & \hspace{.05\textwidth} &
+    f_1 (\vx) & = & f'_1 (\vx) + n_1 \times d_1 \\
+    & \vdots & & & & \vdots \\
+    e_i (\vx) & = & e'_i (\vx) & &
+    f_j (\vx) & = & f'_j (\vx) + n_j \times d_j \\
+    & \vdots & & & & \vdots \\
+    e_r (\vx) & = & e'_r (\vx) & &
+    f_s (\vx) & = & f'_s (\vx) + n_s \times d_s
+  \end{array}
+\end{equation}
+with some $d_1, \ldots, d_s$, then $g (\vx) = g' (\vx)$ or $h
+(\vx) \equiv h' (\vx) \mod m$. 
+}
+
+In other words, it suffices to consider the following
+\emph{polynomial equation entailment} problems~\cite{H:07:AENTP}:
+\begin{equation}
+  \label{eq:reduced-polynomial-equation-implicant}
+  \forall \vx \in \bbfZ^{|\vx|}.
+  \bigwedge\limits_{i \in [I]} e_i (\vx) = e'_i (\vx)
+  \implies
+  g (\vx) = g' (\vx)
+\end{equation}
+where $e_i (\vx), e'_i (\vx), g (\vx), g' (\vx) \in \bbfZ[\vx]$ for $i
+\in [I]$; or,
+ \begin{equation}
+   \label{eq:reduced-modular-polynomial-equation-implicant}
+   \forall \vx \in \bbfZ^{|\vx|}.
+   \bigwedge\limits_{i \in [I]} e_i (\vx) = e'_i (\vx)
+   \implies
+   h (\vx) \equiv h' (\vx) \mod m
+ \end{equation}
+where $e_i (\vx), e'_i (\vx), h (\vx), h' (\vx) \in \bbfZ[\vx]$ for $i
+\in [I]$ and $m \in \bbfN$.
+
+One way to solve the polynomial equation entailment problems
+~(\ref{eq:reduced-polynomial-equation-implicant})
+and~(\ref{eq:reduced-modular-polynomial-equation-implicant}) is by
+solving the ideal membership problem~\cite{H:07:AENTP,BS:16:GFEV}. 
+For~(\ref{eq:reduced-polynomial-equation-implicant}), consider the
+ideal $I = \langle e_i(\vx) - e'_i(\vx) \rangle_{i \in [I]}$. Suppose
+$g(\vx) - g'(\vx) \in I$. Then there are $u_i(\vx) \in \bbfZ[\vx]$
+such that 
+\[
+g(\vx) - g'(\vx) = \sum\limits_{i \in [I]} u_i (\vx) [e_i (\vx) - e' (\vx)].
+\]
+Hence $g(\vx) - g'(\vx) = 0$ by the polynomial equations $e_i (\vx) =
+e' (\vx)$ for $i \in [I]$ in the antecedents
+in~(\ref{eq:reduced-polynomial-equation-implicant}). Similarly, it
+suffices to check if $h(\vx) - h'(\vx) \in \langle m, e_i(\vx) -
+e'_i(\vx) \rangle_{i \in [I]}$
+for~(\ref{eq:reduced-modular-polynomial-equation-implicant}).
+The reduction to the ideal membership problem however is sound but
+incomplete. There are instances
+of~(\ref{eq:reduced-polynomial-equation-implicant})
+or~(\ref{eq:reduced-modular-polynomial-equation-implicant}) whose
+corresponding ideal membership problems do not hold. 
+
+The ideal membership problem can be solved by finding a Gr\"obner
+basis for the ideal. There are two \coq tactics to
+construct formal proofs for the polynomial equation entailment
+problems~(\ref{eq:reduced-polynomial-equation-implicant})
+and~(\ref{eq:reduced-modular-polynomial-equation-implicant})~\cite{P:08:CGBP,P:10:CGBP}. 
+The tactic \dslcode{nsatz} is able to prove
+equalities in integral domains. The tactic \dslcode{gbarith} is able
+to prove modulo equalities in integral domains. We define a
+\coq tactic which invokes \dslcode{nsatz} or \dslcode{gbarith} 
+to prove $g (\vx) = g' (\vx)$ or $h (\vx) \equiv
+h' (\vx) \mod m$ respectively. Finding Gr\"obner bases for ideals is
+known to be an NP-complete problem. \todo{reference?} 
+The tactics \dslcode{nsatz} and \dslcode{gbarith} are not very
+scalable.
+For modulo arithmetic over large finite fields, their 
+implementations can have hundreds of polynomial equations
+in~(\ref{eq:reduced-polynomial-equation-implicant})
+or~(\ref{eq:reduced-modular-polynomial-equation-implicant}). 
+The \coq tactics are unable to finish
+the proof in a reasonable amount of time. A more scalable tactic is
+necessary to verify implementations of low-level cryptographic codes.
+
+For the polynomial equations generated by \textit{ProgramToQ}
+($p$) (Algorithm~\ref{algorithm:polynomial-programs}), they are of the
+following forms: $x = E$ (from an assignment statement) or $x + 2^c y
+= E$ (from a \dslcode{Split} statement). Such polynomial equations can
+safely be removed after every occurrences of $x$ are replaced with $E$
+or $E - 2^c y$. The number of polynomial equations is thus greatly
+reduced. We hence define a \coq tactic to rewrite variables and then
+remove corresponding polynomial equations. For proving a polynomial
+equation $g (\vx) = g' (\vx)$, it turns out that the \coq tactic
+\dslcode{ring} suffices. For a modulo equation $h (\vx) \equiv
+h' (\vx) \mod m$, \todo{we need what?}

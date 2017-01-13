@@ -1,0 +1,35 @@
+
+We evaluate our techniques in real-world low-level cryptographic
+programs. In elliptic curve cryptography, arithmetic computation over
+large finite fields is required for cryptographic primitives. For
+instance, the elliptic curve $y^2 = x^3 + 486662 x^2 + x$ used in 
+Curve25519 is over the Galois field $\bbfF = \bbfGF(\varrho)$ with
+$\varrho = 2^{255} - 19$. The arithmetic operations (addition and
+multiplication) in the curve are in fact over the finite field. To
+make the finite field $\bbfF$ explicit, we may rewrite the elliptic
+curve as the following equation: 
+\begin{equation}
+  \label{eq:curve25519}
+  y \Ftimes y \Feq x \Ftimes x \Ftimes x \Fplus
+  486662 \Ftimes x \Ftimes x \Fplus x.
+\end{equation}
+
+Since arithmetic computation is over the Galois field and every
+element of $\bbfGF(\varrho)$ can be represented by a 255-bit number,
+any pair $(x, y)$ satisfying (\ref{eq:curve25519}) (called a
+\emph{point} on the curve) can be represented by a pair of 255-bit
+numbers. It can be shown that points on Curve25519 with the point at
+infinity form a commutative group $\bbfG = (G, \Gplus, \Gzero)$
+with $G = \{ (x, y) : x, y \textmd{ satisfying } (\ref{eq:curve25519})
+\}$. Let $p_0 = (x_0, y_0), p_1 = (x_1, y_1) \in G$. We have $-p_0 =
+(x_0, -y_0)$ and $p_0 \Gplus p_1 = (x, y)$ where
+\begin{eqnarray}
+  m & = & (y_1 \Fminus y_0) \Fdiv (x_1 \Fminus x_0)\\
+  x & = & m \Ftimes m \Fminus x_0 \Fminus x_1\\
+  y & = & m \Ftimes (x_0 \Fminus x) \Fminus y_0
+     = m \Ftimes (x_1 \Fminus x) \Fminus y_1.
+  \label{eq:curve25519-group}
+\end{eqnarray}
+The induced group $\bbfG$ plays an important role in elliptic
+curve cryptography. It is essential to implement the commutative binary
+operation $\Gplus$ very efficiently in practical cryptography. 

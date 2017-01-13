@@ -1,0 +1,156 @@
+
+Consider the problem of checking whether $\hoaretriple{q}{p}{q'}$ for
+arbitrary $q, q' \in Q$ and $p \in P$. Since $q'$ is arbitrary, the
+program $p$ may contain portions irrevelant to $q'$. Program slicing
+is a simple yet effective technique to improve efficiency of
+verification through simplifying programs. \todo{reference?} 
+
+Here we slice programs in a backward manner. We initialize the set
+of \emph{cared} variables to be the variables appeared in the
+post-condition $q'$. Starting from the last statement, we check if the
+it assigns any cared variables. If not, we skip the last statement and
+move to the last but one statement. If it does, we keep the last
+statement, update the cared variables, and examine the second-to-last
+statement. This process repeats until the first statement of the
+program is processed.
+
+Our program slicing algorithm requires several auxiliary functions. 
+Algorithm~\ref{algorithm:variables-in-expressions} shows how to
+compute all variables occurred in an expression by structural
+induction on the expression. 
+
+\begin{algorithm}
+  \begin{algorithmic}[1]
+    \Function{VarsInE}{$e$}
+    \Match{$e$}
+      \Case{$V$}
+        \Return $\{ e \}$
+      \EndCase
+      \Case{$Z$}
+        \Return $\emptyset$
+      \EndCase
+      \Case{$-e'$}
+        \Return \Call{VarsInE}{$e'$}
+      \EndCase
+      \Case{$e' + e''$}
+        \Return \Call{VarsInE}{$e'$} $\cup$ \Call{VarsInE}{$e''$}
+      \EndCase
+      \Case{$e' - e''$}
+        \Return \Call{VarsInE}{$e'$} $\cup$ \Call{VarsInE}{$e''$}
+      \EndCase
+      \Case{$e' \times e''$}
+        \Return \Call{VarsInE}{$e'$} $\cup$ \Call{VarsInE}{$e''$}
+      \EndCase
+      \Case{$\dslcode{Pow}(e', \uscore)$}
+        \Return \Call{VarsInE}{$e'$}
+      \EndCase
+    \EndMatch
+    \EndFunction
+  \end{algorithmic}
+  \caption{Variables Occurred in Expressions}
+  \label{algorithm:variables-in-expressions}
+\end{algorithm}
+
+\begin{algorithm}
+\begin{algorithmic}[1]
+  \Function{VarsInQ}{$q$}
+  \Match{$q$}
+    \Case{$\top$}
+      $\emptyset$
+    \EndCase
+    \Case{$e' = e''$}
+      \Return \Call{VarsInE}{$e'$} $\cup$ \Call{VarsInE}{$e''$}
+    \EndCase
+    \Case{$e' \equiv e'' \mod \uscore$}
+      \Return \Call{VarsInE}{$e'$} $\cup$ \Call{VarsInE}{$e''$}
+    \EndCase
+    \Case{$q' \wedge q''$}
+      \Return \Call{VarsInQ}{$q'$} $\cup$ \Call{VarsInQ}{$q''$}
+    \EndCase
+  \EndMatch
+  \EndFunction
+\end{algorithmic}
+\caption{Variables Occurred in Predicates}
+\label{algorithm:variables-in-predicates}
+\end{algorithm}
+
+Similarly, Algorithm~\ref{algorithm:variables-in-predicates} computes
+the variables appeared in a predicate. Using a \coq formalization of
+sets, both algorithms are specified in the proof assistant easily.
+
+\begin{algorithm}
+  \begin{algorithmic}[1]
+    \Function{SliceStatement}{$\mathit{vars}$, $s$}
+    \Match{$s$}
+      \Case{$v \leftarrow e$}
+        \IfThenElse{$v \in \mathit{vars}$}
+          {\Return $\langle$\Call{VarsInE}{$e$} 
+            $\cup$ $(\mathit{vars} \setminus \{ v \})$, $s \rangle$}
+          {\Return $\mathit{vars}$}
+      \EndCase
+      \Case{$\concat{v_h}{v_l} \leftarrow \dslcode{Split} (e, \uscore)$}
+        \IfThenElse{$v_h$ or $v_l \in \mathit{vars}$}
+          {\Return $\langle$\Call{VarsInE}{$e$} $\cup$ 
+            $(\mathit{vars} \setminus \{ v_h, v_l \})$, $s \rangle$}
+          {\Return $\mathit{vars}$}
+      \EndCase
+    \EndMatch
+    \EndFunction
+  \end{algorithmic}
+  \caption{Slicing Statements}
+  \label{algorithm:slicing-statements}
+\end{algorithm}
+
+For each statement, we check if the variables in the left hand side are
+cared variables. If these variables are not, we leave the cared
+variables intact. If they are cared variables, we update the cared
+variables by excluding the variables on the left hand side but adding
+the variables appeared on the right hand
+side~(Algorithm~\ref{algorithm:slicing-statements}). In the algorithm, 
+the parameter $\mathit{vars}$ denotes the set of cared variables.
+Observe that irrelevant statements are not returned by the algorithm.
+
+To slice a program, our algorithm proceeds from the last statement
+(Algorithm~\ref{algorithm:slicing-programs}). It invokes
+\textsc{SliceStatement} to see if the current statement is relevant
+and update cared variables if necessary. The algorithm recurses with
+the updated cared variables and previous statements.
+
+\begin{algorithm}
+  \begin{algorithmic}[1]
+    \Function{SliceProgram}{$\mathit{vars}$, $p$}
+    \Match{$p$}
+      \Case{$\epsilon$}
+        \Return $\epsilon$
+      \EndCase
+      \Case{$pp; s;$}
+        \Match{\Call{SliceStatement}{$\mathit{vars}$, $s$}}
+          \Case{$\mathit{vars}'$}
+            \Return \Call{SliceProgram}{$\mathit{vars}'$, $pp;$}
+          \EndCase
+          \Case{$\langle \mathit{vars}'$, $s' \rangle$}
+            \Return \Call{SliceProgram}{$\mathit{vars}'$, $pp$}$\ s';$
+          \EndCase
+        \EndMatch
+      \EndCase
+    \EndMatch
+    \EndFunction
+  \end{algorithmic}
+  \caption{Slicing Programs}
+  \label{algorithm:slicing-programs}
+\end{algorithm}
+
+We specify Algorithms~\ref{algorithm:slicing-statements}
+and~\ref{algorithm:slicing-programs} in \coq. Using the proof
+assistant, we show our program slicing algorithm is both sound and
+complete. That is, the proof of the following theorem is certified.
+
+\begin{theorem}
+  For every $q, q' \in Q$ and $p \in P$,
+  \begin{center}
+  $\models \hoaretriple{q}{p}{q'}$ if and only if
+  $\models \hoaretriple{q}{\textsc{SliceProgram}(\textsc{VarsInQ}(q'), p)}
+  {q'}$.
+  \end{center}
+  \label{theorem:program-slicing}
+\end{theorem}

@@ -1,0 +1,49 @@
+
+\newcommand{\todo}[1]{\textcolor{blue}{TODO: {#1}}}
+\newcommand{\hide}[1]{}
+
+\newcommand{\defn}{\triangleq}
+\newcommand{\dslcode}[1]{\mbox{\textsf{#1}}}
+\newcommand{\code}[1]{\mbox{#1}}
+\newcommand{\uscore}[0]{{\char95}}
+\newcommand{\cond}[1]{{(\!|}{#1}{|\!)}}
+\newcommand{\valueof}[1]{[\!|{#1}|\!]}
+\newcommand{\bbfN}{\mathbb{N}}
+\newcommand{\bbfZ}{\mathbb{Z}}
+\newcommand{\bbfF}{\mathbb{F}}
+\newcommand{\bbfGF}{\mathbb{GF}}
+\newcommand{\bbfG}{\mathbb{G}}
+\newcommand{\coq}{\textsc{Coq}\xspace}
+\newcommand{\openssh}{\textsc{OpenSSH}\xspace}
+\newcommand{\singular}{\textsc{Singular}\xspace}
+\newcommand{\qhasm}{\textsc{Qhasm}\xspace}
+\newcommand{\vx}{\vec{x}}
+\newcommand{\vv}{\vec{v}}
+\newcommand{\vn}{\vec{n}}
+\newcommand{\vd}{\vec{d}}
+\newcommand{\myprime}{\varrho}
+\newcommand{\hoaretriple}[3]{\cond{#1}~{#2}~\cond{#3}}
+\newcommand{\concat}[2]{{[}{#1}, {#2}{]}}
+\newcommand{\mymapsto}[2]{\{{#1} \mapsto {#2}\}}
+\newcommand{\Gzero}{0_{\bbfG}}
+\newcommand{\Gplus}{+_{\bbfG}}
+\newcommand{\Geq}{=_{\bbfG}}
+\newcommand{\Fplus}{+_{\bbfF}}
+\newcommand{\Fminus}{-_{\bbfF}}
+\newcommand{\Ftimes}{\cdot_{\bbfF}}
+\newcommand{\Fzero}{0_{\bbfF}}
+\newcommand{\Funit}{1_{\bbfF}}
+\newcommand{\Feq}{=_{\bbfF}}
+\newcommand{\Fdiv}{\div_{\bbfF}}
+\newcommand{\mydsl}{\textsc{CryptoLine}\xspace}
+
+\algnewcommand\algorithmicmatch{\textbf{match}}
+\algnewcommand\algorithmicwith{\textbf{with}}
+\algnewcommand\algorithmiccase{\textbf{case}}
+% New "environments"
+\algdef{SE}[MATCH]{Match}{EndMatch}[1]{\algorithmicmatch\ {#1}\ \algorithmicwith}{\algorithmicend\ \algorithmicmatch}%
+\algdef{SE}[CASE]{Case}{EndCase}[1]{\algorithmiccase\ {#1}:}{\algorithmicend\ \algorithmiccase}%
+\algtext*{EndMatch}%
+\algtext*{EndCase}%
+\algnewcommand{\IfThenElse}[3]{% \IfThenElse{<if>}{<then>}{<else>}
+  \State \algorithmicif\ #1\ \algorithmicthen\ #2\ \algorithmicelse\ #3}

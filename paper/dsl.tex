@@ -1,0 +1,202 @@
+
+One of the big issues with modern cryptography is how the assumptions
+match up with reality. In many situations, unexpected channels
+through which information can leak to the attacker can cause the
+cryptosystem to be broken. Typically this is about timing, or
+electric power used. Implementations which are not defeated through
+such means are called ``side-channel resilient'' implementations.
+Clearly in such implementations the execution time are kept constant
+(as much as possible).
+
+This turns out in some cases to be harder than one would imagine.
+This is chiefly because modern processors have caches and out of order
+execution and multitasking. This makes it possible for one execution
+thread, even when no privilege is conferred ,to affect the running
+time of another -- simply by caching a sufficient amount of its own
+data in correct locations through repeated accesses, and then
+observing the running time of the other thread. The instructions in
+the other thread which uses the ``evicted'' data (to make room for the
+data of the eavesdropping thread) then has to take more time getting
+their data back to the cache. Such attacks are quite practical.
+\todo{insert reference to cache-timing attacks.}
+
+Thus, the innocuous actions of (a) executing the CPU's conditional
+branch instruction dependent on a secret bit, and (b) executing an
+indirect load instruction using a secret value in the register as the
+address, are both potentially dangerous leaks of information.
+
+As such, modern cryptographic implementations often have to resort to
+seemingly contrived sequences of conditional moves and arithmetic
+manipulations to achieve the same result as simply using the CPU
+instructions designed for the purpose. This of course slows the
+computation down and waste resources but is inevitable because
+secret-dependent conditional actions and table lookups are actually
+very useful tasks that sometimes simply must be performed.
+
+There are some side results of the above, one is that we are not often
+faced with secret-dependent branching or table-lookups in the assembly
+instructions, but a language describing cryptographic code might
+include pseudo-instructions to cover instruction sequences, phrases in
+the language if you will, that is used to achieve the same effect.
+
+Consider the following syntactic class for expressions in our domain
+specific language:
+
+\begin{eqnarray*}
+  N & ::= & \dslcode{1}\ |\ \dslcode{2}\ |\ \cdots\\
+  Z & ::= & \cdots \ |\ \dslcode{-2}\ |\ \dslcode{-1} \ |\ 0\ |\ 
+            \dslcode{1}\ |\ \dslcode{2}\ |\ \cdots\\
+  V & ::= & \dslcode{x} \ |\ \dslcode{y} \ |\ \dslcode{z} \ |\ \cdots\\
+  E & ::= &  Z \ |\ V \ |\  \dslcode{-}E \ |\ E \dslcode{+} E 
+             \ |\ E \dslcode{-} E
+             \ |\ E \times E \ |\ \dslcode{Pow} (E, N)
+\end{eqnarray*}
+
+We allow exact integers as constants in the domain specific
+language. Variables are thus integer variables. An expression can be a
+constant, a variable, or a negative expression. Addition, subtraction,
+and multiplication of expressions are available. The expression
+$\dslcode{Pow}(e, n)$ denotes $e^n$ for any expression $e$ and positive
+integer $n$. For low-level cryptographic programs over large Galois
+fields, division is computed via multiplication; the bit-wise
+left-shifting can be modeled by multiplying
+$\dslcode{Pow}(\dslcode{2}, n)$. They are not necessary in our
+domain specific language. 
+
+\begin{eqnarray*}
+  S & ::= & V \leftarrow E 
+            \ |\  \concat{V}{V} \leftarrow \dslcode{Split} (E, N)\\
+  P & ::= & \epsilon \ |\ S; P
+\end{eqnarray*}
+
+For low-level cryptographic programs, the only statements are
+assignments. The statement $v \leftarrow e$ assigns the value of $e$
+to the variable $v$. The statement $\concat{v_h}{v_l} \leftarrow
+\dslcode{Split}(e, n)$ splits the value of $e$ into higher and lowest
+$n$ bits. The higher and lower bits are stored in $v_h$ and $v_l$
+respectively. A program is a sequence of statements. We denote the
+empty program by $\epsilon$. Observe that conditional branches are not
+allowed in cryptographic programs to prevent timing attacks. Every
+loop must repeat a fixed number of times and hence can be unfolded
+into a sequence of assignments.
+
+For specifications, our domain specific language allows arbitrary
+conjunctions of (modulo) equations over expressions. The notation
+$\top$ denotes the Boolean value $\mathit{tt}$. We follow Hoare's
+formalism in cryptographic program specifications~\cite{H:69:ABCP}. A program
+\textit{state} is a mapping from variables to integers. For any $q \in
+Q$, a \emph{$q$-state} is a state satisfying $q$.
+Given $q, q' \in Q$ and $p \in P$, $\models \hoaretriple{q}{p}{q'}$
+denotes that the program $p$ will terminate and end in a $q'$-state
+provided it starts from any $q$-state. In $\hoaretriple{q}{p}{q'}$,
+$q$ and $q'$ are the pre- and post-conditions of $p$ respectively.
+
+\begin{eqnarray*}
+  Q & ::= & \top
+     \ |\   E = E
+     \ |\   E \equiv E \mod N
+     \ |\   Q \wedge Q\\
+  H & ::= & \cond{Q} P \cond{Q}
+\end{eqnarray*}
+
+
+\begin{figure}[ht]
+  \centering
+  \[
+  \begin{array}{lclcl}
+    \begin{array}{rcl}
+    \textmd{1:} && \dslcode{r}_0 \leftarrow \dslcode{x}_0; \\
+    \textmd{2:} && \dslcode{r}_1 \leftarrow \dslcode{x}_1; \\
+    \textmd{3:} && \dslcode{r}_2 \leftarrow \dslcode{x}_2; \\
+    \textmd{4:} && \dslcode{r}_3 \leftarrow \dslcode{x}_3; \\
+    \textmd{5:} && \dslcode{r}_5 \leftarrow \dslcode{x}_4; \\
+    \end{array}
+    &\hspace{.05\textwidth}&
+    \begin{array}{rcl}
+    \textmd{6:} && 
+      \dslcode{r}_0 \leftarrow \dslcode{r}_0 + \dslcode{4503599627370458}; \\
+    \textmd{7:} &&
+      \dslcode{r}_1 \leftarrow \dslcode{r}_1 + \dslcode{4503599627370494}; \\
+    \textmd{8:} &&
+      \dslcode{r}_2 \leftarrow \dslcode{r}_2 + \dslcode{4503599627370494}; \\
+    \textmd{9:} &&
+      \dslcode{r}_3 \leftarrow \dslcode{r}_3 + \dslcode{4503599627370494}; \\
+    \textmd{10:} && 
+      \dslcode{r}_4 \leftarrow \dslcode{r}_4 + \dslcode{4503599627370494};\\
+    \end{array}
+    &\hspace{.05\textwidth}&
+    \begin{array}{rcl}
+    \textmd{11:} && \dslcode{r}_0 \leftarrow \dslcode{r}_0 - \dslcode{y}_0; \\
+    \textmd{12:} && \dslcode{r}_1 \leftarrow \dslcode{r}_1 - \dslcode{y}_1; \\
+    \textmd{13:} && \dslcode{r}_2 \leftarrow \dslcode{r}_2 - \dslcode{y}_2; \\
+    \textmd{14:} && \dslcode{r}_3 \leftarrow \dslcode{r}_3 - \dslcode{y}_3; \\
+    \textmd{15:} && \dslcode{r}_4 \leftarrow \dslcode{r}_4 - \dslcode{y}_4;
+    \end{array}
+  \end{array}
+  \]
+  \caption{Subtraction \dslcode{sub}}
+%$(\dslcode{x}_0, \dslcode{x}_1, \dslcode{x}_2, \dslcode{x}_3,
+%\dslcode{x}_4, \dslcode{y}_0, \dslcode{y}_1, \dslcode{y}_2,
+%\dslcode{y}_3, \dslcode{y}_4)$
+  \label{figure:dsl:subtraction}
+\end{figure}
+
+Figure~\ref{figure:dsl:subtraction} gives a simple yet real
+implementation of subtraction over $\bbfGF(\myprime)$. 
+In the figure, a number in $\bbfGF(\varrho)$ 
+is represented by five 51-bit unsigned integers. The variables
+$\dslcode{x}_0, \dslcode{x}_1, \dslcode{x}_2, \dslcode{x}_3,
+\dslcode{x}_4$ for instance represent 
+$\mathit{radix51}(\dslcode{x}_4, \dslcode{x}_3, \dslcode{x}_2,
+\dslcode{x}_1, \dslcode{x}_0) \defn
+2^{51 \times 4} \dslcode{x}_4 + 2^{51 \times 3} \dslcode{x}_3 + 
+2^{51 \times 2} \dslcode{x}_2 + 2^{51 \times 1} \dslcode{x}_1 + 
+2^{51 \times 0} \dslcode{x}_0$. The result of
+subtraction is stored in the variables $\dslcode{r}_0, \dslcode{r}_1,
+\dslcode{r}_2, \dslcode{r}_3, \dslcode{r}_4$. 
+Given $0 \leq \dslcode{x}_0,$ $\dslcode{x}_1,$ $\dslcode{x}_2,$
+$\dslcode{x}_3,$ $\dslcode{x}_4,$ $\dslcode{y}_0,$ $\dslcode{y}_1,$
+$\dslcode{y}_2,$ $\dslcode{y}_3,$ $\dslcode{y}_4 < 2^{51}$, 
+the specification of the program is therefore
+\[
+\begin{array}{c}
+\cond{\top}\\
+\dslcode{sub}\\
+%(\dslcode{x}_0, \dslcode{x}_1, \dslcode{x}_2, \dslcode{x}_3,
+%\dslcode{x}_4, \dslcode{y}_0, \dslcode{y}_1, \dslcode{y}_2,
+%\dslcode{y}_3, \dslcode{y}_4)\\
+\cond{\mathit{radix}(\dslcode{x}_4, \dslcode{x}_3, \dslcode{x}_2,
+\dslcode{x}_1, \dslcode{x}_0) -
+\mathit{radix51}(\dslcode{y}_4, \dslcode{y}_3, \dslcode{y}_2,
+\dslcode{y}_1, \dslcode{y}_0)
+\equiv
+\mathit{radix51}(\dslcode{r}_4, \dslcode{r}_3, \dslcode{r}_2,
+\dslcode{r}_1, \dslcode{r}_0)
+\mod \myprime
+}.
+\end{array}
+\]
+
+Note that the variables $\dslcode{r}_i$'s are added with constants
+after they are initizlied with $\dslcode{x}_i$'s but before
+$\dslcode{y}_i$'s are subtracted from them. It is not hard to see that
+$2\myprime = \mathit{radix51} (4503599627370458,$ $4503599627370494,$
+$4503599627370494,$ $4503599627370494,$ $4503599627370494)$
+after tedious computation. Hence $\mathit{radix51}(\dslcode{r}_4,$
+$\dslcode{r}_3,$ $\dslcode{r}_2,$ $\dslcode{r}_1,$ $\dslcode{r}_0)$ $=$
+$\mathit{radix51}(\dslcode{x}_4,$ $\dslcode{x}_3,$ $\dslcode{x}_2,$
+$\dslcode{x}_1,$ $\dslcode{x}_0)$ $+$ $2 \myprime $ $-$
+$\mathit{radix51}(\dslcode{y}_4,$ $\dslcode{y}_3,$ $\dslcode{y}_2,$
+$\dslcode{y}_1,$ $\dslcode{y}_0)$ $\equiv $
+$\mathit{radix51}(\dslcode{x}_4,$ $\dslcode{x}_3,$ $\dslcode{x}_2,$
+$\dslcode{x}_1,$ $\dslcode{x}_0)$ $-$
+$\mathit{radix51}(\dslcode{y}_4,$ $\dslcode{y}_3,$ $\dslcode{y}_2,$
+$\dslcode{y}_1,$ $\dslcode{y}_0)$ $\mod \myprime $. The program in
+Figure~\ref{figure:dsl:subtraction} is correct. The reason for
+adding constants is to prevent underflow. If the constants were not
+added, the subtraction in lines~11 to 15 could give negative and hence
+incorrect results. Indeed, characteristics of large Galois fields are
+regularly exploited in cryptographic programs for correctness and
+efficiency. Our domain specific language can easily model such
+specialized programming techniques and is most suitable for low-level
+cryptographic programs.

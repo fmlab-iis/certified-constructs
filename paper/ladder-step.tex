@@ -1,0 +1,90 @@
+
+\hide{
+\todo{Bo-Yin, please describe how the ladder step is used and why it is 
+important for about .5 page. Maybe another .5 page for its mathematical 
+properties? }
+}
+
+Recall that X25519 is based on the elliptic curve Curve25519. 
+Cryptographic primitives of the key exchange protocol perform
+sequences of algebraic operations on the Abelian group $\bbfG$ induced
+by Curve25519, not on the finite field $\bbfGF(\varrho)$. As
+aforementioned, the binary operation $\Gplus$ requires another
+sequence of arithmetic computation over $\bbfGF(\varrho)$. Errors
+could still be introduced or even implanted in implementations of
+$\Gplus$. Correctness of arithmetic constructs over $\bbfGF(\varrho)$
+does not necessarily imply the correctness of the mathematical
+construct in X25519. The Montgomery Ladderstep is the mathematical
+construct widely used to implement $\Gplus$ on Curve25519. We 
+verify a low-level implementation of the mathematical construct in
+this experiment. 
+
+\begin{algorithm}[h]
+\label{evaluation:ladder-step:montgomery}
+\begin{algorithmic}[1]
+\Function{ladderstep}{$x_1, x_m, z_m, x_n, z_n$}
+\begin{multicols}{3}
+\State $t_1 \leftarrow x_m \Fplus z_m$
+\State $t_2 \leftarrow x_m \Fminus z_m$
+\State $t_7 \leftarrow t_2 \Ftimes t_2$
+\State $t_6 \leftarrow t_1 \Ftimes t_1$
+\State $t_5 \leftarrow t_6 \Fminus t_7$
+\State $t_3 \leftarrow x_n \Fplus z_n$
+\State $t_4 \leftarrow x_n \Fminus z_n$\rule{0ex}{0ex}
+\State $t_9 \leftarrow t_3 \Ftimes t_2$
+\State $t_8 \leftarrow t_4 \Ftimes t_1$
+\State $x_n \leftarrow t_8 \Fplus t_9$
+\State $z_n \leftarrow t_8 \Fminus t_9$
+\State $x_n \leftarrow x_{n} \Ftimes x_{n}$
+\State $z_n \leftarrow z_{n} \Ftimes z_{n}$
+\State $z_n \leftarrow z_{n} \Ftimes x_1$\rule{0ex}{0ex} 
+\State $x_m \leftarrow t_6 \Ftimes t_7$
+\State $z_m \leftarrow 121666 \Ftimes t_5$
+\State $z_m \leftarrow z_m \Fplus t_7$
+\State $z_m \leftarrow z_m \Ftimes t_5$
+\State \Return $(x_m, z_m, x_n, z_n)$
+\EndFunction
+\end{multicols}
+\end{algorithmic}
+\caption{Montgomery Ladderstep}
+\end{algorithm}
+
+Peter Montgomery derived a sequence of computations, now usually known
+as "the Montgomery Ladderstep", to compute both $P+Q$ and $[2]Q$
+simultaneously and efficiently knowing $\pm(P-Q)$.  The ladderstep can
+be achieved only the x coordinates on a set of curves today known as
+Montgomery curves. This is known as a differential addition chain and
+is one of the fundamental ways to avoid timing attacks.  That is,
+starting from points $[n]P$ and $[n+1]P$, one can get either $[2n]P$
+and $[2n+1]P$, or $[2n+1]P$ and $[2n+2]P$ in a time-constant manner,
+with the difference between the two points always remaining $\pm P$
+using the Ladderstep, provided that there is a time-constant way to
+swap the two (which there usually is).   This is equivalent to
+computing either $2n$ or $2n+1$ from $n$ and is sufficient to compute
+any $[n]P$ where n has a constant bitlength.   For curves not
+equivalent to a Montgomery curve, a variant known as the "Co-Z ladder"
+is available to effect the same differential addition chain. 
+
+Montgomery's formulas and his steps are well known since his original
+paper.  (include Montgomery ladderstep diagram and Montgomery's
+original equations).  We show that the program carrys out a
+computation equivalent to his formulas.  In fact, we show that the
+doubling part of the formula has a coefficient of 4 in both the
+numerator and denominator that is not in Peter Montgomery's formula
+(insert cite here). 
+
+Let $p \in G$ be an element of the group $\bbfG$ and hence a point on
+the elliptic curve Curve25519. We write $n \cdot p$ for
+$\overbrace{p \Gplus \cdots \Gplus p}^n \in G$ when $n \in \bbfN$. A
+crucial mathematical construct in X25519 is to compute the
+$x$-coordinate of $n \cdot p$ for $n \in \bbfN$. The na\"ive
+implementation would follow the equation (\ref{eq:curve25519-group})
+and compute both $x$- and $y$-coordinates with, in particular, a
+division operation $\Fdiv$ in $\bbfGF(\varrho)$. In~\cite{M:87:SPEC},
+a more efficient implementation is proposed. 
+
+$np = x_n \Fdiv z_n$.
+$\textsc{ladderstep} (x_1, x_m, z_m, x_n, z_n) = (x_{2m}, z_{2m},
+x_{m+n}, z_{m+n})$
+ 
+\todo{mention the coefficient $4$ in the ratio}

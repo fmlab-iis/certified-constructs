@@ -1,0 +1,158 @@
+
+The last step transforms any program specification to the 
+modular polynomial equation entailment problem defined as follows. For
+$q \in Q$, we write $q(\vx)$ to signify the free variables $\vx$
+occurred in $q$. Given $q(\vx), q'(\vx) \in Q$, the \emph{modular
+  polynomial equation entailment} problem decides whether $\forall
+\vx. q(\vx) \implies q'(\vx)$ holds for all $\vx \in \bbfZ^{|\vx|}$.
+
+Programs in single static assignment form can easily be transformed to
+conjunctions of polynomial equations. We first show how to transform
+statements into polynomial equations. An assignment statement is
+translated to a polynomial equation with a single variable on the left
+hand side. For a $\dslcode{Split}$ statement, it is transformed to an
+equation with a linear expression of the assigned variables on the
+left hand side (Algorithm~\ref{algorithm:polynomial-statements}). 
+\begin{algorithm}
+  \begin{algorithmic}[1]
+    \Function{StatementToPolyEQ}{$s$}
+    \Match{$s$}
+      \Case{$v \leftarrow e$}
+        \Return $v = e$
+      \EndCase
+      \Case{$\concat{v_h}{v_l} \leftarrow \dslcode{Split}(e, n)$}
+        \Return $v_l + 2^n v_h = e$
+      \EndCase
+    \EndMatch
+    \EndFunction
+  \end{algorithmic}
+  \caption{Polynomial Equation Transformation for Statements}
+  \label{algorithm:polynomial-statements}
+\end{algorithm}
+
+A program is transformed to the conjunction of polynomial
+equations corresponding to its statements
+(Algorithm~\ref{algorithm:polynomial-programs}). Both algorithms are
+specified straightforwardly in \coq.
+
+\begin{algorithm}
+  \begin{algorithmic}[1]
+    \Function{ProgramToPolyEQ}{$p$}
+    \Match{$p$}
+      \Case{$\epsilon$} \Return $\top$ \EndCase
+      \Case{$s; pp$}
+        \Return \Call{StatementToPolyEQ}{$s$} $\wedge$
+                \Call{ProgramToPolyEQ}{$pp$}
+      \EndCase
+    \EndMatch
+    \EndFunction
+  \end{algorithmic}
+  \caption{Polynomial Equation Transformation for Programs}
+  \label{algorithm:polynomial-programs}
+\end{algorithm}
+
+\begin{figure}
+  \centering
+  \[
+  \begin{array}{l}
+  \forall 
+    (\dslcode{x}^0_0, \dslcode{x}^0_1, \dslcode{x}^0_2,
+    \dslcode{x}^0_3, \dslcode{x}^0_4,
+    \dslcode{y}^0_0, \dslcode{y}^0_1, \dslcode{y}^0_2,
+    \dslcode{y}^0_3, \dslcode{y}^0_4,
+    \dslcode{r}^0_0, \dslcode{r}^0_1, \dslcode{r}^0_2,
+    \dslcode{r}^0_3, \dslcode{r}^0_4,
+    \dslcode{r}^1_0, \dslcode{r}^1_1, \dslcode{r}^1_2,
+    \dslcode{r}^1_3, \dslcode{r}^1_4,
+    \dslcode{r}^2_0, \dslcode{r}^2_1, \dslcode{r}^2_2,
+    \dslcode{r}^2_3, \dslcode{r}^2_4) \in \bbfZ^{25}.\\
+  \hspace{.05\textwidth}\top \wedge
+  \left(
+  \begin{array}{lclcl}
+    \begin{array}{rclc}
+      \dslcode{r}^0_0 & = & \dslcode{x}^0_0 & \wedge \\
+      \dslcode{r}^0_1 & = & \dslcode{x}^0_1 & \wedge \\
+      \dslcode{r}^0_2 & = & \dslcode{x}^0_2 & \wedge \\
+      \dslcode{r}^0_3 & = & \dslcode{x}^0_3 & \wedge \\
+      \dslcode{r}^0_4 & = & \dslcode{x}^0_4 & \wedge \\
+    \end{array}
+    &\hspace{.01\textwidth}&
+    \begin{array}{rclc}
+      \dslcode{r}^1_0 & = & \dslcode{r}^0_0 + \dslcode{4503599627370458} & \wedge \\
+      \dslcode{r}^1_1 & = & \dslcode{r}^0_1 + \dslcode{4503599627370494} & \wedge \\
+      \dslcode{r}^1_2 & = & \dslcode{r}^0_2 + \dslcode{4503599627370494} & \wedge \\
+      \dslcode{r}^1_3 & = & \dslcode{r}^0_3 + \dslcode{4503599627370494} & \wedge \\
+      \dslcode{r}^1_4 & = & \dslcode{r}^0_4 + \dslcode{4503599627370494} & \wedge\\
+    \end{array}
+    &\hspace{.01\textwidth}&
+    \begin{array}{rclc}
+      \dslcode{r}^2_0 & = & \dslcode{r}^1_0 - \dslcode{y}^0_0 & \wedge \\
+      \dslcode{r}^2_1 & = & \dslcode{r}^1_1 - \dslcode{y}^0_1 & \wedge \\
+      \dslcode{r}^2_2 & = & \dslcode{r}^1_2 - \dslcode{y}^0_2 & \wedge \\
+      \dslcode{r}^2_3 & = & \dslcode{r}^1_3 - \dslcode{y}^0_3 & \wedge \\
+      \dslcode{r}^2_4 & = & \dslcode{r}^1_4 - \dslcode{y}^0_4
+    \end{array}
+  \end{array}
+  \right)\\
+    \\
+    \hspace{.05\textwidth}
+    \implies 
+    \mathit{radix}(\dslcode{x}^0_4, \dslcode{x}^0_3, \dslcode{x}^0_2,
+    \dslcode{x}^0_1, \dslcode{x}^0_0) -
+    \mathit{radix51}(\dslcode{y}^0_4, \dslcode{y}^0_3, \dslcode{y}^0_2,
+    \dslcode{y}^0_1, \dslcode{y}^0_0)
+    \equiv
+    \mathit{radix51}(\dslcode{r}^2_4, \dslcode{r}^2_3, \dslcode{r}^2_2,
+    \dslcode{r}^2_1, \dslcode{r}^2_0)
+    \mod \myprime
+  \end{array}
+  \]
+  \caption{Modular Polynomial Equation Entailment for \dslcode{subSSA}}
+  \label{figure:dsl:subtraction-polynomial}
+\end{figure}
+
+\noindent
+\emph{Example}.
+
+
+
+
+\begin{theorem}
+  Let $p \in P$ be a well-formed program in static single assignment
+  form. 
+\todo{Explain polynomial equation is an abstraction. It admits all
+  program behaviors and definitely more.}
+\end{theorem}
+
+
+Note that $\textsc{ProgramToPolyEQ}(p) \in Q$ for every $p \in P$.
+Definition~\ref{definition:program-entailment} gives the modular
+polynomial equation entailment problem corresponding to a program
+specification.
+\begin{definition}
+  For any $q, q' \in Q$ and $p \in P$ in single static assignment
+  form, define
+  \begin{eqnarray*}
+    \Pi(\hoaretriple{q}{p}{q'}) & \defn &
+    \forall \vx \in \bbfZ^{|\vx|}. q(\vx) \wedge \varphi(\vx) \implies q'(\vx)
+  \end{eqnarray*}
+  where $\varphi(\vx) =
+  \textsc{ProgramToPolyEQ}(p)$. 
+  %$\Pi(\hoaretriple{q}{p}{q'})$ is called the modular polynomial
+  %equation entailment problem for $\hoaretriple{q}{p}{q'}$. 
+  \label{definition:program-entailment}
+\end{definition}
+
+Algorithm~\ref{algorithm:polynomial-programs} is only sound for
+well-formed programs. 
+Theorem~\ref{theorem:program-to-q-soundness} establishes the
+soundnesss of our last transformation. Its proof is also certified in
+\coq. 
+\begin{theorem}
+  \label{theorem:program-to-q-soundness}
+  Let $q, q' \in Q$ be predicates, and $p \in P$ a program in single
+  static assignment form and well-formed. 
+  If $\Pi(\hoaretriple{q}{p}{q'})$ holds, then
+  $\models$ $\hoaretriple{q}{p}{q'}$.
+\end{theorem}
+

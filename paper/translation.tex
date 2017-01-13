@@ -1,0 +1,32 @@
+
+Given $q, q' \in Q$ and $p \in P$, we reduce the problem of checking
+$\models \hoaretriple{q}{p}{q'}$ to a problem of checking (modular)
+polynomial equalities under a system of polynomial equations over
+integral domains. The reduction is carried out by the following three
+transformations:
+\begin{enumerate}
+\item Program slicing. To improve efficiency, the segments of the program $p$
+  irrelevant to the post-condition $q$ are removed by program slicing 
+  (Section~\ref{subsection:translation:slicing}). 
+\item Static single assignments. The sliced program is transformed
+  into static single assignments. Variables in the pre- and
+  post-conditions are renamed accordingly
+  (Section~\ref{subsection:translation:static-single-assignment}).
+\item Multivariant polynomial equations. The resultant program
+  specification is transformed into checking (modular)
+  polynomial equalities under a system of polynomial equations
+  (Section~\ref{subsection:translation:multivariant-polynomial-equations}).
+\end{enumerate}
+
+For each transformation, we give an algorithm and establish the
+correctness of the algorithm in \coq. Particularly, a semantics
+for our domain specific language is given and 
+$\models \hoaretriple{q}{p}{q'}$ is formalized in \coq. The
+correctness of transformations is then established by formal \coq
+proofs. For program slicing and static single assignments, we
+construct machine-checkable proofs for the soundness and completeness
+of the two transformations. For multivariant polynomial equations,
+another \coq-certified proof shows the soundness of the transformation
+from $\models \hoaretriple{q}{p}{q'}$ to an algebraic problem over
+(modular) polynomial equations. In the following subsections, we
+elaborate the transformations and their correctness in details.

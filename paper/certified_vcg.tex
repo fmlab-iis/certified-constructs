@@ -1,0 +1,142 @@
+\documentclass{llncs}
+
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+%\usepackage{listings}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{xspace}
+\usepackage{multirow}
+\pagestyle{plain}
+%\usepackage{graphicx}
+\usepackage{algorithm,algpseudocode}
+%\usepackage[T1]{fontenc} 
+\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+\renewcommand{\algorithmicensure}{\textbf{Output:}}
+
+\usepackage{a4wide}
+
+\input{macros}
+
+\usepackage{xcolor}
+\definecolor{linkcolor}{rgb}{0.65,0,0}
+\definecolor{citecolor}{rgb}{0,0.65,0}
+\definecolor{urlcolor}{rgb}{0,0,0.65}
+\usepackage[colorlinks=true, backref=page, linkcolor=linkcolor, urlcolor=urlcolor, citecolor=citecolor]{hyperref}
+
+\newif\ifpublic
+%\publictrue
+
+\title{Certified Verification of Algebraic Properties on
+Low-Level Mathematical Constructs in Cryptographic Programs} 
+
+\ifpublic
+\author{
+Ming-Hsien Tsai
+\and
+Bow-Yaw Wang
+\and
+Bo-Yin Yang
+%
+%\thanks{}
+}
+\institute
+{
+Institute of Information Science\\
+Academia Sinica\\
+128 Section 2 Academia Road, Taipei 115-29, Taiwan\\
+\email{mhtsai208@gmail.com, bywang@iis.sinica.edu.tw, by@crypto.tw}
+}
+\else
+\author{\vspace*{0cm}}
+\institute{\vspace*{0cm}\ }
+\fi
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+  Mathematical constructs are needed to perform algebraic operations
+  on the underlying mathematical structures of cryptosystems. 
+  Since they are invoked most frequently, these mathematical constructs
+  are written in assembly languages and often optimized manually. We
+  propose a fully certified technique to formally verify mathematical
+  constructs in X25519, the default elliptic curve Diffie-Hellman key
+  exchange protocol used in \openssh. Our technique first translates any
+  algebraic specification of mathematical constructs into an algebraic
+  problem. The algebraic 
+  problem in turn is solved by \coq and \singular. The proof assistant 
+  \coq is used to certify the translation and solution to algebraic
+  problems. We report our experiments on the verification of
+  arithmetic computation over the Galois field used in X25519, where
+  each element of the field is represented by a 255-bit number. We
+  also verify the Montgomery Ladderstep used in the key exchange
+  protocol.
+\end{abstract}
+
+\section{Introduction}
+\label{section:introduction}
+\input{introduction}
+
+\section{Preliminaries}
+\label{section:preliminaries}
+\input{preliminaries}
+
+\section{Domain Specific Language -- \mydsl}
+\label{section:domain-specific-language}
+\input{dsl}
+
+\section{Translation to Algebraic Problems}
+\label{section:translation}
+\input{translation}
+
+\subsection{Program Slicing}
+\label{subsection:translation:slicing}
+\input{slicing}
+
+
+\subsection{Static Single Assignments}
+\label{subsection:translation:static-single-assignment}
+\input{ssa}
+
+
+\subsection{Modular Polynomial Equation Entailment}
+\label{subsection:translation:multivariant-polynomial-equations}
+\input{polynomial-equations}
+
+\subsubsection*{Summary of Translation}
+\input{overview}
+
+
+\section{Solving Modular Polynomial Equation Entailment Problem}
+\label{section:solving-algebraic-equations}
+\input{solver}
+
+\section{Evaluation}
+\label{section:evaluation}
+\input{evaluation}
+
+\subsection{Arithmetic Computation over $\bbfGF(2^{255}-19)$}
+\label{subection:evaluation:multiplication}
+\input{multiplication}
+
+\subsection{The Montgomery Ladderstep}
+\label{subsection:evaluation:ladder-step}
+\input{ladder-step}
+
+\section{Conclusion}
+\label{section:conclusion}
+\input{conclusion}
+
+
+\bibliographystyle{splncs-sorted}
+\bibliography{refs}
+
+\end{document}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% eval: (TeX-PDF-mode 1)
+%%% TeX-master: "certified_vcg"
+%%% End: 

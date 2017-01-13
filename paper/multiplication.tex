@@ -1,0 +1,89 @@
+ 
+The operator $\Gplus$ is defined by arithmetic computation over
+$\bbfF$. In order to compute $p_0 \Gplus p_1$ for $p_0, p_1 \in G$,
+arithmetic operations over $\bbfF$ need to be implemented. Recall that
+an element in $\bbfF$ is represented by a 256-bit number. The na\"ive
+implementation for arithmetic operations over $\bbfF$ would require
+arithmetic computation over $\bbfZ$. Arithmetic computation for
+255-bit integers however is not available in commodity computing
+devices as of the year 2017. Long-integer arithmetic has to be carried
+out by limbs of 32 or 64 bits depending on the underlying computer
+architectures.
+
+In practice, efficient long-integer arithmetic however is more
+complicated. Consider subtracting a long integer from another. The
+na\"ive implementation would simply subtract by limbs, propagate carry
+flags, and add the prime number $\varrho$ if necessary. Carry flag
+propagation however may induce waiting time on architectures with
+multiple arithmetic logic units (ALUs) such as \todo{amd64? check!} 
+More importantly, executime time of the na\"ive subtraction varies
+when minuend is less than subtrahend. It allows timing attacks and is
+insecure. The na\"ive implementation of 255-bit subtraction should
+never be used in cryptographic primitives. 
+Figure~\ref{figure:dsl:subtraction}
+(Section~\ref{section:domain-specific-language}) in fact is an
+efficient and secure implementation of 255-bit subtraction for the
+AMD64 architecture. Notice that each limb can be computed in
+parallel. It also has constant execution time. 
+
+Long-integer multiplication is another interesting but much more
+complicated operation. The na\"ive implementation for 255-bit
+multiplication would compute a 510-bit result and then find the
+corresponding 255-bit representation by a modulo operation. The
+modulo operation however requires long-integer division. The na\"ive
+implementation is very inefficient. An efficient implementation for
+255-bit multiplication avoids division by performing modulo operations
+aggressively. Observe that $2^{255} \Feq 19$ in $\bbfGF(\varrho)$. 
+Whenever an intermediate result of the form $c \Ftimes 2^{255}$
+is obtained, it is replaced by $c \Ftimes 19$. Recall that
+elements in $\bbfF$ are represented by five limbs of 51-bit unsigned
+integers. Consider multiplying two 255-bit values
+\begin{equation*}
+  \begin{array}{lcccccccccccl}
+    x & = & \mathit{radix51} (x_4, x_3, x_2, x_1, x_0) & = &
+            2^{51 \times 4} x_4 & + & 2^{51 \times 3} x_3 & + &
+            2^{51 \times 2} x_2 & + & 2^{51 \times 1} x_1 & + &
+            2^{51 \times 0} x_0 \textmd{ and}\\
+    y & = & \mathit{radix51} (y_4, y_3, y_2, y_1, y_0) & = &
+            2^{51 \times 4} y_4 & + & 2^{51 \times 3} y_3 & + &
+            2^{51 \times 2} y_2 & + & 2^{51 \times 1} y_1 & + &
+            2^{51 \times 0} y_0.
+  \end{array}
+\end{equation*}
+The intermediate results $2^{255} x_4 y_1$, $2^{255} x_3 y_2$,
+$2^{255} x_2 y_3$, and $2^{255} x_1 y_4$ can all be replaced by 
+$19 x_4 y_1$, $19 x_3 y_2$, $19 x_2 y_3$, and $19 x_1 y_4$,
+respectively. Division is not needed in such implementations.
+
+We describe but a couple of optimizations in efficient implementations
+of arithmetic operations over $\bbfF$. Real-world implementations
+are necessarily optimized with various algebraic properties in
+$\bbfF$. In our experiments, we took real-world efficient and secure
+low-level implementations of arithmetic operations over
+$\bbfGF(\varrho)$ in~\todo{reference?}, manually translated source
+codes to our domain specific language, and specified their algebraic
+properties, and performed certified verification with our new technique. 
+Table~\ref{table:arithmetic-operations} summarizes the results.
+
+
+\begin{table}[ht]
+  \caption{Certified Verification of Arithmetic Operations over
+    $\bbfGF(\varrho)$}
+  \centering
+  \begin{tabular}{|c|c|c|c|}
+    \hline
+             & number of lines & time (seconds) & remark\\
+    \hline
+    addition & 10 &                       & $a \Fplus b$ \\
+    \hline
+    subtraction & 15 &                    & $a \Fminus b$ \\
+    \hline
+    multiplication & 169 &                & $a \Ftimes b$\\
+    \hline
+    multiplication by 121666 & 31 &       & $121666 \Ftimes a$\\
+    \hline
+    square & 124 &                        & $a \Ftimes a$\\
+    \hline
+  \end{tabular}
+  \label{table:arithmetic-operations}
+\end{table}
