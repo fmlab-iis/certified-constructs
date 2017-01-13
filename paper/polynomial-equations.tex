@@ -51,70 +51,6 @@ specified straightforwardly in \coq.
   \label{algorithm:polynomial-programs}
 \end{algorithm}
 
-\begin{figure}
-  \centering
-  \[
-  \begin{array}{l}
-  \forall 
-    (\dslcode{x}^0_0, \dslcode{x}^0_1, \dslcode{x}^0_2,
-    \dslcode{x}^0_3, \dslcode{x}^0_4,
-    \dslcode{y}^0_0, \dslcode{y}^0_1, \dslcode{y}^0_2,
-    \dslcode{y}^0_3, \dslcode{y}^0_4,
-    \dslcode{r}^0_0, \dslcode{r}^0_1, \dslcode{r}^0_2,
-    \dslcode{r}^0_3, \dslcode{r}^0_4,
-    \dslcode{r}^1_0, \dslcode{r}^1_1, \dslcode{r}^1_2,
-    \dslcode{r}^1_3, \dslcode{r}^1_4,
-    \dslcode{r}^2_0, \dslcode{r}^2_1, \dslcode{r}^2_2,
-    \dslcode{r}^2_3, \dslcode{r}^2_4) \in \bbfZ^{25}.\\
-  \hspace{.05\textwidth}\top \wedge
-  \left(
-  \begin{array}{lclcl}
-    \begin{array}{rclc}
-      \dslcode{r}^0_0 & = & \dslcode{x}^0_0 & \wedge \\
-      \dslcode{r}^0_1 & = & \dslcode{x}^0_1 & \wedge \\
-      \dslcode{r}^0_2 & = & \dslcode{x}^0_2 & \wedge \\
-      \dslcode{r}^0_3 & = & \dslcode{x}^0_3 & \wedge \\
-      \dslcode{r}^0_4 & = & \dslcode{x}^0_4 & \wedge \\
-    \end{array}
-    &\hspace{.01\textwidth}&
-    \begin{array}{rclc}
-      \dslcode{r}^1_0 & = & \dslcode{r}^0_0 + \dslcode{4503599627370458} & \wedge \\
-      \dslcode{r}^1_1 & = & \dslcode{r}^0_1 + \dslcode{4503599627370494} & \wedge \\
-      \dslcode{r}^1_2 & = & \dslcode{r}^0_2 + \dslcode{4503599627370494} & \wedge \\
-      \dslcode{r}^1_3 & = & \dslcode{r}^0_3 + \dslcode{4503599627370494} & \wedge \\
-      \dslcode{r}^1_4 & = & \dslcode{r}^0_4 + \dslcode{4503599627370494} & \wedge\\
-    \end{array}
-    &\hspace{.01\textwidth}&
-    \begin{array}{rclc}
-      \dslcode{r}^2_0 & = & \dslcode{r}^1_0 - \dslcode{y}^0_0 & \wedge \\
-      \dslcode{r}^2_1 & = & \dslcode{r}^1_1 - \dslcode{y}^0_1 & \wedge \\
-      \dslcode{r}^2_2 & = & \dslcode{r}^1_2 - \dslcode{y}^0_2 & \wedge \\
-      \dslcode{r}^2_3 & = & \dslcode{r}^1_3 - \dslcode{y}^0_3 & \wedge \\
-      \dslcode{r}^2_4 & = & \dslcode{r}^1_4 - \dslcode{y}^0_4
-    \end{array}
-  \end{array}
-  \right)\\
-    \\
-    \hspace{.05\textwidth}
-    \implies 
-    \mathit{radix}(\dslcode{x}^0_4, \dslcode{x}^0_3, \dslcode{x}^0_2,
-    \dslcode{x}^0_1, \dslcode{x}^0_0) -
-    \mathit{radix51}(\dslcode{y}^0_4, \dslcode{y}^0_3, \dslcode{y}^0_2,
-    \dslcode{y}^0_1, \dslcode{y}^0_0)
-    \equiv
-    \mathit{radix51}(\dslcode{r}^2_4, \dslcode{r}^2_3, \dslcode{r}^2_2,
-    \dslcode{r}^2_1, \dslcode{r}^2_0)
-    \mod \myprime
-  \end{array}
-  \]
-  \caption{Modular Polynomial Equation Entailment for \dslcode{subSSA}}
-  \label{figure:dsl:subtraction-polynomial}
-\end{figure}
-
-\noindent
-\emph{Example}.
-
-
 
 
 \begin{theorem}
@@ -142,6 +78,76 @@ specification.
   %equation entailment problem for $\hoaretriple{q}{p}{q'}$. 
   \label{definition:program-entailment}
 \end{definition}
+
+\begin{figure}
+  \centering
+  \[
+  \begin{array}{l}
+  \forall 
+    ({x}^0_0, {x}^0_1, {x}^0_2,
+     {x}^0_3, {x}^0_4,
+     {y}^0_0, {y}^0_1, {y}^0_2,
+     {y}^0_3, {y}^0_4,
+     {r}^0_0, {r}^0_1, {r}^0_2,
+     {r}^0_3, {r}^0_4,
+     {r}^1_0, {r}^1_1, {r}^1_2,
+     {r}^1_3, {r}^1_4,
+     {r}^2_0, {r}^2_1, {r}^2_2,
+     {r}^2_3, {r}^2_4) \in \bbfZ^{25}.\\
+  \hspace{.05\textwidth}\top \wedge
+  \left(
+  \begin{array}{lclcl}
+    \begin{array}{rclc}
+      {r}^0_0 & = & {x}^0_0 & \wedge \\
+      {r}^0_1 & = & {x}^0_1 & \wedge \\
+      {r}^0_2 & = & {x}^0_2 & \wedge \\
+      {r}^0_3 & = & {x}^0_3 & \wedge \\
+      {r}^0_4 & = & {x}^0_4 & \wedge \\
+    \end{array}
+    &\hspace{.01\textwidth}&
+    \begin{array}{rclc}
+      {r}^1_0 & = & {r}^0_0 + {4503599627370458} & \wedge \\
+      {r}^1_1 & = & {r}^0_1 + {4503599627370494} & \wedge \\
+      {r}^1_2 & = & {r}^0_2 + {4503599627370494} & \wedge \\
+      {r}^1_3 & = & {r}^0_3 + {4503599627370494} & \wedge \\
+      {r}^1_4 & = & {r}^0_4 + {4503599627370494} & \wedge\\
+    \end{array}
+    &\hspace{.01\textwidth}&
+    \begin{array}{rclc}
+      {r}^2_0 & = & {r}^1_0 - {y}^0_0 & \wedge \\
+      {r}^2_1 & = & {r}^1_1 - {y}^0_1 & \wedge \\
+      {r}^2_2 & = & {r}^1_2 - {y}^0_2 & \wedge \\
+      {r}^2_3 & = & {r}^1_3 - {y}^0_3 & \wedge \\
+      {r}^2_4 & = & {r}^1_4 - {y}^0_4
+    \end{array}
+  \end{array}
+  \right)\\
+    \hspace{.05\textwidth}
+    \implies 
+    \mathit{radix}({x}^0_4, {x}^0_3, {x}^0_2, {x}^0_1, {x}^0_0) -
+    \mathit{radix51}({y}^0_4, {y}^0_3, {y}^0_2, {y}^0_1, {y}^0_0)
+    \equiv
+    \mathit{radix51}({r}^2_4, {r}^2_3, {r}^2_2, {r}^2_1, {r}^2_0)
+    \mod \myprime
+  \end{array}
+  \]
+  \caption{Modular Polynomial Equation Entailment for \dslcode{subSSA}}
+  \label{figure:translation:subtraction-polynomial}
+\end{figure}
+
+\noindent
+\emph{Example}.
+The modular polynomial equation entailment problem coresponding to the
+algebraic specification of subtraction is shown in
+Figure~\ref{figure:translation:subtraction-polynomial}. The problem
+has 15 polynomial constraints with 25 integer variables. We would like
+to see if $\mathit{radix51}({r}^2_4, {r}^2_3, {r}^2_2,
+{r}^2_1, {r}^2_0)$ is the difference between $\mathit{radix}({x}^0_4,
+{x}^0_3, {x}^0_2, {x}^0_1, {x}^0_0)$ and $\mathit{radix51}({y}^0_4,
+{y}^0_3, {y}^0_2, {y}^0_1, {y}^0_0)$ in $\bbfGF(\varrho)$ under the
+constraints. 
+
+
 
 Algorithm~\ref{algorithm:polynomial-programs} is only sound for
 well-formed programs. 

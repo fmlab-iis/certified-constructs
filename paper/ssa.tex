@@ -133,6 +133,51 @@ continues to transform the next statement with the updated mapping
   \label{algorithm:ssa-programs}
 \end{algorithm}
 
+
+
+With the \coq specifications, we establish the correctness of our
+algorithms in two steps. We first show that the transformation indeed
+produces a program in single static assignment form.
+\begin{theorem}
+  Let $\theta_0(v) = 0$ for every $v \in V$ and $p \in P$.
+  If $\langle \hat{\theta}, \hat{p} \rangle$ $=
+  \textsc{SSAProgram}(\theta_0, p)$, then 
+  $\hat{p}$ is in single static assignment form.
+\end{theorem}
+
+Without loss of generality, we assume programs are well-formed. 
+A program is \emph{well-formed} if
+\begin{itemize}
+\item for every $\concat{v_h}{v_l} \leftarrow \dslcode{Split}(e, n)$, $v_h
+  \neq v_l$; and
+\item every variable must be assigned to a value before being used.
+\end{itemize}
+Well-formedness is preserved by our transformation. Formally, we have
+the following theorem.
+\begin{theorem}
+  Let $\theta_0(v) = 0$ for every $v \in V$ and $p \in P$ a
+  well-formed program. If $\langle \hat{\theta}, \hat{p} \rangle$ $=$ 
+  $\textsc{SSAProgram}(\theta_0, p)$, then $\hat{p}$ is well-formed.
+\end{theorem}
+
+The next theorem states that our transformation is both sound and
+complete. That is, a program specification is valid if and only if its
+corresponding specification in single static assignment form is valid.
+All theorems are formally certified in \coq. 
+\begin{theorem}
+  Let $\theta_0(v) = 0$ for every $v \in V$. For every $q, q' \in Q$
+  and $p \in P$,
+  \begin{center}
+    $\models \hoaretriple{q}{p}{q'}$ if and only if
+    $\models \hoaretriple{\textsc{SSAQ}(\theta_0, q)}
+    {\hat{p}}
+    {\textsc{SSAQ}(\hat{\theta}, q')}$
+  \end{center}
+  where $\langle \hat{\theta}, \hat{p} \rangle =
+  \textsc{SSAProgram}(\theta_0, p)$.
+  \label{theorem:ssa}
+\end{theorem}
+
 \begin{figure}
   \centering
   \[
@@ -171,12 +216,20 @@ continues to transform the next statement with the updated mapping
 % $(\dslcode{x}_0, \dslcode{x}_1, \dslcode{x}_2, \dslcode{x}_3,
 % \dslcode{x}_4, \dslcode{y}_0, \dslcode{y}_1, \dslcode{y}_2,
 % \dslcode{y}_3, \dslcode{y}_4)$
-  \label{figure:dsl:subtraction-ssa}
+  \label{figure:translation:subtraction-ssa}
 \end{figure}
 
 \noindent
 \emph{Example.}
-
+Figure~\ref{figure:translation:subtraction-ssa} gives the subtraction program
+\textsc{sub} in single static assignment form. Starting from $0$, the
+index of a variable is incremented when the variable is assigned to an
+expression. After the single static assignment translation, the
+variables $\dslcode{x}_i$, $\dslcode{y}_i$ are indexed by $0$ and
+$\dslcode{r}_i$ are indexed by $2$ for $0 \leq i \leq 4$. 
+Subsequently, variables in pre- and post-conditions of the algebraic
+specification for subtraction needs to be re-indexed. The
+corresponding algebraic specification is as follows.
 \[
 \begin{array}{c}
 \cond{\top}\\
@@ -195,49 +248,4 @@ continues to transform the next statement with the updated mapping
 }.
 \end{array}
 \]
-
-
-
-With the \coq specifications, we establish the correctness of our
-algorithms in two steps. We first show that the transformation indeed
-produces a program in single static assignment form.
-\begin{theorem}
-  Let $\theta_0(v) = 0$ for every $v \in V$ and $p \in P$.
-  If $\langle \hat{\theta}, \hat{p} \rangle$ $=
-  \textsc{SSAProgram}(\theta_0, p)$, then 
-  $\hat{p}$ is in single static assignment form.
-\end{theorem}
-
-Without loss of generality, we assume all programs are well-formed. 
-A program is \emph{well-formed} if
-\begin{itemize}
-\item for every $\concat{v_h}{v_l} \leftarrow \dslcode{Split}(e, n)$, $v_h
-  \neq v_l$; and
-\item every variable must be assigned to a value before being used.
-\end{itemize}
-Well-formedness is preserved by our transformation. Formally, we have
-the following theorem.
-\begin{theorem}
-  Let $\theta_0(v) = 0$ for every $v \in V$ and $p \in P$ a
-  well-formed program. If $\langle \hat{\theta}, \hat{p} \rangle$ $=$ 
-  $\textsc{SSAProgram}(\theta_0, p)$, then $\hat{p}$ is well-formed.
-\end{theorem}
-
-The next theorem states that our transformation is both sound and
-complete. That is, a program specification is valid if and only if its
-corresponding specification in single static assignment form is valid.
-All theorems are formally certified in \coq. 
-\begin{theorem}
-  Let $\theta_0(v) = 0$ for every $v \in V$. For every $q, q' \in Q$
-  and $p \in P$,
-  \begin{center}
-    $\models \hoaretriple{q}{p}{q'}$ if and only if
-    $\models \hoaretriple{\textsc{SSAQ}(\theta_0, q)}
-    {\hat{p}}
-    {\textsc{SSAQ}(\hat{\theta}, q')}$
-  \end{center}
-  where $\langle \hat{\theta}, \hat{p} \rangle =
-  \textsc{SSAProgram}(\theta_0, p)$.
-  \label{theorem:ssa}
-\end{theorem}
 
