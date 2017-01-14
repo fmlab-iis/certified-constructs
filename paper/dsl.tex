@@ -144,18 +144,12 @@ P$. $\nu'$ is a state after executing $p$ from $\nu$
 \ldots, \nu_n, \nu_{n+1} = \nu'$ with $(\nu_i, s_i, \nu_{i+1}) \in
 \Tr^*$ for every $1 \leq i < n$.
 
-
-For specifications, our domain specific language allows arbitrary
-conjunctions of (modulo) equations over expressions. The notation
-$\top$ denotes the Boolean value $\mathit{tt}$. We follow Hoare's
-formalism in cryptographic program specifications~\cite{H:69:ABCP}. 
-For any $q \in Q$, a state $\nu$ is a \emph{$q$-state} if 
-$q$ evaluates to $\mathit{tt}$ after replacing each variable $x$ with
-$\nu (x)$. Given $q, q' \in Q$ and $p \in P$, $\models
-\hoaretriple{q}{p}{q'}$ 
-denotes that the program $p$ will terminate and end in a $q'$-state
-provided it starts from any $q$-state. In $\hoaretriple{q}{p}{q'}$,
-$q$ and $q'$ are the pre- and post-conditions of $p$ respectively.
+For algebraic specifications, $\top$ denotes the Boolean value
+$\mathit{tt}$. A \emph{predicate} $q \in Q$ is an arbitrary
+conjunction of (modulo) equations over expressions are admissible. For
+$\nu \in \St$, we write $\bbfZ \models q[\nu]$ if $q$
+evaluates to $\btt$ after replacing each variable $v$ with
+$\nu(v)$; $\nu$ is moreover called a \emph{$q$-state}.
 
 \begin{eqnarray*}
   Q & ::= & \top
@@ -165,6 +159,15 @@ $q$ and $q'$ are the pre- and post-conditions of $p$ respectively.
   H & ::= & \cond{Q} P \cond{Q}
 \end{eqnarray*}
 
+We follow Hoare's formalism in algebraic specifications of
+mathematical constructs~\cite{H:69:ABCP}. In an algebraic
+specification $\hoaretriple{q}{p}{q'}$, $q$ and $q'$ are the \emph{pre}- and
+\emph{post-conditions} of $p$ respectively. Given $q, q' \in Q$ and $p
+\in P$, $\models \hoaretriple{q}{p}{q'}$ if for every $\nu, \nu' \in
+\St$, $\bbfZ \models q[\nu]$ and $\nu \goesto{p} \nu'$ imply
+$\bbfZ \models q'[\nu']$. Less formally, $\models
+\hoaretriple{q}{p}{q'}$ if executing $p$ from a $q$-state always
+results in a $q'$-state.
 
 \begin{figure}[ht]
   \centering
