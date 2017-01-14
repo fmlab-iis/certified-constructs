@@ -26,10 +26,8 @@ prove one conjunct at a time. That is, we aim to show that
   \bigwedge\limits_{i \in [I]} e_i (\vx) = e'_i (\vx) \wedge
   \bigwedge\limits_{j \in [J]} f_j (\vx) \equiv f'_j (\vx) \mod n_j
   \implies
-  g (\vx) = g' (\vx)
+  g (\vx) = g' (\vx); \textmd{ or}
 \end{equation}
-where $e_i (\vx), e'_i (\vx), f_j (\vx), f'_j (\vx), g (\vx), g' (\vx)
-\in \bbfZ[\vx]$ for $i \in [I], j \in [J]$; or, 
  \begin{equation}
    \label{eq:modular-polynomial-equation-implicant}
    \forall \vx. % \in \bbfZ^{|\vx|}.
@@ -42,7 +40,7 @@ where $e_i (\vx), e'_i (\vx), f_j (\vx), f'_j (\vx), h (\vx), h' (\vx)
 \in \bbfZ[\vx]$ for $i \in [I], j \in [J]$, and $m \in \bbfN$. 
 
 It is not hard to rewrite modular polynomial equations in antecedents
-in (\ref{eq:polynomial-equation-implicant}) and 
+of (\ref{eq:polynomial-equation-implicant}) and 
 (\ref{eq:modular-polynomial-equation-implicant}) to polynomial
 equations~\cite{H:07:AENTP}. By definition of modular polynomial equations,
 (\ref{eq:polynomial-equation-implicant}) is equivalent to
@@ -55,54 +53,12 @@ g (\vx) = g' (\vx),
 \]
 which in turn is equivalent to
 \[
-\forall \vx \vd. % \in \bbfZ^{|\vx|} \vd \in \bbfZ^{J}.
+\forall \vx \forall \vd. % \in \bbfZ^{|\vx|} \vd \in \bbfZ^{J}.
 \bigwedge\limits_{i \in [I]} e_i (\vx) = e'_i (\vx) \wedge
 \bigwedge\limits_{j \in [J]} f_j (\vx) = f'_j (\vx) + d_j \cdot n_j
 \implies
 g (\vx) = g' (\vx).
 \]
-
-\hide{
-Consider the following system of $r + s$ (modulo) equations:
-\begin{equation}
-  \label{equation:modulo-polynomials}
-  \begin{array}{rclcrcl}
-    e_1 (\vx) & = & e'_1 (\vx) 
-    & \hspace{.05\textwidth} &
-    f_1 (\vx) & \equiv & f'_1 (\vx) \mod n_1\\
-    & \vdots & & & & \vdots \\
-    e_i (\vx) & = & e'_i (\vx) & &
-    f_j (\vx) & \equiv & f'_j (\vx) \mod n_j\\
-    & \vdots & & & & \vdots \\
-    e_r (\vx) & = & e'_r (\vx) & &
-    f_s (\vx) & \equiv & f'_s (\vx) \mod n_s
-  \end{array}
-\end{equation}
-Our goal is to establish $g (\vx) = g' (\vx)$ or $h (\vx)
-\equiv h (\vx) \mod m$ for every $\vx$ satisfying the system
-of equations~(\ref{equation:modulo-polynomials}). In order to prove it
-in \coq, we first rewrite modulo equations $f_j (\vx) \equiv f'_j
-(\vx) \mod n_j$ to existentially quantified equations $\exists d_j
-\in \bbfZ, f_j (\vx) = f'_j (\vx) + n_j \times d_j$. In other
-words, we want to show that for every $\vx \in \bbfZ^{|\vx|}$
-satisfying 
-\begin{equation}
-  \label{equation:polynomials}
-  \begin{array}{rclcrcl}
-    e_1 (\vx) & = & e'_1 (\vx) 
-    & \hspace{.05\textwidth} &
-    f_1 (\vx) & = & f'_1 (\vx) + n_1 \times d_1 \\
-    & \vdots & & & & \vdots \\
-    e_i (\vx) & = & e'_i (\vx) & &
-    f_j (\vx) & = & f'_j (\vx) + n_j \times d_j \\
-    & \vdots & & & & \vdots \\
-    e_r (\vx) & = & e'_r (\vx) & &
-    f_s (\vx) & = & f'_s (\vx) + n_s \times d_s
-  \end{array}
-\end{equation}
-with some $d_1, \ldots, d_s$, then $g (\vx) = g' (\vx)$ or $h
-(\vx) \equiv h' (\vx) \mod m$. 
-}
 
 In other words, it suffices to consider the following
 \emph{polynomial equation entailment} problems~\cite{H:07:AENTP}:
@@ -111,10 +67,8 @@ In other words, it suffices to consider the following
   \forall \vx. % \in \bbfZ^{|\vx|}.
   \bigwedge\limits_{i \in [I]} e_i (\vx) = e'_i (\vx)
   \implies
-  g (\vx) = g' (\vx)
+  g (\vx) = g' (\vx); \textmd{ or}
 \end{equation}
-where $e_i (\vx), e'_i (\vx), g (\vx), g' (\vx) \in \bbfZ[\vx]$ for $i
-\in [I]$; or,
  \begin{equation}
    \label{eq:reduced-modular-polynomial-equation-implicant}
    \forall \vx. % \in \bbfZ^{|\vx|}.
@@ -125,10 +79,10 @@ where $e_i (\vx), e'_i (\vx), g (\vx), g' (\vx) \in \bbfZ[\vx]$ for $i
 where $e_i (\vx), e'_i (\vx), h (\vx), h' (\vx) \in \bbfZ[\vx]$ for $i
 \in [I]$ and $m \in \bbfN$.
 
-One way to solve the polynomial equation entailment problems
-~(\ref{eq:reduced-polynomial-equation-implicant})
-and~(\ref{eq:reduced-modular-polynomial-equation-implicant}) is by
-solving the ideal membership problem~\cite{H:07:AENTP,BS:16:GFEV}. 
+We solve the polynomial equation entailment
+problems~(\ref{eq:reduced-polynomial-equation-implicant}) 
+and~(\ref{eq:reduced-modular-polynomial-equation-implicant}) via
+the ideal membership problem~\cite{H:07:AENTP,BS:16:GFEV}. 
 For~(\ref{eq:reduced-polynomial-equation-implicant}), consider the
 ideal $I = \langle e_i(\vx) - e'_i(\vx) \rangle_{i \in [I]}$. Suppose
 $g(\vx) - g'(\vx) \in I$. Then there are $u_i(\vx) \in \bbfZ[\vx]$
@@ -136,8 +90,8 @@ such that
 \[
 g(\vx) - g'(\vx) = \sum\limits_{i \in [I]} u_i (\vx) [e_i (\vx) - e' (\vx)].
 \]
-Hence $g(\vx) - g'(\vx) = 0$ by the polynomial equations $e_i (\vx) =
-e' (\vx)$ for $i \in [I]$ in the antecedents
+Hence $g(\vx) - g'(\vx) = 0$ follows from  the polynomial equations
+$e_i (\vx) = e' (\vx)$ for $i \in [I]$ in the antecedents
 in~(\ref{eq:reduced-polynomial-equation-implicant}). Similarly, it
 suffices to check if $h(\vx) - h'(\vx) \in \langle m, e_i(\vx) -
 e'_i(\vx) \rangle_{i \in [I]}$

@@ -184,32 +184,32 @@ All theorems are formally certified in \coq.
   \[
   \begin{array}{lclcl}
     \begin{array}{rcl}
-    \textmd{1:} && \dslcode{r}^0_0 \leftarrow \dslcode{x}^0_0; \\
-    \textmd{2:} && \dslcode{r}^0_1 \leftarrow \dslcode{x}^0_1; \\
-    \textmd{3:} && \dslcode{r}^0_2 \leftarrow \dslcode{x}^0_2; \\
-    \textmd{4:} && \dslcode{r}^0_3 \leftarrow \dslcode{x}^0_3; \\
-    \textmd{5:} && \dslcode{r}^0_4 \leftarrow \dslcode{x}^0_4; \\
+    \textmd{1:} && {r}^0_0 \leftarrow {x}^0_0; \\
+    \textmd{2:} && {r}^0_1 \leftarrow {x}^0_1; \\
+    \textmd{3:} && {r}^0_2 \leftarrow {x}^0_2; \\
+    \textmd{4:} && {r}^0_3 \leftarrow {x}^0_3; \\
+    \textmd{5:} && {r}^0_4 \leftarrow {x}^0_4; \\
     \end{array}
     &\hspace{.05\textwidth}&
     \begin{array}{rcl}
     \textmd{6:} && 
-      \dslcode{r}^1_0 \leftarrow \dslcode{r}^0_0 + \dslcode{4503599627370458}; \\
+      {r}^1_0 \leftarrow {r}^0_0 + {4503599627370458}; \\
     \textmd{7:} &&
-      \dslcode{r}^1_1 \leftarrow \dslcode{r}^0_1 + \dslcode{4503599627370494}; \\
+      {r}^1_1 \leftarrow {r}^0_1 + {4503599627370494}; \\
     \textmd{8:} &&
-      \dslcode{r}^1_2 \leftarrow \dslcode{r}^0_2 + \dslcode{4503599627370494}; \\
+      {r}^1_2 \leftarrow {r}^0_2 + {4503599627370494}; \\
     \textmd{9:} &&
-      \dslcode{r}^1_3 \leftarrow \dslcode{r}^0_3 + \dslcode{4503599627370494}; \\
+      {r}^1_3 \leftarrow {r}^0_3 + {4503599627370494}; \\
     \textmd{10:} && 
-      \dslcode{r}^1_4 \leftarrow \dslcode{r}^0_4 + \dslcode{4503599627370494};\\
+      {r}^1_4 \leftarrow {r}^0_4 + {4503599627370494};\\
     \end{array}
     &\hspace{.05\textwidth}&
     \begin{array}{rcl}
-    \textmd{11:} && \dslcode{r}^2_0 \leftarrow \dslcode{r}^1_0 - \dslcode{y}^0_0; \\
-    \textmd{12:} && \dslcode{r}^2_1 \leftarrow \dslcode{r}^1_1 - \dslcode{y}^0_1; \\
-    \textmd{13:} && \dslcode{r}^2_2 \leftarrow \dslcode{r}^1_2 - \dslcode{y}^0_2; \\
-    \textmd{14:} && \dslcode{r}^2_3 \leftarrow \dslcode{r}^1_3 - \dslcode{y}^0_3; \\
-    \textmd{15:} && \dslcode{r}^2_4 \leftarrow \dslcode{r}^1_4 - \dslcode{y}^0_4;
+    \textmd{11:} && {r}^2_0 \leftarrow {r}^1_0 - {y}^0_0; \\
+    \textmd{12:} && {r}^2_1 \leftarrow {r}^1_1 - {y}^0_1; \\
+    \textmd{13:} && {r}^2_2 \leftarrow {r}^1_2 - {y}^0_2; \\
+    \textmd{14:} && {r}^2_3 \leftarrow {r}^1_3 - {y}^0_3; \\
+    \textmd{15:} && {r}^2_4 \leftarrow {r}^1_4 - {y}^0_4;
     \end{array}
   \end{array}
   \]
@@ -226,8 +226,8 @@ Figure~\ref{figure:translation:subtraction-ssa} gives the subtraction program
 \textsc{sub} in static single assignment form. Starting from $0$, the
 index of a variable is incremented when the variable is assigned to an
 expression. After the static single assignment translation, the
-variables $\dslcode{x}_i$, $\dslcode{y}_i$ are indexed by $0$ and
-$\dslcode{r}_i$ are indexed by $2$ for $0 \leq i \leq 4$. 
+variables ${x}_i$, ${y}_i$ are indexed by $0$ and
+${r}_i$ are indexed by $2$ for $0 \leq i \leq 4$. 
 Subsequently, variables in pre- and post-conditions of the algebraic
 specification for subtraction needs to be re-indexed. The
 corresponding algebraic specification is as follows.
@@ -238,13 +238,10 @@ corresponding algebraic specification is as follows.
 % (\dslcode{x}_0, \dslcode{x}_1, \dslcode{x}_2, \dslcode{x}_3,
 % \dslcode{x}_4, \dslcode{y}_0, \dslcode{y}_1, \dslcode{y}_2,
 % \dslcode{y}_3, \dslcode{y}_4)\\
-\cond{\mathit{radix}(\dslcode{x}^0_4, \dslcode{x}^0_3, \dslcode{x}^0_2,
-\dslcode{x}^0_1, \dslcode{x}^0_0) -
-\mathit{radix51}(\dslcode{y}^0_4, \dslcode{y}^0_3, \dslcode{y}^0_2,
-\dslcode{y}^0_1, \dslcode{y}^0_0)
+\cond{\mathit{radix}({x}^0_4, {x}^0_3, {x}^0_2, {x}^0_1, {x}^0_0) -
+\mathit{radix51}({y}^0_4, {y}^0_3, {y}^0_2, {y}^0_1, {y}^0_0)
 \equiv
-\mathit{radix51}(\dslcode{r}^2_4, \dslcode{r}^2_3, \dslcode{r}^2_2,
-\dslcode{r}^2_1, \dslcode{r}^2_0)
+\mathit{radix51}({r}^2_4, {r}^2_3, {r}^2_2, {r}^2_1, {r}^2_0)
 \mod \myprime
 }.
 \end{array}
