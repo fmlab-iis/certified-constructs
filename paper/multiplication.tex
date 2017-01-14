@@ -1,25 +1,23 @@
  
 The operator $\Gplus$ is defined by arithmetic computation over
-$\bbfF$. In order to compute $p_0 \Gplus p_1$ for $p_0, p_1 \in G$,
+$\bbfF$. In order to compute $P_0 \Gplus P_1$ for $P_0, P_1 \in G$,
 arithmetic operations over $\bbfF$ need to be implemented. Recall that
 an element in $\bbfF$ is represented by a 256-bit number. The na\"ive
 implementation for arithmetic operations over $\bbfF$ would require
 arithmetic computation over $\bbfZ$. Arithmetic computation for
 255-bit integers however is not available in commodity computing
 devices as of the year 2017. Long-integer arithmetic has to be carried
-out by limbs of 32 or 64 bits depending on the underlying computer
-architectures.
+out by limbs where a \emph{limb} is a 32- or 64-bit number depending on the
+underlying computer architectures.
 
 In practice, efficient long-integer arithmetic however is more
 complicated. Consider subtracting a long integer from another. The
 na\"ive implementation would simply subtract by limbs, propagate carry
-flags, and add the prime number $\varrho$ if necessary. Carry flag
-propagation however may induce waiting time on architectures with
-multiple arithmetic logic units (ALUs) such as \todo{amd64? check!} 
-More importantly, executime time of the na\"ive subtraction varies
-when minuend is less than subtrahend. It allows timing attacks and is
+flags, and add the prime number $\varrho$ if necessary. 
+Executime time of the na\"ive subtraction however varies when minuend
+is less than subtrahend. It thus allows timing attacks and is 
 insecure. The na\"ive implementation of 255-bit subtraction should
-never be used in cryptographic primitives. 
+never be used in cryptographic programs.
 Figure~\ref{figure:dsl:subtraction}
 (Section~\ref{section:domain-specific-language}) in fact is an
 %

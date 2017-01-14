@@ -21,22 +21,22 @@ implementations of $\Gplus$.
 %construct widely used to implement $\Gplus$ on Curve25519. We 
 %verify a low-level implementation of the mathematical construct in
 %this experiment. 
-Let $p \in G$ be an element of the group $\bbfG$ and hence a point on
-the elliptic curve Curve25519. We write $n \cdot p$ for
-$\overbrace{p \Gplus \cdots \Gplus p}^n \in G$ when $n \in \bbfN$.
+Let $P \in G$ be an element of the group $\bbfG$ and hence a point on
+the elliptic curve Curve25519. We write $[n]P$ for
+$\overbrace{P \Gplus \cdots \Gplus P}^n \in G$ when $n \in \bbfN$.
 The operation we want is a ``point multiplication'' which is given $n$
-and $p$ compute $n \cdot p$.  The na\"ive way to do this is ``double
+and $P$ compute $[n]P$.  The na\"ive way to do this is ``double
 and add''.  
 
 \begin{algorithm}[h]
   \begin{algorithmic}[1]  
-    \Function{mulp}{$n,p$}
+    \Function{mulp}{$n,P$}
     \begin{multicols}{2}
-      \State $t\leftarrow p$
+      \State $t\leftarrow P$
       \For{$i=\lfloor \log_2 n \rfloor-1\ \mathbf{downto}\ 1$}
-      \State $t\leftarrow 2\cdot p$
+      \State $t\leftarrow [2]P$
       \If{$($ bit $i$ of $n$ in binary $)=1$}
-      \State $t\leftarrow t\Gplus p$
+      \State $t\leftarrow t\Gplus P$
       \EndIf
       \EndFor
       \State \Return{$t$}
@@ -44,12 +44,12 @@ and add''.
     \end{multicols}
   \end{algorithmic}
 \end{algorithm}
-That is from $n \cdot p$ before step 4, we first compute $(2n) \cdot p$
-or $(2n+1) \cdot p$ by the end of step 7 by first doubling to
-$(2n) \cdot p$ (step 4), then decide to add $p$ or not depending on a
+That is from $[n]P$ before step 4, we first compute $[2n]P$
+or $[2n+1]P$ by the end of step 7 by first doubling to
+$[2n]P$ (step 4), then decide to add $P$ or not depending on a
 whether a corresponding bit is 1.  But this is obviously not time
 constant.  The obvious next step that we can double
-(i.e. compute $(2n)\cdot p$), \emph{always add} $p$, then choose one
+(i.e. compute $[2n]P$), \emph{always add} $P$, then choose one
 of the two using conditional moves.  This unfortunately is
 inefficient.  We need something equivalent to steps 4--7 but better.
 
@@ -84,20 +84,20 @@ inefficient.  We need something equivalent to steps 4--7 but better.
 \end{algorithm}
 
 Peter Montgomery derived a sequence of computations known
-as "the Montgomery Ladderstep", to compute both $p_0+p_1$ and $2\cdot p_0$
-simultaneously and efficiently knowing $p_1-p_0$.  The ladderstep can
+as "the Montgomery Ladderstep", to compute both $P_0+P_1$ and $[2]P_0$
+simultaneously and efficiently knowing $P_1-P_0$.  The ladderstep can
 be achieved only using $x$ coordinates on a set of curves today known as
 Montgomery curves, which include Curve25519.  Furthermore, we can
 avoid expensive divisions by using projective representations (i.e,
 instead of $x$ write $x/z$ and work  with fractions).  
 
 Provided that there is a time-constant way to swap the two input
-points, the Ladderstep starts from points $n \cdot p $ and
-$ (n+1) \cdot p $, to get either $ (2n) \cdot p $ and
-$(2n+1) \cdot p$, or $(2n+1) \cdot p$ and $(2n+2) \cdot p$ in constant
-time, the difference between the two points remaining $\pm p$.  This
-is equivalent to computing either $(2n) \cdot p$ or $(2n+1) \cdot p$
-from $n \cdot p$ and is sufficient to compute any $n \cdot p$ where
+points, the Ladderstep starts from points $[n]P $ and
+$[n+1]P $, to get either $ [2n]P $ and
+$[2n+1]P$, or $[2n+1]P$ and $[2n+2]P$ in constant
+time, the difference between the two points remaining $\pm P$.  This
+is equivalent to computing either $[2n]P$ or $[2n+1]P$
+from $[n]P$ and is sufficient to compute any $[n]P$ where
 $n$ has a known bitlength.  This is known as a differential
 addition chain and is one of the fundamental ways to avoid timing
 attacks.  For curves not equivalent to a Montgomery curve, a variant

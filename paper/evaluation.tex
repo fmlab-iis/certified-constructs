@@ -1,13 +1,13 @@
 
-We evaluate our techniques in real-world low-level cryptographic
-programs. In elliptic curve cryptography, arithmetic computation over
+We evaluate our techniques in real-world low-level mathematical
+constructs of X25519. 
+In elliptic curve cryptography, arithmetic computation over
 large finite fields is required for cryptographic primitives. For
 instance, the elliptic curve $y^2 = x^3 + 486662 x^2 + x$ used in 
 Curve25519 is over the Galois field $\bbfF = \bbfGF(\varrho)$ with
-$\varrho = 2^{255} - 19$. The arithmetic operations (addition and
-multiplication) in the curve are in fact over the finite field. To
-make the finite field $\bbfF$ explicit, we may rewrite the elliptic
-curve as the following equation: 
+$\varrho = 2^{255} - 19$. To
+make the finite field $\bbfF$ explicit, we rewrite the elliptic
+curve in the following equation: 
 \begin{equation}
   \label{eq:curve25519}
   y \Ftimes y \Feq x \Ftimes x \Ftimes x \Fplus
@@ -21,8 +21,9 @@ any pair $(x, y)$ satisfying (\ref{eq:curve25519}) (called a
 numbers. It can be shown that points on Curve25519 with the point at
 infinity form a commutative group $\bbfG = (G, \Gplus, \Gzero)$
 with $G = \{ (x, y) : x, y \textmd{ satisfying } (\ref{eq:curve25519})
-\}$. Let $p_0 = (x_0, y_0), p_1 = (x_1, y_1) \in G$. We have $-p_0 =
-(x_0, -y_0)$ and $p_0 \Gplus p_1 = (x, y)$ where
+\}$. Let $P_0 = (x_0, y_0), P_1 = (x_1, y_1) \in G$. We have $-P_0 =
+(x_0, -y_0)$. $P_0 \Gplus P_1$ is defined for three exclusive
+cases. When $P_0 \neq \pm P_1$, $P_0 + P_1 = (x, y)$ where
 \begin{eqnarray}
   m & = & (y_1 \Fminus y_0) \Fdiv (x_1 \Fminus x_0)\\\nonumber
   x & = & b \Ftimes m \Ftimes m \Fminus a \Fminus x_0 \Fminus x_1\\ \nonumber
@@ -32,11 +33,8 @@ with $G = \{ (x, y) : x, y \textmd{ satisfying } (\ref{eq:curve25519})
           \Fminus b \Ftimes m \Ftimes m \Ftimes m\Fminus y_1
   \label{eq:curve25519-group}
 \end{eqnarray}
-% 
-Note that these formulas are \emph{incomplete} because a division by
-zero occurs when $p_0=\pm p_1$.  When $p_0=-p_1$, the sum is
-the point at infinity; When $p_0= p_1$, the correct
-formulas are 
+When $P_0=-P_1$, the sum is the point at infinity; When $P_0= P_1$,
+$P_0 + P_1 = (x, y)$ where
 \begin{eqnarray}
   \label{eq:curve25519-dbl}
   m &=& (3  \Ftimes x_1 \Ftimes x_1 \Fplus 2\Ftimes a\Ftimes x_1\Fplus 1) 
@@ -48,7 +46,7 @@ formulas are
 The induced group $\bbfG$
 plays an important role in elliptic curve cryptography. It is
 essential to implement the commutative binary operation $\Gplus$ very
-efficiently in practical cryptography.
+efficiently in practice.
 
 %%% Local Variables: 
 %%% mode: latex
