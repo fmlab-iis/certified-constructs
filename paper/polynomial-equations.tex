@@ -146,13 +146,16 @@ to see if $\mathit{radix51}({r}^2_4, {r}^2_3, {r}^2_2,
 {y}^0_3, {y}^0_2, {y}^0_1, {y}^0_0)$ in $\bbfGF(\varrho)$ under the
 constraints. 
 
-
-
+\hide{
 Algorithm~\ref{algorithm:polynomial-programs} is only sound for
-well-formed programs. 
+well-formed programs. Its proof is also certified in \coq. 
+}
+
+By abusing the notation, we write $\bbfZ \models \forall
+\vx. \psi(\vx)$ when $\psi$ evaluates to $\btt$ after replacing each
+variable $v$ with $\nu(v)$ for every $\nu \in \St$.
 Theorem~\ref{theorem:program-to-q-soundness} establishes the
-soundnesss of our last transformation. Its proof is also certified in
-\coq. 
+soundnesss of Algorithm~\ref{algorithm:polynomial-programs}.
 \begin{theorem}
   \label{theorem:program-to-q-soundness}
   Let $q, q' \in Q$ be predicates, and $p \in P$ a program in single
