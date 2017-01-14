@@ -159,7 +159,13 @@ to prove modulo equalities in integral domains. We define a
 \coq tactic which invokes \dslcode{nsatz} or \dslcode{gbarith} 
 to prove $g (\vx) = g' (\vx)$ or $h (\vx) \equiv
 h' (\vx) \mod m$ respectively. Finding Gr\"obner bases for ideals is
-known to be an NP-complete problem. \todo{reference?} 
+%
+NP-complete, because finding Gr\"obner basis allows us to
+  solve a system of equations, which is NP-complete even for the
+  boolean field.  \todo{BY: Add reference for Michael Garey and David
+    Johnson, \emph{Computers and Intractability: A Guide to the Theory
+      of NP-Completeness}, Chap.~4}
+%
 The tactics \dslcode{nsatz} and \dslcode{gbarith} are not very
 scalable.
 For modulo arithmetic over large finite fields, their 
@@ -181,3 +187,10 @@ remove corresponding polynomial equations. For proving a polynomial
 equation $g (\vx) = g' (\vx)$, it turns out that the \coq tactic
 \dslcode{ring} suffices. For a modulo equation $h (\vx) \equiv
 h' (\vx) \mod m$, \todo{we need what?}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% eval: (TeX-PDF-mode 1)
+%%% eval: (TeX-source-correlate-mode 1)
+%%% TeX-master: "certified_vcg"
+%%% End: 
