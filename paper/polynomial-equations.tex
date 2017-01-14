@@ -1,6 +1,6 @@
 
 The last step transforms any algebraic program specification to the 
-modular polynomial equation entailment problem defined as follows. For
+modular polynomial equation entailment problem. For
 $q \in \Pred$, we write $q(\vx)$ to signify the free variables $\vx$
 occurred in $q$. Given $q(\vx), q'(\vx) \in \Pred$, the \emph{modular
   polynomial equation entailment} problem decides whether 
@@ -11,8 +11,7 @@ $\nu(x)$ for every valuation $\nu \in \St$. We write $\bbfZ \models
 \forall \vx. q(\vx) \implies q'(\vx)$ if it is indeed the case.
 
 Programs in static single assignment form can easily be transformed to
-conjunctions of polynomial equations. We first show how to transform
-statements into polynomial equations. An assignment statement is
+conjunctions of polynomial equations. An assignment statement is
 translated to a polynomial equation with a single variable on the left
 hand side. For a $\dslcode{Split}$ statement, it is transformed to an
 equation with a linear expression of the assigned variables on the
@@ -73,7 +72,7 @@ Definition~\ref{definition:program-entailment} gives the modular
 polynomial equation entailment problem corresponding to an algebraic
 program specification.
 \begin{definition}
-  For any $q, q' \in \Pred$ and $p \in \Prog$ in static single assignment
+  For $q, q' \in \Pred$ and $p \in \Prog$ in static single assignment
   form, define
   \begin{eqnarray*}
     \Pi(\hoaretriple{q}{p}{q'}) & \defn &
@@ -136,16 +135,16 @@ program specification.
 The modular polynomial equation entailment problem coresponding to the
 algebraic specification of subtraction is shown in
 Figure~\ref{figure:translation:subtraction-polynomial}. The problem
-has 15 polynomial equality constraints with 25 integer variables. We would like
-to see if $\mathit{radix51}({r}^2_4, {r}^2_3, {r}^2_2,
+has 15 polynomial equality constraints with 25 variables. We 
+want to know if $\mathit{radix51}({r}^2_4, {r}^2_3, {r}^2_2,
 {r}^2_1, {r}^2_0)$ is the difference between $\mathit{radix}({x}^0_4,
 {x}^0_3, {x}^0_2, {x}^0_1, {x}^0_0)$ and $\mathit{radix51}({y}^0_4,
 {y}^0_3, {y}^0_2, {y}^0_1, {y}^0_0)$ in $\bbfGF(\varrho)$ under the
 constraints. 
 
-Theorem~\ref{theorem:program-to-q-soundness} establishes the
-soundnesss of Algorithm~\ref{algorithm:polynomial-programs}. Its proof
-is again certified by \coq.
+The soundnesss of Algorithm~\ref{algorithm:polynomial-programs}
+is certified in \coq (Theorem~\ref{theorem:program-to-q-soundness}).
+% Its proof is again certified by \coq.
 \begin{theorem}
   \label{theorem:program-to-q-soundness}
   Let $q, q' \in \Pred$ be predicates, and $p \in \Prog$ a program in
