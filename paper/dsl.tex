@@ -100,7 +100,7 @@ to the variable $v$. The statement $\concat{v_h}{v_l} \leftarrow
 the lowest $n$ bits are stored in $v_l$ and the higher bits
 are stored in $v_h$. Define
 \begin{eqnarray*}
-\nu\remap{\vv}{\vd}(v) & \defn &
+\nu\mymapsto{\vv}{\vd}(v) & \defn &
 \left\{
    \begin{array}{ll}
      d_i & \textmd{if $v = v_i \in \vv$}\\
@@ -112,10 +112,10 @@ Consider the relation $\Tr \subseteq \St \times \Stmt \times \St$ defined
 as follows. 
 \begin{eqnarray*}
   (\nu, v \leftarrow e, \nu') \in \Tr & \textmd{if} &
-  \nu' = \nu\remap{v}{\valueof{e}_{\nu}}\\
+  \nu' = \nu\mymapsto{v}{\valueof{e}_{\nu}}\\
   (\nu, \concat{v_h}{v_l} \leftarrow \dslcode{Split} (e, n), \nu') \in
   \Tr & \textmd{if} &
-  \nu' = \nu\remap{v_h, v_l}{h, l}
+  \nu' = \nu\mymapsto{v_h, v_l}{h, l}
 \end{eqnarray*}
 where
 $l = \valueof{e}_{\nu} \mod 2^{\valueof{n}_{\nu}}$ and

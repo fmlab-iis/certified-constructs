@@ -3,36 +3,38 @@ A program is in \emph{single static assignment} form if every variable
 is assigned at most once. \todo{reference?} 
 Our next task is to correctly transform any
 program specification $\hoaretriple{q}{p}{q'}$ to single static
-assignments for any $q, q' \in Q$ and $p \in P$. Our transformation
+assignments for any $q, q' \in \Pred$ and $p \in \Prog$. Our transformation
 maintains a finite mapping $\theta$ from program variables to
-non-negative integers. For any program variable $v$, $v^{\theta(v)}$ is
-the most recently assigned program variable corresponding to $v$. 
-Such variables are always referred in
-expressions. Algorithm~\ref{algorithm:ssa-expressions} shows how
-to transform expressions with the finite mapping $\theta$ by
-structural induction.
+non-negative integers. For any variable $v$, $v^{\theta(v)}$ is
+the most recently assigned copy of $v$. Only the most recent copies of
+variables are referred in
+expressions. Algorithm~\ref{algorithm:ssa-expressions} shows how 
+to transform expressions with the finite mapping $\theta$ by a
+structural induction. For each variable, its most recent copy is
+returned by looking up the mapping $\theta$. Integers are
+unchanged. Other expressions are transformed recursively.
 
 \begin{algorithm}
   \begin{algorithmic}[1]
-    \Function{SSAE}{$\theta$, $e$}
+    \Function{SSAExpr}{$\theta$, $e$}
     \Match{$e$}
-      \Case{$V$} \Return $e^{\theta(e)}$ \EndCase
-      \Case{$Z$} \Return $e$ \EndCase
-      \Case{$-e'$} \Return $-$\Call{SSAE}{$\theta$, $e'$} \EndCase
+      \Case{$v$} \Return $v^{\theta(e)}$ \EndCase
+      \Case{$i$} \Return $i$ \EndCase
+      \Case{$-e'$} \Return $-$\Call{SSAExpr}{$\theta$, $e'$} \EndCase
       \Case{$e' + e''$} 
-        \Return \Call{SSAE}{$\theta$, $e'$} $+$ 
-                \Call{SSAE}{$\theta$, $e''$}
+        \Return \Call{SSAExpr}{$\theta$, $e'$} $+$ 
+                \Call{SSAExpr}{$\theta$, $e''$}
       \EndCase
       \Case{$e' - e''$} 
-        \Return \Call{SSAE}{$\theta$, $e'$} $-$ 
-                \Call{SSAE}{$\theta$, $e''$}
+        \Return \Call{SSAExpr}{$\theta$, $e'$} $-$ 
+                \Call{SSAExpr}{$\theta$, $e''$}
       \EndCase
       \Case{$e' \times e''$} 
-        \Return \Call{SSAE}{$\theta$, $e'$} $\times$ 
-                \Call{SSAE}{$\theta$, $e''$}
+        \Return \Call{SSAExpr}{$\theta$, $e'$} $\times$ 
+                \Call{SSAExpr}{$\theta$, $e''$}
       \EndCase
       \Case{$\dslcode{Pow}$($e'$, $n$)}
-        \Return $\dslcode{Pow}$(\Call{SSAE}{$\theta$, $e'$}, $n$)
+        \Return $\dslcode{Pow}$(\Call{SSAExpr}{$\theta$, $e'$}, $n$)
       \EndCase
     \EndMatch
     \EndFunction
@@ -41,29 +43,28 @@ structural induction.
   \label{algorithm:ssa-expressions}
 \end{algorithm}
 
-Similarly, predicates always refer to most recently assigned
-variables. They are transformed by the finite mapping $\theta$
-accordingly (Algorithm~\ref{algorithm:ssa-predicates}). Thanks to the
+Similarly, predicates must refer to most recent copies of 
+variables. They are transformed according to the finite mapping
+$\theta$ (Algorithm~\ref{algorithm:ssa-predicates}). Thanks to the
 formalization of finite mappings in \coq. Both
 Algorithms~\ref{algorithm:ssa-expressions}
-and~\ref{algorithm:ssa-predicates} are easily specified in the proof
-assistant.
+and~\ref{algorithm:ssa-predicates} are easily specified in \gallina.
 
 \begin{algorithm}
   \begin{algorithmic}[1]
-    \Function{SSAQ}{$\theta$, $q$}
+    \Function{SSAPred}{$\theta$, $q$}
     \Match{$q$}
       \Case{$\top$} \Return $\top$ \EndCase
       \Case{$e' = e''$} 
-        \Return \Call{SSAE}{$\theta$, $e$} = \Call{SSAE}{$\theta$, $e'$}
+        \Return \Call{SSAExpr}{$\theta$, $e$} = \Call{SSAExpr}{$\theta$, $e'$}
       \EndCase
       \Case{$e' \equiv e'' \mod n$} 
-        \Return \Call{SSAE}{$\theta$, $e$} $\equiv$ 
-                \Call{SSAE}{$\theta$, $e'$} $\mod n$
+        \Return \Call{SSAExpr}{$\theta$, $e$} $\equiv$ 
+                \Call{SSAExpr}{$\theta$, $e'$} $\mod n$
       \EndCase
       \Case{$q' \wedge q''$}
-        \Return \Call{SSAQ}{$\theta$, $q'$} $\wedge$
-                \Call{SSAQ}{$\theta$, $q''$}
+        \Return \Call{SSAPred}{$\theta$, $q'$} $\wedge$
+                \Call{SSAPred}{$\theta$, $q''$}
       \EndCase
     \EndMatch
     \EndFunction
@@ -75,26 +76,26 @@ assistant.
 Statement transformation is slightly more complicated. For
 expressions on the right hand side, they are transformed by the given
 finite mapping $\theta$. Algorithm~\ref{algorithm:ssa-statements} then
-updates the mapping and renames variables on the left hand side of
-statements. In the algorithm, $\theta\mymapsto{v}{n}$
-denotes the finite mapping which simultaneously maps $v$ to
-$n$ and $u$ to $\theta(u)$ for every $u \neq v$.
+updates the mapping and replaces variables on the left hand side of
+statements with their latest copies. In the algorithm, 
+$\theta\mymapsto{v}{n}$ denotes updating the finite mapping $\theta$
+by abusing the notation. 
 
 \begin{algorithm}
   \begin{algorithmic}[1]
-    \Function{SSAStatement}{$\theta$, $s$}
+    \Function{SSAStmt}{$\theta$, $s$}
     \Match{$s$}
       \Case{$v \leftarrow e$}
         \State{$\theta' \leftarrow \theta\mymapsto{v}{\theta(v) + 1}$}
         \State{\Return $\langle \theta'$, 
-                $v^{\theta'(v)} \leftarrow$ \Call{SSAE}{$\theta$, $e$}$\rangle$}
+                $v^{\theta'(v)} \leftarrow$ \Call{SSAExpr}{$\theta$, $e$}$\rangle$}
       \EndCase
       \Case{$\concat{v_h}{v_l} \leftarrow \dslcode{Split}(e, n)$}
         \State{$\theta_h \leftarrow \theta\mymapsto{v_h}{\theta(v_h) + 1}$}
         \State{$\theta_l \leftarrow \theta_h\mymapsto{v_l}{\theta_h(v_l) + 1}$}
         \State{\Return $\langle \theta_l$,
                 $\concat{v_h^{\theta_h(v_h)}}{v_l^{\theta_l(v_l)}} \leftarrow
-                \dslcode{Split}($\Call{SSAE}{$\theta$, $e$}$, n)
+                \dslcode{Split}($\Call{SSAExpr}{$\theta$, $e$}$, n)
                 \rangle$
               }
       \EndCase
@@ -114,16 +115,16 @@ continues to transform the next statement with the updated mapping
 
 \begin{algorithm}
   \begin{algorithmic}[1]
-    \Function{SSAProgram}{$\theta$, $p$}
+    \Function{SSAProg}{$\theta$, $p$}
     \Match{$p$}
       \Case{$\epsilon$}
         \Return $\langle \theta,$ $\epsilon \rangle$
       \EndCase
       \Case{$s; pp$}
         \State{$\langle \theta'$, $s' \rangle$ $\leftarrow$ 
-                 \Call{SSAStatement}{$\theta$, $s$}}
+                 \Call{SSAStmt}{$\theta$, $s$}}
         \State{$\langle \theta''$, $pp'' \rangle$ $\leftarrow$ 
-                 \Call{SSAProgram}{$\theta'$, $pp$}}
+                 \Call{SSAProg}{$\theta'$, $pp$}}
         \State{\Return $\langle \theta''$, $s'; pp'' \rangle$}
       \EndCase
     \EndMatch
@@ -161,7 +162,7 @@ the following theorem.
 \end{theorem}
 
 The next theorem states that our transformation is both sound and
-complete. That is, a program specification is valid if and only if its
+complete. That is, an algebraic specification is valid if and only if its
 corresponding specification in single static assignment form is valid.
 All theorems are formally certified in \coq. 
 \begin{theorem}
@@ -169,12 +170,12 @@ All theorems are formally certified in \coq.
   and $p \in P$,
   \begin{center}
     $\models \hoaretriple{q}{p}{q'}$ if and only if
-    $\models \hoaretriple{\textsc{SSAQ}(\theta_0, q)}
+    $\models \hoaretriple{\textsc{SSAPred}(\theta_0, q)}
     {\hat{p}}
-    {\textsc{SSAQ}(\hat{\theta}, q')}$
+    {\textsc{SSAPred}(\hat{\theta}, q')}$
   \end{center}
   where $\langle \hat{\theta}, \hat{p} \rangle =
-  \textsc{SSAProgram}(\theta_0, p)$.
+  \textsc{SSAProg}(\theta_0, p)$.
   \label{theorem:ssa}
 \end{theorem}
 

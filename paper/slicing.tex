@@ -26,10 +26,10 @@ recursively.
   \begin{algorithmic}[1]
     \Function{VarsInExpr}{$e$}
     \Match{$e$}
-      \Case{$\Var$}
-        \Return $\{ e \}$
+      \Case{$v$}
+        \Return $\{ v \}$
       \EndCase
-      \Case{$\Int$}
+      \Case{$i$}
         \Return $\emptyset$
       \EndCase
       \Case{$-e'$}
@@ -56,19 +56,19 @@ recursively.
 
 \begin{algorithm}
 \begin{algorithmic}[1]
-  \Function{VarsInQ}{$q$}
+  \Function{VarsInPred}{$q$}
   \Match{$q$}
     \Case{$\top$}
       $\emptyset$
     \EndCase
     \Case{$e' = e''$}
-      \Return \Call{VarsInE}{$e'$} $\cup$ \Call{VarsInE}{$e''$}
+      \Return \Call{VarsInExpr}{$e'$} $\cup$ \Call{VarsInExpr}{$e''$}
     \EndCase
     \Case{$e' \equiv e'' \mod \uscore$}
-      \Return \Call{VarsInE}{$e'$} $\cup$ \Call{VarsInE}{$e''$}
+      \Return \Call{VarsInExpr}{$e'$} $\cup$ \Call{VarsInExpr}{$e''$}
     \EndCase
     \Case{$q' \wedge q''$}
-      \Return \Call{VarsInQ}{$q'$} $\cup$ \Call{VarsInQ}{$q''$}
+      \Return \Call{VarsInPred}{$q'$} $\cup$ \Call{VarsInPred}{$q''$}
     \EndCase
   \EndMatch
   \EndFunction
@@ -88,13 +88,13 @@ assistant easily.
     \Match{$s$}
       \Case{$v \leftarrow e$}
         \IfThenElse{$v \in \mathit{vars}$}
-          {\Return $\langle$\Call{VarsInE}{$e$} 
+          {\Return $\langle$\Call{VarsInExpr}{$e$} 
             $\cup$ $(\mathit{vars} \setminus \{ v \})$, $s \rangle$}
           {\Return $\mathit{vars}$}
       \EndCase
       \Case{$\concat{v_h}{v_l} \leftarrow \dslcode{Split} (e, \uscore)$}
         \IfThenElse{$v_h$ or $v_l \in \mathit{vars}$}
-          {\Return $\langle$\Call{VarsInE}{$e$} $\cup$ 
+          {\Return $\langle$\Call{VarsInExpr}{$e$} $\cup$ 
             $(\mathit{vars} \setminus \{ v_h, v_l \})$, $s \rangle$}
           {\Return $\mathit{vars}$}
       \EndCase
@@ -155,7 +155,7 @@ following theorem is certified.
   For every $q, q' \in Q$ and $p \in P$,
   \begin{center}
   $\models \hoaretriple{q}{p}{q'}$ if and only if
-  $\models \hoaretriple{q}{\textsc{SliceProgram}(\textsc{VarsInQ}(q'), p)}
+  $\models \hoaretriple{q}{\textsc{SliceProgram}(\textsc{VarsInPred}(q'), p)}
   {q'}$.
   \end{center}
   \label{theorem:program-slicing}
