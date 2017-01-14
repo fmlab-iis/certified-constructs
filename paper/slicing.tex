@@ -3,7 +3,7 @@ Consider the problem of checking whether $\hoaretriple{q}{p}{q'}$ for
 arbitrary $q, q' \in Q$ and $p \in P$. Since $q'$ is arbitrary, the
 program $p$ may contain fragments irrevelant to $q'$. Program slicing
 is a simple yet effective technique to improve efficiency of
-verification through simplifying programs. \todo{reference?} 
+verification through simplifying programs~\cite{W:81:PS}.
 
 Here we slice programs in a backward manner. We initialize the set
 of \emph{cared} variables to be the variables appeared in the
