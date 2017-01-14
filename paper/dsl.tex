@@ -90,33 +90,54 @@ mathematical constructs in X25519.
 \begin{eqnarray*}
   S & ::= & V \leftarrow E 
             \ |\  \concat{V}{V} \leftarrow \dslcode{Split} (E, N)\\
-  P & ::= & \epsilon \ |\ S; P
 \end{eqnarray*}
 
 For low-level mathematical constructs, only assignments are allowed.
 The statement $v \leftarrow e$ assigns the value of $e$
 to the variable $v$. The statement $\concat{v_h}{v_l} \leftarrow
-\dslcode{Split}(e, n)$ splits the value of $e$ into higher and lowest
-$n$ bits. The higher and lower bits are stored in $v_h$ and $v_l$
-respectively. More formally, define the relation $\Tr \subseteq \St
-\times S \times \St$ as follows.
+\dslcode{Split}(e, n)$ splits the value of $e$ into two parts;
+the lowest $n$ bits are stored in $v_l$ and the higher bits
+are stored in $v_h$. Define
+\begin{eqnarray*}
+\nu[\vv \mapsto \vd](v) & \defn &
+\left\{
+   \begin{array}{ll}
+     d_i & \textmd{if $v = v_i \in \vv$}\\
+     \nu(v) & \textmd{otherwise}
+   \end{array}
+\right.
+\end{eqnarray*}
+Consider the relation $\Tr \subseteq \St \times S \times \St$ defined
+as follows. 
 \begin{eqnarray*}
   (\nu, v \leftarrow e, \nu') \in \Tr & \textmd{if} &
   \nu' = \nu[v \mapsto \valueof{e}_{\nu}]\\
   (\nu, \concat{v_h}{v_l} \leftarrow \dslcode{Split} (e, n), \nu') \in
   \Tr & \textmd{if} &
-  \nu' = \nu[v_h \mapsto h, v_l \mapsto l]
+  \nu' = \nu[v_h, v_l \mapsto h, l]
 \end{eqnarray*}
 where
 $l = \valueof{e}_{\nu} \mod 2^{\valueof{n}_{\nu}}$ and
 $h = (\valueof{e}_{\nu} - l) \div 2^{\valueof{n}_{\nu}}$.
+Hence $(\nu, s, \nu') \in \Tr$ denotes that the state $\nu$ transits to 
+the state $\nu'$ after executing the statement $s$.
 
+\begin{eqnarray*}
+  P & ::= & \epsilon \ |\ S; P
+\end{eqnarray*}
 
-A program is a sequence of statements. We denote the
-empty program by $\epsilon$. Observe that conditional branches are not
-allowed in cryptographic programs to prevent timing attacks. Every
-loop must repeat a fixed number of times and hence can be unfolded
-into a sequence of assignments.
+A program is a sequence of statements. We denote the empty program by
+$\epsilon$. Observe that conditional branches are not allowed in
+cryptographic programs to prevent timing attacks. The semantics of a
+program is defined by the relation 
+$\Tr^* \subseteq \St \times P \times \St$:
+\begin{eqnarray*}
+  (\nu, \epsilon, \nu) \in \Tr^*\\
+  (\nu, s; p, \nu'') \in \Tr^* & \textmd{if} &
+    \textmd{there is a } \nu' \textmd{ with }
+    (\nu, s, \nu') \in \Tr^* \textmd{ and }
+    (\nu, p, \nu'') \in \Tr^*.
+\end{eqnarray*}
 
 For specifications, our domain specific language allows arbitrary
 conjunctions of (modulo) equations over expressions. The notation
