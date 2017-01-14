@@ -1,13 +1,13 @@
 
 Consider the problem of checking whether $\hoaretriple{q}{p}{q'}$ for
 arbitrary $q, q' \in Q$ and $p \in P$. Since $q'$ is arbitrary, the
-program $p$ may contain portions irrevelant to $q'$. Program slicing
+program $p$ may contain fragments irrevelant to $q'$. Program slicing
 is a simple yet effective technique to improve efficiency of
 verification through simplifying programs. \todo{reference?} 
 
 Here we slice programs in a backward manner. We initialize the set
 of \emph{cared} variables to be the variables appeared in the
-post-condition $q'$. Starting from the last statement, we check if the
+post-condition $q'$. Starting from the last statement, we check if
 it assigns any cared variables. If not, we skip the last statement and
 move to the last but one statement. If it does, we keep the last
 statement, update the cared variables, and examine the second-to-last
@@ -16,33 +16,36 @@ program is processed.
 
 Our program slicing algorithm requires several auxiliary functions. 
 Algorithm~\ref{algorithm:variables-in-expressions} shows how to
-compute all variables occurred in an expression by structural
-induction on the expression. 
+compute all variables occurred in an expression by a structural
+induction on the expression. If the given expression is an integer,
+the empty set is returned; if it is a variable, the singleton with the
+variable is returned. Variables in other expressions are computed
+recursively. 
 
 \begin{algorithm}
   \begin{algorithmic}[1]
-    \Function{VarsInE}{$e$}
+    \Function{VarsInExpr}{$e$}
     \Match{$e$}
-      \Case{$V$}
+      \Case{$\Var$}
         \Return $\{ e \}$
       \EndCase
-      \Case{$Z$}
+      \Case{$\Int$}
         \Return $\emptyset$
       \EndCase
       \Case{$-e'$}
-        \Return \Call{VarsInE}{$e'$}
+        \Return \Call{VarsInExpr}{$e'$}
       \EndCase
       \Case{$e' + e''$}
-        \Return \Call{VarsInE}{$e'$} $\cup$ \Call{VarsInE}{$e''$}
+        \Return \Call{VarsInExpr}{$e'$} $\cup$ \Call{VarsInExpr}{$e''$}
       \EndCase
       \Case{$e' - e''$}
-        \Return \Call{VarsInE}{$e'$} $\cup$ \Call{VarsInE}{$e''$}
+        \Return \Call{VarsInExpr}{$e'$} $\cup$ \Call{VarsInExpr}{$e''$}
       \EndCase
       \Case{$e' \times e''$}
-        \Return \Call{VarsInE}{$e'$} $\cup$ \Call{VarsInE}{$e''$}
+        \Return \Call{VarsInExpr}{$e'$} $\cup$ \Call{VarsInExpr}{$e''$}
       \EndCase
       \Case{$\dslcode{Pow}(e', \uscore)$}
-        \Return \Call{VarsInE}{$e'$}
+        \Return \Call{VarsInExpr}{$e'$}
       \EndCase
     \EndMatch
     \EndFunction
@@ -75,8 +78,9 @@ induction on the expression.
 \end{algorithm}
 
 Similarly, Algorithm~\ref{algorithm:variables-in-predicates} computes
-the variables appeared in a predicate. Using a \coq formalization of
-sets, both algorithms are specified in the proof assistant easily.
+the variables appeared in a predicate. Using the \coq specification
+langauge \gallina, both algorithms are specified in the proof
+assistant easily. 
 
 \begin{algorithm}
   \begin{algorithmic}[1]
@@ -114,7 +118,7 @@ To slice a program, our algorithm proceeds from the last statement
 (Algorithm~\ref{algorithm:slicing-programs}). It invokes
 \textsc{SliceStatement} to see if the current statement is relevant
 and update cared variables if necessary. The algorithm recurses with
-the updated cared variables and previous statements.
+the updated cared variables and all but the last statements.
 
 \begin{algorithm}
   \begin{algorithmic}[1]
@@ -141,9 +145,11 @@ the updated cared variables and previous statements.
 \end{algorithm}
 
 We specify Algorithms~\ref{algorithm:slicing-statements}
-and~\ref{algorithm:slicing-programs} in \coq. Using the proof
-assistant, we show our program slicing algorithm is both sound and
-complete. That is, the proof of the following theorem is certified.
+and~\ref{algorithm:slicing-programs} in \gallina. Their properties are
+also specified and proven formally in \coq. Particularly, the
+soundness and completeness of our program slicing algorithm have been
+established in the proof assistant. That is, the proof of the
+following theorem is certified. 
 
 \begin{theorem}
   For every $q, q' \in Q$ and $p \in P$,
