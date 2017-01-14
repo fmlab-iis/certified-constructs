@@ -57,11 +57,34 @@ language. Variables are thus integer variables. An expression can be a
 constant, a variable, or a negative expression. Addition, subtraction,
 and multiplication of expressions are available. The expression
 $\dslcode{Pow}(e, n)$ denotes $e^n$ for any expression $e$ and positive
-integer $n$. For low-level cryptographic programs over large Galois
-fields, division is computed via multiplication; the bit-wise
-left-shifting can be modeled by multiplying
-$\dslcode{Pow}(\dslcode{2}, n)$. They are not necessary in our
-domain specific language. 
+integer $n$. More formally, let a \textit{state} $\nu : V \rightarrow
+\bbfZ$ be a mapping from variables to integers. Define the semantic
+function $\valueof{e}_{\nu}$ for an expression $e$ as follows.
+\[
+\begin{array}{rclcrcl}
+  \valueof{\dslcode{i}}_{\nu} & \defn & i \textmd{  for $\dslcode{i} \in Z$} 
+  & \hspace{.1\textwidth} &
+  \valueof{\dslcode{v}}_{\nu} & \defn & \nu(\dslcode{v}) 
+     \textmd{  for $\dslcode{v} \in V$}\\
+  \valueof{-e}_{\nu} & \defn & -_{\bbfZ}\valueof{e}_{\nu}
+  &&
+  \valueof{e_0 + e_1}_{\nu} & \defn & 
+     \valueof{e_0}_{\nu} +_{\bbfZ} \valueof{e_1}_{\nu} \\
+  \valueof{e_0 - e_1}_{\nu} & \defn & 
+     \valueof{e_0}_{\nu} -_{\bbfZ} \valueof{e_1}_{\nu}
+  &&
+  \valueof{e_0 \times e_1}_{\nu} & \defn & 
+     \valueof{e_0}_{\nu} \times_{\bbfZ} \valueof{e_1}_{\nu} \\
+  \valueof{\dslcode{Pow}(e, n)}_{\nu} & \defn & 
+     (\valueof{e}_{\nu})^{\valueof{n}_{\nu}}
+\end{array}
+\]
+
+Note that there is no expression for quotients, bitwise logical
+operations. Bitwise left shifting however can be modeled by
+multiplying $\dslcode{Pow}(2, n)$. Although \mydsl models a (very) 
+small subset of assembly, it suffices to encode crucial low-level
+mathematical constructs in X25519.
 
 \begin{eqnarray*}
   S & ::= & V \leftarrow E 
@@ -83,10 +106,11 @@ into a sequence of assignments.
 For specifications, our domain specific language allows arbitrary
 conjunctions of (modulo) equations over expressions. The notation
 $\top$ denotes the Boolean value $\mathit{tt}$. We follow Hoare's
-formalism in cryptographic program specifications~\cite{H:69:ABCP}. A program
-\textit{state} is a mapping from variables to integers. For any $q \in
-Q$, a \emph{$q$-state} is a state satisfying $q$.
-Given $q, q' \in Q$ and $p \in P$, $\models \hoaretriple{q}{p}{q'}$
+formalism in cryptographic program specifications~\cite{H:69:ABCP}. 
+For any $q \in Q$, a state $\nu$ is a \emph{$q$-state} if 
+$q$ evaluates to $\mathit{tt}$ after replacing each variable $x$ with
+$\nu (x)$. Given $q, q' \in Q$ and $p \in P$, $\models
+\hoaretriple{q}{p}{q'}$ 
 denotes that the program $p$ will terminate and end in a $q'$-state
 provided it starts from any $q$-state. In $\hoaretriple{q}{p}{q'}$,
 $q$ and $q'$ are the pre- and post-conditions of $p$ respectively.
