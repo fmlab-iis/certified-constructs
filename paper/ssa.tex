@@ -1,8 +1,8 @@
 
-A program is in \emph{single static assignment} form if every variable
+A program is in \emph{static single assignment} form if every variable
 is assigned at most once. \todo{reference?} 
 Our next task is to correctly transform any
-program specification $\hoaretriple{q}{p}{q'}$ to single static
+program specification $\hoaretriple{q}{p}{q'}$ to static single 
 assignments for any $q, q' \in \Pred$ and $p \in \Prog$. Our transformation
 maintains a finite mapping $\theta$ from program variables to
 non-negative integers. For any variable $v$, $v^{\theta(v)}$ is
@@ -39,7 +39,7 @@ unchanged. Other expressions are transformed recursively.
     \EndMatch
     \EndFunction
   \end{algorithmic}
-  \caption{Single Static Assignment Transformation for Expressions}
+  \caption{Static Single Assignment Transformation for Expressions}
   \label{algorithm:ssa-expressions}
 \end{algorithm}
 
@@ -69,7 +69,7 @@ and~\ref{algorithm:ssa-predicates} are easily specified in \gallina.
     \EndMatch
     \EndFunction
   \end{algorithmic}
-  \caption{Single Static Assignment Transformation for Predicates}
+  \caption{Static Single Assignment Transformation for Predicates}
   \label{algorithm:ssa-predicates}
 \end{algorithm}
 
@@ -102,14 +102,14 @@ by abusing the notation.
     \EndMatch
     \EndFunction
   \end{algorithmic}
-  \caption{Single Static Assignement Transformation for Statements}
+  \caption{Static Single Assignement Transformation for Statements}
   \label{algorithm:ssa-statements}
 \end{algorithm}
 
-It is now straightforward to transform programs to single static
+It is now straightforward to transform programs to static single
 assignment form. Using an initial mapping from variables to integers,
 the transformation starts from the first statement and obtains an
-updated mapping with a statement in single static assignment form. It
+updated mapping with a statement in static single assignment form. It
 continues to transform the next statement with the updated mapping
 (Algorithm~\ref{algorithm:ssa-programs}). 
 
@@ -130,7 +130,7 @@ continues to transform the next statement with the updated mapping
     \EndMatch
     \EndFunction
   \end{algorithmic}
-  \caption{Single Static Assignment for Programs}
+  \caption{Static Single Assignment for Programs}
   \label{algorithm:ssa-programs}
 \end{algorithm}
 
@@ -138,12 +138,12 @@ continues to transform the next statement with the updated mapping
 
 With the \coq specifications, we establish the correctness of our
 algorithms in two steps. We first show that the transformation indeed
-produces a program in single static assignment form.
+produces a program in static single assignment form.
 \begin{theorem}
   Let $\theta_0(v) = 0$ for every $v \in V$ and $p \in P$.
   If $\langle \hat{\theta}, \hat{p} \rangle$ $=
   \textsc{SSAProgram}(\theta_0, p)$, then 
-  $\hat{p}$ is in single static assignment form.
+  $\hat{p}$ is in static single assignment form.
 \end{theorem}
 
 Without loss of generality, we assume programs are well-formed. 
@@ -163,7 +163,7 @@ the following theorem.
 
 The next theorem states that our transformation is both sound and
 complete. That is, an algebraic specification is valid if and only if its
-corresponding specification in single static assignment form is valid.
+corresponding specification in static single assignment form is valid.
 All theorems are formally certified in \coq. 
 \begin{theorem}
   Let $\theta_0(v) = 0$ for every $v \in V$. For every $q, q' \in Q$
@@ -213,7 +213,7 @@ All theorems are formally certified in \coq.
     \end{array}
   \end{array}
   \]
-  \caption{Subtraction \dslcode{subSSA} in Single Static Assignment Form}
+  \caption{Subtraction \dslcode{subSSA} in Static Single Assignment Form}
 % $(\dslcode{x}_0, \dslcode{x}_1, \dslcode{x}_2, \dslcode{x}_3,
 % \dslcode{x}_4, \dslcode{y}_0, \dslcode{y}_1, \dslcode{y}_2,
 % \dslcode{y}_3, \dslcode{y}_4)$
@@ -223,9 +223,9 @@ All theorems are formally certified in \coq.
 \noindent
 \emph{Example.}
 Figure~\ref{figure:translation:subtraction-ssa} gives the subtraction program
-\textsc{sub} in single static assignment form. Starting from $0$, the
+\textsc{sub} in static single assignment form. Starting from $0$, the
 index of a variable is incremented when the variable is assigned to an
-expression. After the single static assignment translation, the
+expression. After the static single assignment translation, the
 variables $\dslcode{x}_i$, $\dslcode{y}_i$ are indexed by $0$ and
 $\dslcode{r}_i$ are indexed by $2$ for $0 \leq i \leq 4$. 
 Subsequently, variables in pre- and post-conditions of the algebraic

@@ -1,12 +1,16 @@
 
-The last step transforms any program specification to the 
+The last step transforms any algebraic program specification to the 
 modular polynomial equation entailment problem defined as follows. For
-$q \in Q$, we write $q(\vx)$ to signify the free variables $\vx$
-occurred in $q$. Given $q(\vx), q'(\vx) \in Q$, the \emph{modular
-  polynomial equation entailment} problem decides whether $\forall
-\vx. q(\vx) \implies q'(\vx)$ holds for all $\vx \in \bbfZ^{|\vx|}$.
+$q \in \Pred$, we write $q(\vx)$ to signify the free variables $\vx$
+occurred in $q$. Given $q(\vx), q'(\vx) \in \Pred$, the \emph{modular
+  polynomial equation entailment} problem decides whether 
+$q(\vx) \implies q'(\vx)$ holds when $\vx$ are substituted for
+arbitrary integers. That is, we want to check if $q(\vx) \implies
+q'(\vx)$ evaluates to $\btt$ after each variable $x$ is replaced by
+$\nu(x)$ for every valuation $\nu \in \St$. We write $\bbfZ \models
+\forall \vx. q(\vx) \implies q'(\vx)$ if it is indeed the case.
 
-Programs in single static assignment form can easily be transformed to
+Programs in static single assignment form can easily be transformed to
 conjunctions of polynomial equations. We first show how to transform
 statements into polynomial equations. An assignment statement is
 translated to a polynomial equation with a single variable on the left
@@ -15,7 +19,7 @@ equation with a linear expression of the assigned variables on the
 left hand side (Algorithm~\ref{algorithm:polynomial-statements}). 
 \begin{algorithm}
   \begin{algorithmic}[1]
-    \Function{StatementToPolyEQ}{$s$}
+    \Function{StmtToPolyEQ}{$s$}
     \Match{$s$}
       \Case{$v \leftarrow e$}
         \Return $v = e$
@@ -30,19 +34,18 @@ left hand side (Algorithm~\ref{algorithm:polynomial-statements}).
   \label{algorithm:polynomial-statements}
 \end{algorithm}
 
-A program is transformed to the conjunction of polynomial
-equations corresponding to its statements
-(Algorithm~\ref{algorithm:polynomial-programs}). Both algorithms are
-specified straightforwardly in \coq.
+A program in static single assignment form is transformed to the
+conjunction of polynomial equations corresponding to its statements
+(Algorithm~\ref{algorithm:polynomial-programs}). 
 
 \begin{algorithm}
   \begin{algorithmic}[1]
-    \Function{ProgramToPolyEQ}{$p$}
+    \Function{ProgToPolyEQ}{$p$}
     \Match{$p$}
       \Case{$\epsilon$} \Return $\top$ \EndCase
       \Case{$s; pp$}
-        \Return \Call{StatementToPolyEQ}{$s$} $\wedge$
-                \Call{ProgramToPolyEQ}{$pp$}
+        \Return \Call{StmtToPolyEQ}{$s$} $\wedge$
+                \Call{ProgToPolyEQ}{$pp$}
       \EndCase
     \EndMatch
     \EndFunction
@@ -51,30 +54,33 @@ specified straightforwardly in \coq.
   \label{algorithm:polynomial-programs}
 \end{algorithm}
 
-
+Algorithm~\ref{algorithm:polynomial-statements}
+and~\ref{algorithm:polynomial-programs} are specified straightforwardly 
+in \gallina. We use the proof assistant \coq to prove properties
+about the algorithms. First, note that $\textsc{ProgToPolyEQ}(p) \in
+\Pred$ for every $p \in \Prog$. The following theorem shows that any
+behavior of the program $p$ is a solution to the system of polynomial
+equations $\textsc{ProgToPolyEQ}(p)$. In other words,
+$\textsc{ProgToPolyEQ}(p)$ gives an abstraction of the program $p$.
 
 \begin{theorem}
-  Let $p \in P$ be a well-formed program in static single assignment
+  Let $p \in \Prog$ be a well-formed program in static single assignment
   form. For every $\nu, \nu' \in \St$ with $\nu \goesto{p} \nu'$, 
-  we have $\bbfZ \models \textsc{ProgramToPolyEQ}(p) [\nu']$.
+  we have $\bbfZ \models \textsc{ProgToPolyEQ}(p) [\nu']$.
 \end{theorem}
 
-
-Note that $\textsc{ProgramToPolyEQ}(p) \in Q$ for every $p \in P$.
 Definition~\ref{definition:program-entailment} gives the modular
-polynomial equation entailment problem corresponding to a program
-specification.
+polynomial equation entailment problem corresponding to an algebraic
+program specification.
 \begin{definition}
-  For any $q, q' \in Q$ and $p \in P$ in single static assignment
+  For any $q, q' \in \Pred$ and $p \in \Prog$ in static single assignment
   form, define
   \begin{eqnarray*}
     \Pi(\hoaretriple{q}{p}{q'}) & \defn &
-    \forall \vx. q(\vx) \wedge \varphi(\vx) \implies q'(\vx)
+    q(\vx) \wedge \varphi(\vx) \implies q'(\vx)
   \end{eqnarray*}
   where $\varphi(\vx) =
   \textsc{ProgramToPolyEQ}(p)$. 
-  %$\Pi(\hoaretriple{q}{p}{q'})$ is called the modular polynomial
-  %equation entailment problem for $\hoaretriple{q}{p}{q'}$. 
   \label{definition:program-entailment}
 \end{definition}
 
@@ -82,18 +88,7 @@ specification.
   \centering
   \[
   \begin{array}{l}
-  \forall 
-     {x}^0_0, {x}^0_1, {x}^0_2,
-     {x}^0_3, {x}^0_4,
-     {y}^0_0, {y}^0_1, {y}^0_2,
-     {y}^0_3, {y}^0_4,
-     {r}^0_0, {r}^0_1, {r}^0_2,
-     {r}^0_3, {r}^0_4,
-     {r}^1_0, {r}^1_1, {r}^1_2,
-     {r}^1_3, {r}^1_4,
-     {r}^2_0, {r}^2_1, {r}^2_2,
-     {r}^2_3, {r}^2_4).\\
-  \hspace{.05\textwidth}\top \wedge
+  \top \wedge
   \left(
   \begin{array}{lclcl}
     \begin{array}{rclc}
@@ -139,28 +134,21 @@ specification.
 The modular polynomial equation entailment problem coresponding to the
 algebraic specification of subtraction is shown in
 Figure~\ref{figure:translation:subtraction-polynomial}. The problem
-has 15 polynomial constraints with 25 integer variables. We would like
+has 15 polynomial equality constraints with 25 integer variables. We would like
 to see if $\mathit{radix51}({r}^2_4, {r}^2_3, {r}^2_2,
 {r}^2_1, {r}^2_0)$ is the difference between $\mathit{radix}({x}^0_4,
 {x}^0_3, {x}^0_2, {x}^0_1, {x}^0_0)$ and $\mathit{radix51}({y}^0_4,
 {y}^0_3, {y}^0_2, {y}^0_1, {y}^0_0)$ in $\bbfGF(\varrho)$ under the
 constraints. 
 
-\hide{
-Algorithm~\ref{algorithm:polynomial-programs} is only sound for
-well-formed programs. Its proof is also certified in \coq. 
-}
-
-By abusing the notation, we write $\bbfZ \models \forall
-\vx. \psi(\vx)$ when $\psi$ evaluates to $\btt$ after replacing each
-variable $v$ with $\nu(v)$ for every $\nu \in \St$.
 Theorem~\ref{theorem:program-to-q-soundness} establishes the
-soundnesss of Algorithm~\ref{algorithm:polynomial-programs}.
+soundnesss of Algorithm~\ref{algorithm:polynomial-programs}. Its proof
+is again certified by \coq.
 \begin{theorem}
   \label{theorem:program-to-q-soundness}
-  Let $q, q' \in Q$ be predicates, and $p \in P$ a program in single
-  static assignment form and well-formed. 
-  If $\bbfZ \models \Pi(\hoaretriple{q}{p}{q'})$, then
+  Let $q, q' \in \Pred$ be predicates, and $p \in \Prog$ a program in
+  static single assignment form and well-formed. 
+  If $\bbfZ \models \forall \vx.\Pi(\hoaretriple{q}{p}{q'})$, then
   $\models$ $\hoaretriple{q}{p}{q'}$.
 \end{theorem}
 

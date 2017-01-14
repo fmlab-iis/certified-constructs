@@ -1,6 +1,6 @@
 
-Consider any predicates $q, q' \in Q$ and well-formed program $p \in
-P$. Let $\theta_0 (v) = 0$ for every $v \in V$. By
+Consider any predicates $q, q' \in \Pred$ and well-formed program $p \in
+\Prog$. Let $\theta_0 (v) = 0$ for every $v \in \Var$. By
 Theorem~\ref{theorem:program-slicing}, \ref{theorem:ssa}, and
 \ref{theorem:program-to-q-soundness}, we have the following deduction:
 \begin{equation*}
@@ -8,22 +8,22 @@ Theorem~\ref{theorem:program-slicing}, \ref{theorem:ssa}, and
     & \models \hoaretriple{q}{p}{q'}\\
     \Leftrightarrow
     & \models 
-      \hoaretriple{q}{\textsc{SliceProgram}(\textsc{VarsInQ}(q'), p)}{q'}
+      \hoaretriple{q}{\textsc{SliceProg}(\textsc{VarsInPred}(q'), p)}{q'}
     & \textmd{ (Theorem~\ref{theorem:program-slicing})}\\
     \Leftrightarrow
     & \models
-      \hoaretriple{\textsc{SSAQ}(\theta_0, q)}
+      \hoaretriple{\textsc{SSAPred}(\theta_0, q)}
       {\hat{p}}
-      {\textsc{SSAQ}(\hat{\theta}, q')}
+      {\textsc{SSAPred}(\hat{\theta}, q')}
     & \textmd{ (Theorem~\ref{theorem:ssa})}\\
     &
       \textmd{where } \langle \hat{\theta}, \hat{p} \rangle = 
-      \textsc{SSAProgram} (\theta_0, \textsc{SliceProgram}
-      (\textsc{VarsInQ}(q'), p))\\
+      \textsc{SSAProg} (\theta_0, \textsc{SliceProg}
+      (\textsc{VarsInPred}(q'), p))\\
     \Leftarrow
-    & \bbfZ \models \Pi (\hoaretriple{\textsc{SSAQ}(\theta_0, q)}
-      {\hat{p}}
-      {\textsc{SSAQ}(\hat{\theta}, q')})
+    & \bbfZ \models \forall \vx.
+      \Pi (\hoaretriple{\textsc{SSAPred}(\theta_0, q)} {\hat{p}}
+      {\textsc{SSAPred}(\hat{\theta}, q')})
     & \textmd{ (Theorem~\ref{theorem:program-to-q-soundness})}
   \end{array}
 \end{equation*}

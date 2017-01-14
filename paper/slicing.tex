@@ -122,7 +122,7 @@ the updated cared variables and all but the last statements.
 
 \begin{algorithm}
   \begin{algorithmic}[1]
-    \Function{SliceProgram}{$\mathit{vars}$, $p$}
+    \Function{SliceProg}{$\mathit{vars}$, $p$}
     \Match{$p$}
       \Case{$\epsilon$}
         \Return $\epsilon$
@@ -130,10 +130,10 @@ the updated cared variables and all but the last statements.
       \Case{$pp; s;$}
         \Match{\Call{SliceStatement}{$\mathit{vars}$, $s$}}
           \Case{$\mathit{vars}'$}
-            \Return \Call{SliceProgram}{$\mathit{vars}'$, $pp;$}
+            \Return \Call{SliceProg}{$\mathit{vars}'$, $pp;$}
           \EndCase
           \Case{$\langle \mathit{vars}'$, $s' \rangle$}
-            \Return \Call{SliceProgram}{$\mathit{vars}'$, $pp$}$\ s';$
+            \Return \Call{SliceProg}{$\mathit{vars}'$, $pp$}$\ s';$
           \EndCase
         \EndMatch
       \EndCase
@@ -155,7 +155,7 @@ following theorem is certified.
   For every $q, q' \in Q$ and $p \in P$,
   \begin{center}
   $\models \hoaretriple{q}{p}{q'}$ if and only if
-  $\models \hoaretriple{q}{\textsc{SliceProgram}(\textsc{VarsInPred}(q'), p)}
+  $\models \hoaretriple{q}{\textsc{SliceProg}(\textsc{VarsInPred}(q'), p)}
   {q'}$.
   \end{center}
   \label{theorem:program-slicing}
