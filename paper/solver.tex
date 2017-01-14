@@ -3,7 +3,7 @@ By Theorem~\ref{theorem:program-to-q-soundness}, it remains to show
 that 
 \[
 \begin{array}{l}
-  \forall \vx \in \bbfZ^{|\vx|}.
+  \forall \vx. % \in \bbfZ^{|\vx|}.
   \bigwedge\limits_{i \in [I]} e_i (\vx) = e'_i (\vx) \wedge
   \bigwedge\limits_{j \in [J]} f_j (\vx) \equiv f'_j (\vx) \mod n_j
   \implies
@@ -22,7 +22,7 @@ implicant is a conjunction of (modulo) equations, it suffces to
 prove one conjunct at a time. That is, we aim to show that 
 \begin{equation}
   \label{eq:polynomial-equation-implicant}
-  \forall \vx \in \bbfZ^{|\vx|}.
+  \forall \vx. % \in \bbfZ^{|\vx|}.
   \bigwedge\limits_{i \in [I]} e_i (\vx) = e'_i (\vx) \wedge
   \bigwedge\limits_{j \in [J]} f_j (\vx) \equiv f'_j (\vx) \mod n_j
   \implies
@@ -32,7 +32,7 @@ where $e_i (\vx), e'_i (\vx), f_j (\vx), f'_j (\vx), g (\vx), g' (\vx)
 \in \bbfZ[\vx]$ for $i \in [I], j \in [J]$; or, 
  \begin{equation}
    \label{eq:modular-polynomial-equation-implicant}
-   \forall \vx \in \bbfZ^{|\vx|}.
+   \forall \vx. % \in \bbfZ^{|\vx|}.
    \bigwedge\limits_{i \in [I]} e_i (\vx) = e'_i (\vx) \wedge
    \bigwedge\limits_{j \in [J]} f_j (\vx) \equiv f'_j (\vx) \mod n_j
    \implies
@@ -47,7 +47,7 @@ in (\ref{eq:polynomial-equation-implicant}) and
 equations~\cite{H:07:AENTP}. By definition of modular polynomial equations,
 (\ref{eq:polynomial-equation-implicant}) is equivalent to
 \[
-\forall \vx \in \bbfZ^{|\vx|}.
+\forall \vx. % \in \bbfZ^{|\vx|}.
 \bigwedge\limits_{i \in [I]} e_i (\vx) = e'_i (\vx) \wedge
 \bigwedge\limits_{j \in [J]} [\exists d_j. f_j (\vx) = f'_j (\vx) + d_j \cdot n_j]
 \implies
@@ -55,7 +55,7 @@ g (\vx) = g' (\vx),
 \]
 which in turn is equivalent to
 \[
-\forall \vx \in \bbfZ^{|\vx|} \vd \in \bbfZ^{J}.
+\forall \vx \vd. % \in \bbfZ^{|\vx|} \vd \in \bbfZ^{J}.
 \bigwedge\limits_{i \in [I]} e_i (\vx) = e'_i (\vx) \wedge
 \bigwedge\limits_{j \in [J]} f_j (\vx) = f'_j (\vx) + d_j \cdot n_j
 \implies
@@ -108,7 +108,7 @@ In other words, it suffices to consider the following
 \emph{polynomial equation entailment} problems~\cite{H:07:AENTP}:
 \begin{equation}
   \label{eq:reduced-polynomial-equation-implicant}
-  \forall \vx \in \bbfZ^{|\vx|}.
+  \forall \vx. % \in \bbfZ^{|\vx|}.
   \bigwedge\limits_{i \in [I]} e_i (\vx) = e'_i (\vx)
   \implies
   g (\vx) = g' (\vx)
@@ -117,7 +117,7 @@ where $e_i (\vx), e'_i (\vx), g (\vx), g' (\vx) \in \bbfZ[\vx]$ for $i
 \in [I]$; or,
  \begin{equation}
    \label{eq:reduced-modular-polynomial-equation-implicant}
-   \forall \vx \in \bbfZ^{|\vx|}.
+   \forall \vx. % \in \bbfZ^{|\vx|}.
    \bigwedge\limits_{i \in [I]} e_i (\vx) = e'_i (\vx)
    \implies
    h (\vx) \equiv h' (\vx) \mod m
@@ -162,9 +162,7 @@ h' (\vx) \mod m$ respectively. Finding Gr\"obner bases for ideals is
 %
 NP-complete, because finding Gr\"obner basis allows us to
   solve a system of equations, which is NP-complete even for the
-  boolean field.  \todo{BY: Add reference for Michael Garey and David
-    Johnson, \emph{Computers and Intractability: A Guide to the Theory
-      of NP-Completeness}, Chap.~4}
+  boolean field~\cite{GJ:1979:CAI}.
 %
 The tactics \dslcode{nsatz} and \dslcode{gbarith} are not very
 scalable.
