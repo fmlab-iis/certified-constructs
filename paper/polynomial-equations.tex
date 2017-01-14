@@ -55,9 +55,8 @@ specified straightforwardly in \coq.
 
 \begin{theorem}
   Let $p \in P$ be a well-formed program in static single assignment
-  form. 
-\todo{Explain polynomial equation is an abstraction. It admits all
-  program behaviors and definitely more.}
+  form. For every $\nu, \nu' \in \St$ with $\nu \goesto{p} \nu'$, 
+  we have $\bbfZ \models \textsc{ProgramToPolyEQ}(p) [\nu']$.
 \end{theorem}
 
 
@@ -70,7 +69,7 @@ specification.
   form, define
   \begin{eqnarray*}
     \Pi(\hoaretriple{q}{p}{q'}) & \defn &
-    \forall \vx \in \bbfZ^{|\vx|}. q(\vx) \wedge \varphi(\vx) \implies q'(\vx)
+    \forall \vx. q(\vx) \wedge \varphi(\vx) \implies q'(\vx)
   \end{eqnarray*}
   where $\varphi(\vx) =
   \textsc{ProgramToPolyEQ}(p)$. 
@@ -84,7 +83,7 @@ specification.
   \[
   \begin{array}{l}
   \forall 
-    ({x}^0_0, {x}^0_1, {x}^0_2,
+     {x}^0_0, {x}^0_1, {x}^0_2,
      {x}^0_3, {x}^0_4,
      {y}^0_0, {y}^0_1, {y}^0_2,
      {y}^0_3, {y}^0_4,
@@ -93,7 +92,7 @@ specification.
      {r}^1_0, {r}^1_1, {r}^1_2,
      {r}^1_3, {r}^1_4,
      {r}^2_0, {r}^2_1, {r}^2_2,
-     {r}^2_3, {r}^2_4) \in \bbfZ^{25}.\\
+     {r}^2_3, {r}^2_4).\\
   \hspace{.05\textwidth}\top \wedge
   \left(
   \begin{array}{lclcl}
@@ -158,7 +157,7 @@ soundnesss of our last transformation. Its proof is also certified in
   \label{theorem:program-to-q-soundness}
   Let $q, q' \in Q$ be predicates, and $p \in P$ a program in single
   static assignment form and well-formed. 
-  If $\Pi(\hoaretriple{q}{p}{q'})$ holds, then
+  If $\bbfZ \models \Pi(\hoaretriple{q}{p}{q'})$, then
   $\models$ $\hoaretriple{q}{p}{q'}$.
 \end{theorem}
 
