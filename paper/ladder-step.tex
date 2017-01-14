@@ -5,19 +5,34 @@ important for about .5 page. Maybe another .5 page for its mathematical
 properties? }
 }
 
-Recall that X25519 is based on the elliptic curve Curve25519. 
+Recall that X25519 is based on the elliptic curve Curve25519.
 Cryptographic primitives of the key exchange protocol perform
 sequences of algebraic operations on the Abelian group $\bbfG$ induced
 by Curve25519, not on the finite field $\bbfGF(\varrho)$. As
 aforementioned, the binary operation $\Gplus$ requires another
-sequence of arithmetic computation over $\bbfGF(\varrho)$. Errors
-could still be introduced or even implanted in implementations of
-$\Gplus$. Correctness of arithmetic constructs over $\bbfGF(\varrho)$
-does not necessarily imply the correctness of the mathematical
-construct in X25519. The Montgomery Ladderstep is the mathematical
-construct widely used to implement $\Gplus$ on Curve25519. We 
-verify a low-level implementation of the mathematical construct in
-this experiment. 
+sequence of arithmetic computation over $\bbfGF(\varrho)$.
+\textbf{switched around sentences.  Deleted sentences.}
+Correctness of arithmetic constructs over $\bbfGF(\varrho)$ does not
+necessarily imply the correctness of the mathematical construct in
+X25519. Errors could still be introduced or even implanted in
+implementations of $\Gplus$.
+
+%The Montgomery Ladderstep is the mathematical
+%construct widely used to implement $\Gplus$ on Curve25519. We 
+%verify a low-level implementation of the mathematical construct in
+%this experiment. 
+Let $p \in G$ be an element of the group $\bbfG$ and hence a point on
+the elliptic curve Curve25519. We write $n \cdot p$ for
+$\overbrace{p \Gplus \cdots \Gplus p}^n \in G$ when $n \in \bbfN$.
+The operation we want is a ``point multiplication'' which is given $n$
+and $p$ compute $n \cdot p$.  The na\"ive way to do this is ``double
+and add''.  That is, starting from $n \cdot p$, we first compute
+$(2n) \cdot p$ or $(2n+1) \cdot p$ by always first compute
+$(2n) \cdot p$, then decide to add $p$ or not depending on a whether a
+corresponding bit is 1.  This is obviously not time constant.  The
+obvious counter to that obstacle is that we can double (i.e. compute
+$(2n)\cdot p$), \emph{always add} $p$, then choose one of the two using
+conditional moves.  This unfortunately is inefficient.
 
 \begin{algorithm}[h]
 \label{evaluation:ladder-step:montgomery}
@@ -49,42 +64,53 @@ this experiment.
 \caption{Montgomery Ladderstep}
 \end{algorithm}
 
-Peter Montgomery derived a sequence of computations, now usually known
-as "the Montgomery Ladderstep", to compute both $P+Q$ and $[2]Q$
-simultaneously and efficiently knowing $\pm(P-Q)$.  The ladderstep can
-be achieved only the x coordinates on a set of curves today known as
-Montgomery curves. This is known as a differential addition chain and
-is one of the fundamental ways to avoid timing attacks.  That is,
-starting from points $[n]P$ and $[n+1]P$, one can get either $[2n]P$
-and $[2n+1]P$, or $[2n+1]P$ and $[2n+2]P$ in a time-constant manner,
-with the difference between the two points always remaining $\pm P$
-using the Ladderstep, provided that there is a time-constant way to
-swap the two (which there usually is).   This is equivalent to
-computing either $2n$ or $2n+1$ from $n$ and is sufficient to compute
-any $[n]P$ where n has a constant bitlength.   For curves not
-equivalent to a Montgomery curve, a variant known as the "Co-Z ladder"
-is available to effect the same differential addition chain. 
+Peter Montgomery derived a sequence of computations known
+as "the Montgomery Ladderstep", to compute both $p_0+p_1$ and $2p_0$
+simultaneously and efficiently knowing $p_1-p_0$.  The ladderstep can
+be achieved only using $x$ coordinates on a set of curves today known as
+Montgomery curves, which include Curve25519.  Furthermore, we can
+avoid expensive divisions by using projective representations (i.e,
+instead of $x$ write $x/z$ and work  with fractions).  
 
-Montgomery's formulas and his steps are well known since his original
-paper.  (include Montgomery ladderstep diagram and Montgomery's
-original equations).  We show that the program carrys out a
-computation equivalent to his formulas.  In fact, we show that the
-doubling part of the formula has a coefficient of 4 in both the
-numerator and denominator that is not in Peter Montgomery's formula
-(insert cite here). 
+The reason to prefer using the Ladderstep, provided that there is a
+time-constant way to swap the two input points, is the following: 
+Starting from points $n \cdot p $ and
+$ (n+1) \cdot p $, one can get either $ (2n) \cdot p $ and
+$(2n+1) \cdot p$, or $(2n+1) \cdot p$ and $(2n+2) \cdot p$ in a
+time-constant manner, with the difference between the two points
+always being $\pm p$.  This is equivalent to computing either
+$(2n) \cdot p$ or $(2n+1) \cdot p$ from $n \cdot p$ and is sufficient
+to compute any $n \cdot p$ where $n$ has a constant bitlength.  This
+is known as a differential addition chain and is one of the
+fundamental ways to avoid timing attacks.  For curves not
+equivalent to a Montgomery curve, a variant known as the "Co-$Z$
+ladder" is available to effect the same differential addition chain.
 
-Let $p \in G$ be an element of the group $\bbfG$ and hence a point on
-the elliptic curve Curve25519. We write $n \cdot p$ for
-$\overbrace{p \Gplus \cdots \Gplus p}^n \in G$ when $n \in \bbfN$. A
-crucial mathematical construct in X25519 is to compute the
-$x$-coordinate of $n \cdot p$ for $n \in \bbfN$. The na\"ive
-implementation would follow the equation (\ref{eq:curve25519-group})
-and compute both $x$- and $y$-coordinates with, in particular, a
-division operation $\Fdiv$ in $\bbfGF(\varrho)$. In~\cite{M:87:SPEC},
-a more efficient implementation is proposed. 
+Montgomery's formulas and his steps are well known
+since~\cite{M:87:SPEC}.  What we showed is that the program carrys out
+a computation equivalent to his formulas\footnote{An amusing fact is
+  that when we carry out the ladderstep, we notice the factor of $4$
+  in both the numerator and denominator of the addition part, which is
+  not obvious from \cite[line 11, page 261]{M:87:SPEC}.}.
 
-$np = x_n \Fdiv z_n$.
-$\textsc{ladderstep} (x_1, x_m, z_m, x_n, z_n) = (x_{2m}, z_{2m},
-x_{m+n}, z_{m+n})$
- 
-\todo{mention the coefficient $4$ in the ratio}
+% A
+%crucial mathematical construct in X25519 is to compute the
+%$x$-coordinate of $n \cdot p$ for $n \in \bbfN$. The na\"ive
+%implementation would follow the equation (\ref{eq:curve25519-group})
+%and compute both $x$- and $y$-coordinates with, in particular, a
+%division operation $\Fdiv$ in $\bbfGF(\varrho)$. ,
+%a more efficient implementation is proposed. 
+%
+%$np = x_n \Fdiv z_n$.
+%$\textsc{ladderstep} (x_1, x_m, z_m, x_n, z_n) = (x_{2m}, z_{2m},
+%x_{m+n}, z_{m+n})$
+% 
+%\todo{mention the coefficient $4$ in the ratio}
+%
+
+%%% Local Variables: 
+%%% mode: latex
+%%% eval: (TeX-PDF-mode 1)
+%%% eval: (TeX-source-correlate-mode 1)
+%%% TeX-master: "certified_vcg"
+%%% End: 
