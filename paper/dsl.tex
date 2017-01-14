@@ -57,15 +57,16 @@ language. Variables are thus integer variables. An expression can be a
 constant, a variable, or a negative expression. Addition, subtraction,
 and multiplication of expressions are available. The expression
 $\dslcode{Pow}(e, n)$ denotes $e^n$ for any expression $e$ and positive
-integer $n$. More formally, let a \textit{state} $\nu : V \rightarrow
-\bbfZ$ be a mapping from variables to integers. Define the semantic
-function $\valueof{e}_{\nu}$ for an expression $e$ as follows.
+integer $n$. More formally, let $\St \defn V \rightarrow
+\bbfZ$ and $\nu \in \St$ be a \emph{state}. That is,
+a {state} $\nu$ is a mapping from variables to integers. Define the
+semantic function $\valueof{e}_{\nu}$ for an expression $e$ as follows.
 \[
 \begin{array}{rclcrcl}
-  \valueof{\dslcode{i}}_{\nu} & \defn & i \textmd{  for $\dslcode{i} \in Z$} 
+  \valueof{{i}}_{\nu} & \defn & i \textmd{  for ${i} \in Z$} 
   & \hspace{.1\textwidth} &
-  \valueof{\dslcode{v}}_{\nu} & \defn & \nu(\dslcode{v}) 
-     \textmd{  for $\dslcode{v} \in V$}\\
+  \valueof{{v}}_{\nu} & \defn & \nu({v}) 
+     \textmd{  for ${v} \in V$}\\
   \valueof{-e}_{\nu} & \defn & -_{\bbfZ}\valueof{e}_{\nu}
   &&
   \valueof{e_0 + e_1}_{\nu} & \defn & 
@@ -92,12 +93,26 @@ mathematical constructs in X25519.
   P & ::= & \epsilon \ |\ S; P
 \end{eqnarray*}
 
-For low-level cryptographic programs, the only statements are
-assignments. The statement $v \leftarrow e$ assigns the value of $e$
+For low-level mathematical constructs, only assignments are allowed.
+The statement $v \leftarrow e$ assigns the value of $e$
 to the variable $v$. The statement $\concat{v_h}{v_l} \leftarrow
 \dslcode{Split}(e, n)$ splits the value of $e$ into higher and lowest
 $n$ bits. The higher and lower bits are stored in $v_h$ and $v_l$
-respectively. A program is a sequence of statements. We denote the
+respectively. More formally, define the relation $\Tr \subseteq \St
+\times S \times \St$ as follows.
+\begin{eqnarray*}
+  (\nu, v \leftarrow e, \nu') \in \Tr & \textmd{if} &
+  \nu' = \nu[v \mapsto \valueof{e}_{\nu}]\\
+  (\nu, \concat{v_h}{v_l} \leftarrow \dslcode{Split} (e, n), \nu') \in
+  \Tr & \textmd{if} &
+  \nu' = \nu[v_h \mapsto h, v_l \mapsto l]
+\end{eqnarray*}
+where
+$l = \valueof{e}_{\nu} \mod 2^{\valueof{n}_{\nu}}$ and
+$h = (\valueof{e}_{\nu} - l) \div 2^{\valueof{n}_{\nu}}$.
+
+
+A program is a sequence of statements. We denote the
 empty program by $\epsilon$. Observe that conditional branches are not
 allowed in cryptographic programs to prevent timing attacks. Every
 loop must repeat a fixed number of times and hence can be unfolded
