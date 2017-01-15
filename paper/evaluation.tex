@@ -25,22 +25,24 @@ with $G = \{ (x, y) : x, y \textmd{ satisfying } (\ref{eq:curve25519})
 (x_0, -y_0)$ and $p_0 \Gplus p_1 = (x, y)$ where
 \begin{eqnarray}
   m & = & (y_1 \Fminus y_0) \Fdiv (x_1 \Fminus x_0)\\\nonumber
-  x & = & m \Ftimes m \Fminus x_0 \Fminus x_1\\ \nonumber
-  y & = & m \Ftimes (x_0 \Fminus x) \Fminus y_0 
-     = m \Ftimes (x_1 \Fminus x) \Fminus y_1.
+  x & = & b \Ftimes m \Ftimes m \Fminus a \Fminus x_0 \Fminus x_1\\ \nonumber
+  y & = & %m \Ftimes (x_0 \Fminus x) \Fminus y_0 
+     %= m \Ftimes (x_1 \Fminus x) \Fminus y_1.
+          (2 \Ftimes x_1 \Fplus x_2 \Fplus a )\Ftimes m
+          \Fminus b \Ftimes m \Ftimes m \Ftimes m\Fminus y_1
   \label{eq:curve25519-group}
 \end{eqnarray}
-\textbf{added text here:}
 % 
-Note that these formulas are \emph{incomplete} because when
-$p_0=\pm p_1$, there is a division by zero.  When $p_0=-p_1$, the sum is obviously the point at  infinity;  When $p_0= p_1$, the
-correct mathematical formulas are actually
+Note that these formulas are \emph{incomplete} because a division by
+zero occurs when $p_0=\pm p_1$.  When $p_0=-p_1$, the sum is
+the point at infinity; When $p_0= p_1$, the correct
+formulas are 
 \begin{eqnarray}
   \label{eq:curve25519-dbl}
   m &=& (3  \Ftimes x_1 \Ftimes x_1 \Fplus 2\Ftimes a\Ftimes x_1\Fplus 1) 
         \Fdiv (2\Ftimes b\Ftimes y_1) \\ \nonumber
    x &=& b \Ftimes m \Ftimes m \Fminus a \Fminus 2 \Ftimes x_1 \\ \nonumber
-   y &=& (3 \Ftimes x1\Fplus a) \Ftimes m -b \Ftimes m \Ftimes m \Ftimes m-y_1
+   y &=& (3 \Ftimes x1\Fplus a) \Ftimes m \Fminus b \Ftimes m \Ftimes m \Ftimes m\Fminus y_1
 \end{eqnarray}
 %
 The induced group $\bbfG$
