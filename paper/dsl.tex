@@ -138,6 +138,12 @@ $\Tr^* \subseteq \St \times P \times \St$:
     (\nu, s, \nu') \in \Tr^* \textmd{ and }
     (\nu, p, \nu'') \in \Tr^*.
 \end{eqnarray*}
+Let $\nu, \nu' \in \St$ and $p = s_1; s_2; \cdots; s_n \in
+P$. $\nu'$ is a state after executing $p$ from $\nu$
+(written $\nu \goesto{p} \nu'$) if there are $\nu_1 = \nu, \nu_2,
+\ldots, \nu_n, \nu_{n+1} = \nu'$ with $(\nu_i, s_i, \nu_{i+1}) \in
+\Tr^*$ for every $1 \leq i < n$.
+
 
 For specifications, our domain specific language allows arbitrary
 conjunctions of (modulo) equations over expressions. The notation
