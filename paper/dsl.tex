@@ -18,7 +18,8 @@ observing the running time of the other thread. The instructions in
 the other thread which uses the ``evicted'' data (to make room for the
 data of the eavesdropping thread) then has to take more time getting
 their data back to the cache. Such attacks are quite practical.
-\todo{insert reference to cache-timing attacks.}
+\todo{insert reference in bib for D.J. Bernstein ``Cache Timing Attacks on AES'',
+https://cr.yp.to/antiforgery/cachetiming-20050414.pdf}
 
 Thus, the innocuous actions of (a) executing the CPU's conditional
 branch instruction dependent on a secret bit, and (b) executing an
@@ -269,3 +270,10 @@ regularly exploited in cryptographic programs for correctness and
 efficiency. Our domain specific language can easily model such
 specialized programming techniques and is most suitable for low-level
 cryptographic programs.
+
+%%% Local Variables: 
+%%% mode: latex
+%%% eval: (TeX-PDF-mode 1)
+%%% eval: (TeX-source-correlate-mode 1)
+%%% TeX-master: "certified_vcg"
+%%% End: 
