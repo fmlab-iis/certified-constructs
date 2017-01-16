@@ -265,7 +265,13 @@ $\dslcode{y}_1,$ $\dslcode{y}_0)$ $\mod \myprime $. The program in
 Figure~\ref{figure:dsl:subtraction} is correct. The reason for
 adding constants is to prevent underflow. If the constants were not
 added, the subtraction in lines~11 to 15 could give negative and hence
-incorrect results. Indeed, characteristics of large Galois fields are
+%
+incorrect results. \emph{Please note that ranges are a complicated
+  issue.  Both addition and subtraction (Fig.~\ref{figure:dsl:subtraction}) gives results that are correct
+  but possibly \textbf{overflowing} ($>\rho$), which can and must be
+  accounted for later.} Indeed, characteristics of large Galois fields
+are
+%
 regularly exploited in cryptographic programs for correctness and
 efficiency. Our domain specific language can easily model such
 specialized programming techniques and is most suitable for low-level

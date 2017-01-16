@@ -22,9 +22,10 @@ insecure. The na\"ive implementation of 255-bit subtraction should
 never be used in cryptographic primitives. 
 Figure~\ref{figure:dsl:subtraction}
 (Section~\ref{section:domain-specific-language}) in fact is an
-efficient and secure implementation of 255-bit subtraction for the
-AMD64 architecture. Notice that each limb can be computed in
-parallel. It also has constant execution time. 
+%
+efficient and secure implementation of subtraction for the AMD64
+architecture.  Notice how it is much more parallel, and also has
+constant execution time.
 
 Long-integer multiplication is another interesting but much more
 complicated operation. The na\"ive implementation for 255-bit
@@ -87,3 +88,10 @@ Table~\ref{table:arithmetic-operations} summarizes the results.
   \end{tabular}
   \label{table:arithmetic-operations}
 \end{table}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% eval: (TeX-PDF-mode 1)
+%%% eval: (TeX-source-correlate-mode 1)
+%%% TeX-master: "certified_vcg"
+%%% End: 
