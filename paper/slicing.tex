@@ -129,13 +129,13 @@ the updated cared variables and all but the last statements.
       \Case{$\epsilon$}
         \Return $\epsilon$
       \EndCase
-      \Case{$pp; s;$}
+      \Case{$pp; s$}
         \Match{\Call{SliceStatement}{$\mathit{vars}$, $s$}}
           \Case{$\mathit{vars}'$}
-            \Return \Call{SliceProg}{$\mathit{vars}'$, $pp;$}
+            \Return \Call{SliceProg}{$\mathit{vars}'$, $pp$}
           \EndCase
           \Case{$\langle \mathit{vars}'$, $s' \rangle$}
-            \Return \Call{SliceProg}{$\mathit{vars}'$, $pp$}$\ s';$
+            \Return \Call{SliceProg}{$\mathit{vars}'$, $pp$}$;\ s'$
           \EndCase
         \EndMatch
       \EndCase
