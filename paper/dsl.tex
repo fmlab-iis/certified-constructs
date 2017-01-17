@@ -1,28 +1,31 @@
 
 One of the big issues with modern cryptography is how the assumptions
 match up with reality. In many situations, unexpected channels
-through which information can leak to the attacker can cause the
-cryptosystem to be broken. Typically this is about timing, or
-electric power used. Implementations which are not defeated through
-such means are called ``side-channel resilient'' implementations.
-Clearly in such implementations the execution time are kept constant
-(as much as possible).
-
-This turns out in some cases to be harder than one would imagine.
-This is chiefly because modern processors have caches and out of order
+through which information can leak to the attacker may cause the
+cryptosystem to be broken. Typically this is about timing or
+electric power used. 
+In such ``side-channel resilient'' implementations the execution time
+are thus kept constant (as much as possible).
+%Implementations which are not defeated through
+%such means are called ``side-channel resilient'' implementations.
+Constant execution time however is harder to achieve than one would imagine.
+%This turns out in some cases to be harder than one would imagine.
+%This is chiefly because 
+Modern processors have caches and out of order
 execution and multitasking. This makes it possible for one execution
-thread, even when no privilege is conferred ,to affect the running
+thread, even when no privilege is conferred, to affect the running
 time of another -- simply by caching a sufficient amount of its own
 data in correct locations through repeated accesses, and then
 observing the running time of the other thread. The instructions in
 the other thread which uses the ``evicted'' data (to make room for the
 data of the eavesdropping thread) then has to take more time getting
-their data back to the cache. Such attacks are quite practical.
-\todo{insert reference in bib for D.J. Bernstein ``Cache Timing Attacks on AES'',
-https://cr.yp.to/antiforgery/cachetiming-20050414.pdf}
+its data back to the cache~\cite{B:05:CTAA}. 
+% Such attacks are quite practical.
+% \todo{insert reference in bib for D.J. Bernstein ``Cache Timing 
+% Attacks on AES'', https://cr.yp.to/antiforgery/cachetiming-20050414.pdf}
 
-Thus, the innocuous actions of (a) executing the CPU's conditional
-branch instruction dependent on a secret bit, and (b) executing an
+Thus, the innocuous actions of executing (a) a conditional
+branch instruction dependent on a secret bit, and (b) an
 indirect load instruction using a secret value in the register as the
 address, are both potentially dangerous leaks of information.
 
@@ -95,7 +98,9 @@ mathematical constructs in X25519.
 
 In \mydsl, only assignments are allowed.
 The statement $v \leftarrow e$ assigns the value of $e$
-to the variable $v$. The statement $\concat{v_h}{v_l} \leftarrow
+to the variable $v$. For bounded addition, multiplication, and right
+shifting, they are modeled by the construct $\dslcode{Split}$ in \mydsl.
+The statement $\concat{v_h}{v_l} \leftarrow
 \dslcode{Split}(e, n)$ splits the value of $e$ into two parts;
 the lowest $n$ bits are stored in $v_l$ and the higher bits
 are stored in $v_h$. Define
