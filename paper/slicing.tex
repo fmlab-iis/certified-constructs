@@ -1,6 +1,6 @@
 
-Consider the problem of checking whether $\hoaretriple{q}{p}{q'}$ for
-arbitrary $q, q' \in Q$ and $p \in P$. Since $q'$ is arbitrary, the
+Consider the problem of checking $\models \hoaretriple{q}{p}{q'}$ for
+arbitrary $q, q' \in \Pred$ and $p \in \Prog$. Since $q'$ is arbitrary, the
 program $p$ may contain fragments irrevelant to $q'$. Program slicing
 is a simple yet effective technique to improve efficiency of
 verification through simplifying programs~\cite{W:81:PS}.
@@ -11,13 +11,13 @@ post-condition $q'$. Starting from the last statement, we check if
 it assigns any cared variables. If not, we skip the last statement and
 move to the last but one statement. If it does, we keep the last
 statement, update the cared variables, and examine the second-to-last
-statement. This process repeats until the first statement of the
-program is processed.
+statement. This process repeats until all statements of the
+program are processed.
 
 Our program slicing algorithm requires several auxiliary functions. 
 Algorithm~\ref{algorithm:variables-in-expressions} shows how to
 compute all variables occurred in an expression by a structural
-induction on the expression. If the given expression is an integer,
+induction. If the given expression is an integer,
 the empty set is returned; if it is a variable, the singleton with the
 variable is returned. Variables in other expressions are computed
 recursively. 
@@ -59,7 +59,7 @@ recursively.
   \Function{VarsInPred}{$q$}
   \Match{$q$}
     \Case{$\top$}
-      $\emptyset$
+      \Return $\emptyset$
     \EndCase
     \Case{$e' = e''$}
       \Return \Call{VarsInExpr}{$e'$} $\cup$ \Call{VarsInExpr}{$e''$}
@@ -112,7 +112,9 @@ variables by excluding the variables on the left hand side but adding
 the variables appeared on the right hand
 side~(Algorithm~\ref{algorithm:slicing-statements}). In the algorithm, 
 the parameter $\mathit{vars}$ denotes the set of cared variables.
-Observe that irrelevant statements are not returned by the algorithm.
+If the given statement assigns to a cared variable, it is returned
+with the updated cared variables by the algorithm. Otherwise, only
+cared variables are returned.
 
 To slice a program, our algorithm proceeds from the last statement
 (Algorithm~\ref{algorithm:slicing-programs}). It invokes
@@ -144,15 +146,15 @@ the updated cared variables and all but the last statements.
   \label{algorithm:slicing-programs}
 \end{algorithm}
 
-We specify Algorithms~\ref{algorithm:slicing-statements}
-and~\ref{algorithm:slicing-programs} in \gallina. Their properties are
+Algorithms~\ref{algorithm:slicing-statements}
+and~\ref{algorithm:slicing-programs} are specified in \gallina. Their
+properties are 
 also specified and proven formally in \coq. Particularly, the
 soundness and completeness of our program slicing algorithm have been
-established in the proof assistant. That is, the proof of the
-following theorem is certified. 
+certified in the proof assistant. Formally, we have the following theorem:
 
 \begin{theorem}
-  For every $q, q' \in Q$ and $p \in P$,
+  For every $q, q' \in \Pred$ and $p \in \Prog$,
   \begin{center}
   $\models \hoaretriple{q}{p}{q'}$ if and only if
   $\models \hoaretriple{q}{\textsc{SliceProg}(\textsc{VarsInPred}(q'), p)}

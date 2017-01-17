@@ -1,33 +1,31 @@
 
 Given $q, q' \in \Pred$ and $p \in \Prog$, we reduce the problem of checking
-$\models \hoaretriple{q}{p}{q'}$ to a problem of checking (modular)
-polynomial equalities constrained by a system of polynomial equations over
-integers. The reduction is carried out by the following three
-transformations:
+$\models \hoaretriple{q}{p}{q'}$ to the entailment problem of
+polynomial equations over integer variables. The reduction is carried out by
+the following three transformations:
 \begin{enumerate}
-\item Program slicing. To improve efficiency, the segments of the program $p$
-  irrelevant to the post-condition $q$ are removed by program slicing 
+\item Program slicing. To improve efficiency, segments of the program $p$
+  irrelevant to the post-condition $q'$ are removed by program slicing 
   (Section~\ref{subsection:translation:slicing}). 
 \item Static single assignments. The sliced program is transformed
   into static single assignments. Variables in the pre- and
   post-conditions are renamed accordingly
   (Section~\ref{subsection:translation:static-single-assignment}).
-\item Polynomial equations. The resultant algebraic
-  specification is transformed into checking (modular)
-  polynomial equalities constrained by a system of polynomial equations
-  (Section~\ref{subsection:translation:multivariant-polynomial-equations}).
+\item Polynomial equations. Validity of algebraic specifications of
+  programs in static single assignements is reduced to the entailment
+  of a system of polynomial equations
+  (Section~\ref{subsection:translation:multivariant-polynomial-equations}). 
 \end{enumerate}
 
 For each transformation, we give an algorithm and establish the
 correctness of the algorithm in \coq. Specifically, a semantics
-for our domain specific language is given and 
-$\models \hoaretriple{q}{p}{q'}$ is formalized in \coq. Then the
-correctness of transformations is established by formal \coq
-proofs. For program slicing and static single assignments, we
+for our domain specific language and the validity of algebraic
+specifications is formalized in \coq. The correctness of
+transformations is then certified by the proof assistant \coq.
+For program slicing and static single assignments, we
 construct machine-checkable proofs for the soundness and completeness
 of the two transformations. For polynomial equations, another
 \coq-certified proof shows the soundness of the transformation
-from the validity of the algebraic specification to solvability of an
-algebraic problem over (modular) polynomial equations. In the
-following subsections, we elaborate the transformations and their
-correctness in details. 
+from the validity of the algebraic specification to the entailment of 
+a system of polynomial equations. In the following subsections,
+transformations and their correctness are elaborated in details.  
