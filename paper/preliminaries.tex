@@ -16,32 +16,36 @@ the operator $+$ is commutative.
 A \emph{ring} $\mathcal{R} = (R, 0, 1, +, \times)$ with $0 \neq 1$ is
 an algebraic structure such that
 \begin{itemize}
-\item $(R, 0, +)$ is an abelian group; 
+\item $(R, 0, +)$ is an Abelian group; 
 \item $(R, 1, \times)$ is a monoid; and 
 \item $\times$ is distributive over $+$: $a \times (b + c) = a \times
   b + a \times c$ for every $a, b, c \in R$.
 \end{itemize}
 If $\times$ is commutative, $\mathcal{R}$ is a \emph{commutative}
-ring. An \emph{integral domain} is a commutative ring where $a \times
-b = 0$ implies $a = 0$ or $b = 0$. A \emph{field} $\mathcal{F} = (F,
+ring. 
+% An \emph{integral domain} is a commutative ring where $a \times
+% b = 0$ implies $a = 0$ or $b = 0$. 
+A \emph{field} $\mathcal{F} = (F,
 0, 1, +, \times)$ is a commutative ring where $(F, 1, \times)$ is also
-a group. $\bbfN$ is not a ring. $\bbfZ$ is an integral domain but not
-a field. The set of rational numbers is a field. 
-For any prime number $\varrho$, $\bbfGF(\varrho)$
-is the Galois field of order $\varrho$. We focus on Galois fields of
-very large orders, say, $\myprime = 2^{255} - 19$. 
+a group. $\bbfN$ is not a ring. $\bbfZ$ is a commutative ring but not
+a field. 
+For any prime number $\varrho$, the set $\{ 0, \ldots, \varrho \}$
+with addition and multiplication modulo $\varrho$ forms a \emph{Galois
+field} of order $\varrho$ (written $\bbfGF(\varrho)$).
+We focus on Galois fields of very large orders, say, $\myprime =
+2^{255} - 19$.
 
 Fix a set of variables $\vx$. $\mathcal{R}[\vx]$ is the set of
-multivariant polynomials over $\vx$ with coefficients in the ring
+polynomials over $\vx$ with coefficients in the ring
 $\mathcal{R}$. $\mathcal{R}[\vx]$ is a ring. A set $I \subseteq
 \mathcal{R}[\vx]$ is an \emph{ideal} if 
 \begin{itemize}
-\item $f +_{\mathcal{R}[\vx]} g \in I$ for every $f, g \in I$; and
-\item $h \times_{\mathcal{R[\vx]}} f \in I$ for every $h \in
+\item $f + g \in I$ for every $f, g \in I$; and
+\item $h \times f \in I$ for every $h \in
   \mathcal{R}[\vx]$ and $f \in I$. 
 \end{itemize}
 We write $\langle G \rangle$ for the minimal ideal containing $G
 \subseteq \mathcal{R}[\vx]$. The set $G$ are the \emph{generators}
-of the ideal $\langle G \rangle$. Given an ideal $I$ and a
-polynomial $f \in \mathcal{R}[\vx]$, the \emph{ideal membership}
+of the ideal $\langle G \rangle$. Given an ideal $I$ and
+$f \in \mathcal{R}[\vx]$, the \emph{ideal membership}
 problem is to decide whether $f \in I$.
