@@ -57,16 +57,17 @@ Academia Sinica\\
 \maketitle
 
 \begin{abstract}
-  Mathematical constructs are needed to perform algebraic operations
-  on the underlying mathematical structures of cryptosystems. 
+  Mathematical constructs are needed to perform operations
+  on the underlying algebraic structures of cryptosystems. 
   Since they are invoked most frequently, these mathematical constructs
   are written in assembly languages and often optimized manually. We
-  propose a fully certified technique to formally verify mathematical
+  develop a certified technique to formally verify mathematical
   constructs in X25519, the default elliptic curve Diffie-Hellman key
   exchange protocol used in \openssh. Our technique first translates any
   algebraic specification of mathematical constructs into an algebraic
   problem. The algebraic 
-  problem in turn is solved by \coq and \singular. The proof assistant 
+  problem in turn is solved by the computer algebra system \singular. 
+  The proof assistant 
   \coq is used to certify the translation and solution to algebraic
   problems. We report our experiments on the verification of
   arithmetic computation over the Galois field used in X25519, where
