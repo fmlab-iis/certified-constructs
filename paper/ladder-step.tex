@@ -11,7 +11,7 @@ sequences of algebraic operations on the Abelian group $\bbfG$ induced
 by Curve25519, not on the finite field $\bbfGF(\varrho)$. As
 aforementioned, the binary operation $\Gplus$ requires another
 sequence of arithmetic computation over $\bbfGF(\varrho)$.
-
+%
 Correctness of arithmetic constructs over $\bbfGF(\varrho)$ does not
 necessarily imply the correctness of the mathematical construct in
 X25519. Errors could still be introduced or even implanted in
@@ -30,10 +30,10 @@ and add''.
 
 \begin{algorithm}[h]
   \begin{algorithmic}[1]  
-    \Function{mulp}{$n,P$}
+    \Function{point.multiple}{$m,P$}
     \begin{multicols}{2}
       \State $t\leftarrow P$
-      \For{$i=\lfloor \log_2 n \rfloor-1\ \mathbf{downto}\ 1$}
+      \For{$i=\lfloor \log_2 m \rfloor-1\ \mathbf{downto}\ 1$}
       \State $t\leftarrow [2]P$
       \If{$($ bit $i$ of $n$ in binary $)=1$}
       \State $t\leftarrow t\Gplus P$
@@ -44,13 +44,13 @@ and add''.
     \end{multicols}
   \end{algorithmic}
 \end{algorithm}
-That is from $[n]P$ before step 4, we first compute $[2n]P$
+Observe that given $[n]P$ before step 4, we first compute $[2n]P$
 or $[2n+1]P$ by the end of step 7 by first doubling to
 $[2n]P$ (step 4), then decide to add $P$ or not depending on a
 whether a corresponding bit is 1.  But this is obviously not time
 constant.  The obvious next step that we can double
 (i.e. compute $[2n]P$), \emph{always add} $P$, then choose one
-of the two using conditional moves.  This unfortunately is
+of the two using conditional moves or equivalents.  This however is
 inefficient.  We need something equivalent to steps 4--7 but better.
 
 \begin{algorithm}[h]
@@ -91,13 +91,13 @@ Montgomery curves, which include Curve25519.  Furthermore, we can
 avoid expensive divisions by using projective representations (i.e,
 instead of $x$ write $x/z$ and work  with fractions).  
 
-Provided that there is a time-constant way to swap the two input
-points, the Ladderstep starts from points $[n]P $ and
+The Ladderstep starts from points $[n]P $ and
 $[n+1]P $, to get either $ [2n]P $ and
-$[2n+1]P$, or $[2n+1]P$ and $[2n+2]P$ in constant
-time, the difference between the two points remaining $\pm P$.  This
+$[2n+1]P$, or $[2n+1]P$ and $[2n+2]P$, the difference between the two points remaining $\pm P$.  Provided that there is a time-constant way to swap the two input
+points, this
 is equivalent to computing either $[2n]P$ or $[2n+1]P$
-from $[n]P$ and is sufficient to compute any $[n]P$ where
+from $[n]P$ in constant
+time and is sufficient to compute any $[n]P$ where
 $n$ has a known bitlength.  This is known as a differential
 addition chain and is one of the fundamental ways to avoid timing
 attacks.  For curves not equivalent to a Montgomery curve, a variant
