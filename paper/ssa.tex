@@ -14,6 +14,7 @@ structural induction. For each variable, its most recent copy is
 returned by looking up the mapping $\theta$. Integers are
 unchanged. Other expressions are transformed recursively.
 
+\vspace{-1em}
 \begin{algorithm}
   \begin{algorithmic}[1]
     \Function{SSAExpr}{$\theta$, $e$}
@@ -42,6 +43,7 @@ unchanged. Other expressions are transformed recursively.
   \caption{Static Single Assignment Transformation for Expressions}
   \label{algorithm:ssa-expressions}
 \end{algorithm}
+\vspace{-1em}
 
 Similarly, predicates must refer to most recent copies of 
 variables. They are transformed according to the finite mapping
@@ -50,6 +52,7 @@ formalization of finite mappings in \coq. Both
 Algorithms~\ref{algorithm:ssa-expressions}
 and~\ref{algorithm:ssa-predicates} are easily specified in \gallina.
 
+\vspace{-1em}
 \begin{algorithm}
   \begin{algorithmic}[1]
     \Function{SSAPred}{$\theta$, $q$}
@@ -72,6 +75,7 @@ and~\ref{algorithm:ssa-predicates} are easily specified in \gallina.
   \caption{Static Single Assignment Transformation for Predicates}
   \label{algorithm:ssa-predicates}
 \end{algorithm}
+\vspace{-1em}
 
 Statement transformation is slightly more complicated. For
 expressions on the right hand side, they are transformed by the given
@@ -113,6 +117,7 @@ updated mapping with a statement in static single assignment form. It
 continues to transform the next statement with the updated mapping
 (Algorithm~\ref{algorithm:ssa-programs}). 
 
+\vspace{-1em}
 \begin{algorithm}
   \begin{algorithmic}[1]
     \Function{SSAProg}{$\theta$, $p$}
@@ -133,8 +138,7 @@ continues to transform the next statement with the updated mapping
   \caption{Static Single Assignment for Programs}
   \label{algorithm:ssa-programs}
 \end{algorithm}
-
-
+\vspace{-1em}
 
 With the \coq specifications, we establish the correctness of our
 algorithms in two steps. We first show that the transformation indeed
@@ -179,6 +183,7 @@ All theorems are formally certified in \coq.
   \label{theorem:ssa}
 \end{theorem}
 
+\vspace{-2em}
 \begin{figure}
   \centering
   \[
@@ -219,6 +224,7 @@ All theorems are formally certified in \coq.
 % \dslcode{y}_3, \dslcode{y}_4)$
   \label{figure:translation:subtraction-ssa}
 \end{figure}
+\vspace{-1em}
 
 \noindent
 \emph{Example.}
