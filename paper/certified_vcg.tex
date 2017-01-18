@@ -29,7 +29,7 @@
 %\publictrue
 
 \title{Certified Verification of Algebraic Properties on
-Low-Level Mathematical Constructs in Cryptographic Programs} 
+Low- \mbox{Level Mathematical Constructs in Cryptographic Programs}}
 
 \ifpublic
 \author{
@@ -58,7 +58,7 @@ Academia Sinica\\
 \maketitle
 
 \begin{abstract}
-  Mathematical constructs are needed to perform operations
+  Mathematical constructs are needed to operate
   on the underlying algebraic structures of cryptosystems. 
   Since they are invoked most frequently, these mathematical constructs
   are written in assembly languages and often optimized manually. We
@@ -73,8 +73,7 @@ Academia Sinica\\
   problems. We report our experiments on the verification of
   arithmetic computation over the Galois field used in X25519, where
   each element of the field is represented by a 255-bit number. We
-  also verify the Montgomery Ladderstep used in the key exchange
-  protocol.
+  also verify the Montgomery Ladderstep, a central loop  in X25519.
 \end{abstract}
 
 \section{Introduction}
