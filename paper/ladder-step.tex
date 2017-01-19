@@ -107,27 +107,42 @@ known as the "Co-$Z$ ladder" is available to effect the same
 differential addition chain.
 }
 
+Let primed variables denote values of variables after computation.
+The Montgomery Ladderstep has the following
+specification~\cite{M:87:SPEC}:\footnote{An amusing fact is that when
+  we carry out the Ladderstep, we find for ourselves the factor of $4$
+  in both the numerator and denominator of the addition formulas,
+  noted on \cite[p.~261]{M:87:SPEC}.}
 \[
 \begin{array}{rcl}
-  x_{2m} & \Feq & 4 \Ftimes (x_m \Ftimes x_{m+1} \Fminus z_m \Ftimes z_{m+1})
+  x'_{m} & \Feq & 4 \Ftimes (x_m \Ftimes x_{m+1} \Fminus z_m \Ftimes z_{m+1})
                \Ftimes (x_m \Ftimes x_{m+1} \Fminus z_m \Ftimes z_{m+1}) \\
-  z_{2m} & \Feq & 4 \Ftimes x_1 \Ftimes (x_m \Ftimes z_{m+1} \Fminus
+  z'_{m} & \Feq & 4 \Ftimes x_1 \Ftimes (x_m \Ftimes z_{m+1} \Fminus
                z_m \Ftimes x_{m+1})
                \Ftimes (x_m \Ftimes z_{m+1} \Fminus z_m \Ftimes x_{m+1}) \\
-  x_{2m+1} & \Feq & (x_m \Ftimes x_m \Fminus z_m \Ftimes z_m) \Ftimes
+  x'_{m+1} & \Feq & (x_m \Ftimes x_m \Fminus z_m \Ftimes z_m) \Ftimes
                  (x_m \Ftimes x_m \Fminus z_m \Ftimes z_m) \\
-  z_{2m+1} & \Feq & 4 \Ftimes x_m \Ftimes z_m \Ftimes
+  z'_{m+1} & \Feq & 4 \Ftimes x_m \Ftimes z_m \Ftimes
                  (x_m \Ftimes x_m \Fplus 121666 \Ftimes x_m \Ftimes z_m \Fplus
                  z_m \Ftimes z_m)
 \end{array}
 \]
+In our experiment, we replace all arithmetic computation over $\bbfF$
+with corrresponding mathematical constructs (8 additions, 2 squares, 7
+multiplications, and 1 multiplication by 121666) written in \mydsl,
+translate the above specification into an algebraic specification, and
+apply our technique to verify the entire Ladderstep (\todo{number of
+ statements}). \todo{how much time?}
 
+
+\hide{
 Montgomery's formulas and his steps are well known
 since~\cite{M:87:SPEC}.  What we showed is that the program carrys out
 a computation equivalent to his formulas\footnote{An amusing fact is
   that when we carry out the ladderstep, we find for ourselves the factor of $4$
   in both the numerator and denominator of the addition formulas, 
   noted on \cite[p.~261]{M:87:SPEC}.}.
+}
 
 % A
 %crucial mathematical construct in X25519 is to compute the
