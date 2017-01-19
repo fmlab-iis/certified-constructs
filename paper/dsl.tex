@@ -4,15 +4,17 @@ match up with reality. In many situations, unexpected channels
 through which information can leak to the attacker may cause the
 cryptosystem to be broken. Typically this is about timing or
 electric power used. 
-In such ``side-channel resilient'' implementations the execution time
-are thus kept constant (as much as possible).
+In side-channel resilient implementations the execution time
+are kept constant (as much as possible) to prevent unexpected
+information leakage.
 %Implementations which are not defeated through
 %such means are called ``side-channel resilient'' implementations.
 Constant execution time however is harder to achieve than one would imagine.
 %This turns out in some cases to be harder than one would imagine.
 %This is chiefly because 
-Modern processors have caches and out of order
-execution and multitasking. This makes it possible for one execution
+Modern processors have caches 
+%and out of order execution 
+and multitasking. This makes it possible for one execution
 thread, even when no privilege is conferred, to affect the running
 time of another -- simply by caching a sufficient amount of its own
 data in correct locations through repeated accesses, and then
@@ -29,6 +31,7 @@ branch instruction dependent on a secret bit, and (b) an
 indirect load instruction using a secret value in the register as the
 address, are both potentially dangerous leaks of information.
 
+\hide{
 As such, modern cryptographic implementations often have to resort to
 seemingly contrived sequences of conditional moves and arithmetic
 manipulations to achieve the same result as simply using the CPU
@@ -36,13 +39,18 @@ instructions designed for the purpose. This of course slows the
 computation down and waste resources but is inevitable because
 secret-dependent conditional actions and table lookups are actually
 very useful tasks that sometimes simply must be performed.
+}
 
-There are some side results of the above, one is that we are not often
+%There are some side results of the above, 
+Consequently, we are not often
 faced with secret-dependent branching or table-lookups in the assembly
 instructions, but a language describing cryptographic code might
 include pseudo-instructions to cover instruction sequences, phrases in
 the language if you will, that is used to achieve the same effect.
-
+The domain specific language \mydsl is designed based on the same
+principles. Conditional branches and indirect memory accesses are not
+admitted in \mydsl. Program are but a straight line of variable
+assignments on expressions. 
 Consider the following syntactic classes:
 \[
 \begin{array}{rclcrclcrcl}
@@ -101,11 +109,9 @@ operations. Bitwise left shifting however can be modeled by
 multiplying $\dslcode{Pow}(2, n)$. Although \mydsl models a (very) 
 small subset of assembly, it suffices to encode crucial low-level
 mathematical constructs in X25519.
-\vspace{-.5em}
 \begin{eqnarray*}
   \Stmt & ::= & \Var \leftarrow \Expr
             \ |\  \concat{\Var}{\Var} \leftarrow \dslcode{Split} (\Expr, \Nat)
-\vspace{-.5em}
 \end{eqnarray*}
 In \mydsl, only assignments are allowed.
 The statement $v \leftarrow e$ assigns the value of $e$
@@ -123,7 +129,7 @@ $
      \nu(v) & \textmd{otherwise}
    \end{array}
 \right.
-$
+$.
 Consider the relation $\Tr \subseteq \St \times \Stmt \times \St$ defined
 by $(\nu, v \leftarrow e, \nu') \in \Tr \textmd{ if }
   \nu' = \nu\mymapsto{v}{\valueof{e}_{\nu}}$; and
@@ -135,10 +141,8 @@ $l = \valueof{e}_{\nu} \mod 2^{\valueof{n}_{\nu}}$ and
 $h = (\valueof{e}_{\nu} - l) \div 2^{\valueof{n}_{\nu}}$.
 Hence $(\nu, s, \nu') \in \Tr$ denotes that the state $\nu$ transits to 
 the state $\nu'$ after executing the statement $s$.
-\vspace{-.5em}
 \begin{eqnarray*}
   \Prog & ::= & \epsilon \ |\ \Stmt; \Prog
-\vspace{-.5em}
 \end{eqnarray*}
 A \emph{program} is a sequence of statements. We denote the empty program by 
 $\epsilon$. Observe that conditional branches are not allowed in our
@@ -164,14 +168,12 @@ predicates. For
 $\nu \in \St$, we write $\bbfZ \models q[\nu]$ if $q$
 evaluates to $\btt$ after replacing each variable $v$ with
 $\nu(v)$; $\nu$ is moreover called a \emph{$q$-state}.
-\vspace{-.5em}
 \begin{eqnarray*}
   \Pred & ::= & \top
      \ |\   \Expr = \Expr
      \ |\   \Expr \equiv \Expr \mod \Nat
      \ |\   \Pred \wedge \Pred\\
   \Spec & ::= & \cond{\Pred} \Prog \cond{\Pred}
-\vspace{-.5em}
 \end{eqnarray*}
 We follow Hoare's formalism in algebraic specifications of
 mathematical constructs~\cite{H:69:ABCP}. In an algebraic
@@ -239,7 +241,6 @@ Given $0 \leq {x}_0,$ ${x}_1,$ ${x}_2,$ ${x}_3,$ ${x}_4,$ ${y}_0,$
 ${y}_1,$ ${y}_2,$ ${y}_3,$ ${y}_4 < 2^{51}$, 
 the algebraic specification of the mathematical construct is therefore
 \[
-\vspace{-.5em}
 \begin{array}{c}
 \cond{\top}\\
 \dslcode{sub}\\
@@ -253,7 +254,6 @@ the algebraic specification of the mathematical construct is therefore
 \mod \myprime
 }.
 \end{array}
-\vspace{-.5em}
 \]
 
 Note that the variables ${r}_i$'s are added with constants
@@ -276,7 +276,7 @@ added, the subtraction in lines~11 to 15 could give negative and hence
 %
 incorrect results. \emph{Please note that ranges are a complicated
   issue.  Both addition and subtraction (Fig.~\ref{figure:dsl:subtraction}) gives results that are correct
-  but possibly \textbf{overflowing} ($>\rho$), which can and must be
+  but possibly \textbf{overflowing} ($>\varrho$), which can and must be
   accounted for later.} Indeed, characteristics of large Galois fields
 are
 %
