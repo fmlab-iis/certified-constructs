@@ -98,7 +98,16 @@ Table~\ref{table:arithmetic-operations} summarizes the results.
   \label{table:arithmetic-operations}
 \end{table}
 
-\todo{range check}
+% {range check}
+
+We also perform range checks on the five mathematical constructs in
+Table~\ref{table:arithmetic-operations}. The most complicated case
+(multiplication) takes \todo{how much time?}. Compared to
+algebraic specifications, verification time for range check is
+insignificant. 
+Although our range check is not certified, low-level
+mathematical constructs in X25519 are formally verified. 
+
 
 %%% Local Variables: 
 %%% mode: latex
