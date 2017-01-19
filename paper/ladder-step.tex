@@ -7,17 +7,24 @@ implanted in any sequence of computation proclaimed to implement $\Gplus$.
 
 Let $P \in G$ be a point on Curve25519. We write $[n]P$ for the
 $n$-fold addition ${P \Gplus \cdots \Gplus P} \in G$ when $n \in \bbfN$.
+In X25519, we want to compute a \emph{point multiplication}, that is,
+the point $[n]P$ for given $n$ and $P$. The standard iterative
+squaring method computes $[n]P$ by examining each bit of $n$ in 
+binary. For each iteration, $[2m]P$ is computed and
+added with another $P$ when the current bit is $1$. Although the
+method is very efficient, it is not constant-time and hence insecure. 
+
+\hide{
 The operation we want is a ``point multiplication'' which is given $n$
 and $P$ compute $[n]P$.  The na\"ive way to do this is ``double
 and add''.  
-
 \begin{algorithm}[h]
   \begin{algorithmic}[1]  
     \Function{point.multiple}{$m,P$}
     \begin{multicols}{2}
       \State $t\leftarrow P$
       \For{$i=\lfloor \log_2 m \rfloor-1\ \mathbf{downto}\ 1$}
-      \State $t\leftarrow [2]P$
+      \State $t\leftarrow [2]T$
       \If{$($ bit $i$ of $n$ in binary $)=1$}
       \State $t\leftarrow t\Gplus P$
       \EndIf
@@ -35,39 +42,51 @@ constant.  The obvious next step that we can double
 (i.e. compute $[2n]P$), \emph{always add} $P$, then choose one
 of the two using conditional moves or equivalents.  This however is
 inefficient.  We need something equivalent to steps 4--7 but better.
+}
 
 \begin{algorithm}[h]
 \label{evaluation:ladder-step:montgomery}
 \begin{algorithmic}[1]
-\Function{Ladderstep}{$x_1, x_m, z_m, x_n, z_n$}
-\begin{multicols}{3}
+\Function{Ladderstep}{$x_1, x_m, z_m, x_{m+1}, z_{m+1}$}
+\begin{multicols}{2}
 \State $t_1 \leftarrow x_m \Fplus z_m$
 \State $t_2 \leftarrow x_m \Fminus z_m$
 \State $t_7 \leftarrow t_2 \Ftimes t_2$
 \State $t_6 \leftarrow t_1 \Ftimes t_1$
 \State $t_5 \leftarrow t_6 \Fminus t_7$
-\State $t_3 \leftarrow x_n \Fplus z_n$
-\State $t_4 \leftarrow x_n \Fminus z_n$\rule{0ex}{0ex}
+\State $t_3 \leftarrow x_{m+1} \Fplus z_{m+1}$
+\State $t_4 \leftarrow x_{m+1} \Fminus z_{m+1}$
 \State $t_9 \leftarrow t_3 \Ftimes t_2$
 \State $t_8 \leftarrow t_4 \Ftimes t_1$
-\State $x_n \leftarrow t_8 \Fplus t_9$
-\State $z_n \leftarrow t_8 \Fminus t_9$
-\State $x_n \leftarrow x_{n} \Ftimes x_{n}$
-\State $z_n \leftarrow z_{n} \Ftimes z_{n}$
-\State $z_n \leftarrow z_{n} \Ftimes x_1$\rule{0ex}{0ex} 
+\State $x_{m+1} \leftarrow t_8 \Fplus t_9$
+\State $z_{m+1} \leftarrow t_8 \Fminus t_9$
+\State $x_{m+1} \leftarrow x_{m+1} \Ftimes x_{m+1}$
+\State $z_{m+1} \leftarrow z_{m+1} \Ftimes z_{m+1}$
+\State $z_{m+1} \leftarrow z_{m+1} \Ftimes x_1$
 \State $x_m \leftarrow t_6 \Ftimes t_7$
 \State $z_m \leftarrow 121666 \Ftimes t_5$
 \State $z_m \leftarrow z_m \Fplus t_7$
 \State $z_m \leftarrow z_m \Ftimes t_5$
-\State \Return $(x_m, z_m, x_n, z_n)$
+\State \Return $(x_m, z_m, x_{m+1}, z_{m+1})$
 \EndFunction
 \end{multicols}
 \end{algorithmic}
 \caption{Montgomery Ladderstep}
+\label{algorithm:ladderstep}
 \end{algorithm}
 
+To have constant execution time, the key idea is to compute \emph{both}
+$[2m]P$ and $[2m+1]P$ at each iteration. The Montgomery Ladderstep is
+an efficient algorithm computes $[2m]P$ and $[2m+1]P$ from $P$,
+$[m]P$, and $[m+1]P$. On Montgomery curves (including Curve25519),
+the algorithm uses only $x$ coordinates of the points. Furthermore,
+expensive divisions are avoided in the Ladderstep by projective
+representations. That is, the algorithm represents $x \Fdiv z$ by the
+pair $x : z$ and works with fractions (Algorithm~\ref{algorithm:ladderstep}).
+
+\hide{
 Peter Montgomery derived a sequence of computations known
-as "the Montgomery Ladderstep", to compute both $P_0+P_1$ and $[2]P_0$
+as the Montgomery Ladderstep, to compute both $P_0+P_1$ and $[2]P_0$
 simultaneously and efficiently knowing $P_1-P_0$.  The ladderstep can
 be achieved only using $x$ coordinates on a set of curves today known as
 Montgomery curves, which include Curve25519.  Furthermore, we can
@@ -86,25 +105,20 @@ addition chain and is one of the fundamental ways to avoid timing
 attacks.  For curves not equivalent to a Montgomery curve, a variant
 known as the "Co-$Z$ ladder" is available to effect the same
 differential addition chain.
+}
 
 \[
-\begin{array}{c}
-  \cond{\top}\\
-  (x_{m+n}, z_{m+n}, x_{2m}, z_{2m})=\textsc{Ladderstep}(x_1, x_m, z_m, x_n, z_n)\\
-  \cond{
-  \begin{array}{rcl}
-    x_{m+n} & = & 4 \Ftimes (x_m \Ftimes x_n \Fminus z_m \Ftimes z_n)
-               \Ftimes (x_m \Ftimes x_n \Fminus z_m \Ftimes z_n) \wedge \\
-    z_{m+n} & = & 4 \Ftimes x_1 \Ftimes (x_m \Ftimes z_n \Fminus z_m \Ftimes x_n)
-               \Ftimes (x_m \Ftimes z_n \Fminus z_m \Ftimes x_n) \wedge \\
-    x_{2m} & = & (x_m \Ftimes x_m \Fminus z_m \Ftimes z_m) \Ftimes
-                (x_m \Ftimes x_m \Fminus z_m \Ftimes z_m) \wedge \\
-    z_{2m} & = & 4 \Ftimes x_m \Ftimes z_m \Ftimes
-                (x_m \Ftimes x_m \Fplus 121666 \Ftimes x_m \Ftimes z_m \Fplus
+\begin{array}{rcl}
+  x_{2m} & \Feq & 4 \Ftimes (x_m \Ftimes x_{m+1} \Fminus z_m \Ftimes z_{m+1})
+               \Ftimes (x_m \Ftimes x_{m+1} \Fminus z_m \Ftimes z_{m+1}) \\
+  z_{2m} & \Feq & 4 \Ftimes x_1 \Ftimes (x_m \Ftimes z_{m+1} \Fminus
+               z_m \Ftimes x_{m+1})
+               \Ftimes (x_m \Ftimes z_{m+1} \Fminus z_m \Ftimes x_{m+1}) \\
+  x_{2m+1} & \Feq & (x_m \Ftimes x_m \Fminus z_m \Ftimes z_m) \Ftimes
+                 (x_m \Ftimes x_m \Fminus z_m \Ftimes z_m) \\
+  z_{2m+1} & \Feq & 4 \Ftimes x_m \Ftimes z_m \Ftimes
+                 (x_m \Ftimes x_m \Fplus 121666 \Ftimes x_m \Ftimes z_m \Fplus
                  z_m \Ftimes z_m)
-  \end{array}
-  }
-  
 \end{array}
 \]
 
