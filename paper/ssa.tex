@@ -2,7 +2,7 @@
 A program is in \emph{static single assignment} form if every variable
 is assigned at most once~\cite{AWZ:88:DQVP}.
 Our next task is to transform any algebraic specification
-$\hoaretriple{q}{p}{q'}$ to another algebraic specification of $p$ in
+$\hoaretriple{q}{p}{q'}$ to an algebraic specification of $p$ in
 static single  assignment form for any $q, q' \in \Pred$ and $p \in
 \Prog$. Our transformation 
 maintains a finite mapping $\theta$ from variables to
@@ -10,7 +10,7 @@ non-negative integers. For any variable $v$, $v^{\theta(v)}$ is
 the most recently assigned copy of $v$. Only the most recent copies of
 variables are referred in
 expressions. Algorithm~\ref{algorithm:ssa-expressions} shows how 
-to transform expressions with the finite mapping $\theta$ by a
+to transform expressions with the finite mapping $\theta$ by
 structural induction. Integers are unchanged. For each variable, its
 most recent copy is returned by looking up the mapping $\theta$. Other
 expressions are transformed recursively. 
@@ -111,7 +111,7 @@ It is straightforward to transform programs to static single
 assignment form (Algorithm~\ref{algorithm:ssa-programs}). Using the
 initial mapping from variables to $0$, 
 the algorithm starts from the first statement and obtains an
-updated mapping with a statement in static single assignment form. It
+updated mapping with the statement in static single assignment form. It
 continues to transform the next statement with the updated mapping. 
 
 \begin{algorithm}
@@ -145,19 +145,22 @@ produces a program in static single assignment form.
   $\langle \hat{\theta}, \hat{p} \rangle$ $=
   \textsc{SSAProg}(\theta_0, p)$. Then
   $\hat{p}$ is in static single assignment form.
+  \label{lemma:ssa-programs}
 \end{lemma}
 
 To avoid ambiguity, we consider \emph{well-formed} programs where
 \begin{itemize}
-\item for every $\concat{v_h}{v_l} \leftarrow \dslcode{Split}(e, n)$, $v_h
-  \neq v_l$; and
-\item every variable must be assigned to a value before being used.
+\item for every statement $\concat{v_h}{v_l} \leftarrow
+  \dslcode{Split}(e, n)$ in the program, $v_h \neq v_l$; and
+\item every variable in theh program must be assigned to a value
+  before being used. 
 \end{itemize}
 Well-formedness is preserved by our transformation. Formally, we have
 \begin{lemma}
   Let $\theta_0(v) = 0$ for every $v \in \Var$ and $p \in \Prog$ a
   well-formed program. If $\langle \hat{\theta}, \hat{p} \rangle$ $=$ 
   $\textsc{SSAProg}(\theta_0, p)$, then $\hat{p}$ is well-formed.
+  \label{lemma:ssa-well-formed}
 \end{lemma}
 
 The next theorem states that our transformation is both sound and
@@ -230,17 +233,17 @@ Subsequently, variables in pre- and post-conditions of the algebraic
 specification for subtraction needs to be indexed. The
 corresponding algebraic specification is as follows.
 \[
-\begin{array}{c}
-\cond{\top}\\
-\dslcode{subSSA}\\
-% (\dslcode{x}_0, \dslcode{x}_1, \dslcode{x}_2, \dslcode{x}_3,
-% \dslcode{x}_4, \dslcode{y}_0, \dslcode{y}_1, \dslcode{y}_2,
-% \dslcode{y}_3, \dslcode{y}_4)\\
-\cond{\mathit{radix}({x}^0_4, {x}^0_3, {x}^0_2, {x}^0_1, {x}^0_0) -
-\mathit{radix51}({y}^0_4, {y}^0_3, {y}^0_2, {y}^0_1, {y}^0_0)
-\equiv
-\mathit{radix51}({r}^2_4, {r}^2_3, {r}^2_2, {r}^2_1, {r}^2_0)
-\mod \myprime
+\begin{array}{rcl}
+\cond{\top} &
+\dslcode{subSSA} &
+\cond{
+   \begin{array}{c}
+     \mathit{radix51}({x}^0_4, {x}^0_3, {x}^0_2, {x}^0_1, {x}^0_0) -
+     \mathit{radix51}({y}^0_4, {y}^0_3, {y}^0_2, {y}^0_1, {y}^0_0) \\
+     \equiv
+     \mathit{radix51}({r}^2_4, {r}^2_3, {r}^2_2, {r}^2_1, {r}^2_0)
+     \mod \myprime
+   \end{array}
 }.
 \end{array}
 \]

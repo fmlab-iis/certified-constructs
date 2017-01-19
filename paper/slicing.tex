@@ -5,18 +5,18 @@ program $p$ may contain fragments irrevelant to $q'$. Program slicing
 is a simple yet effective technique to improve efficiency of
 verification through simplifying programs~\cite{W:81:PS}.
 
-Here we slice programs in a backward manner. We initialize the set
+Here we slice programs in backwardly. We initialize the set
 of \emph{cared} variables to be the variables appeared in the
 post-condition $q'$. Starting from the last statement, we check if
-it assigns any cared variables. If not, we skip the last statement and
-move to the last but one statement. If it does, we keep the last
-statement, update the cared variables, and examine the second-to-last
-statement. This process repeats until all statements of the
-program are processed.
+it assigns any cared variables. If so, we keep the last
+statement and update the cared variables; otherwise, we skip the last
+statement. Then we continue to the previous statement.
+This process repeats until all statements of the
+program are examined.
 
 Our program slicing algorithm requires several auxiliary functions. 
 Algorithm~\ref{algorithm:variables-in-expressions} shows how to
-compute all variables occurred in an expression by a structural
+compute variables in an expression by structural
 induction. If the given expression is an integer,
 the empty set is returned; if it is a variable, the singleton with the
 variable is returned. Variables in other expressions are computed
@@ -78,13 +78,13 @@ recursively.
 \end{algorithm}
 
 Similarly, Algorithm~\ref{algorithm:variables-in-predicates} computes
-the variables appeared in a predicate. Using the \coq specification
+the variables in a predicate. Using the \coq specification
 langauge \gallina, both algorithms are specified in the proof
-assistant easily. 
+assistant.
 
 \begin{algorithm}
   \begin{algorithmic}[1]
-    \Function{SliceStatement}{$\mathit{vars}$, $s$}
+    \Function{SliceStmt}{$\mathit{vars}$, $s$}
     \Match{$s$}
       \Case{$v \leftarrow e$}
         \IfThenElse{$v \in \mathit{vars}$}
@@ -105,22 +105,24 @@ assistant easily.
   \label{algorithm:slicing-statements}
 \end{algorithm}
 
-For each statement, we check if the variables in the left hand side are
-cared variables. If these variables are not, we leave the cared
-variables intact. If they are cared variables, we update the cared
-variables by excluding the variables on the left hand side but adding
-the variables appeared on the right hand
-side~(Algorithm~\ref{algorithm:slicing-statements}). In the algorithm, 
+To slice a statement, we check if the assigned variables are
+cared variables. If they are not, we leave the cared
+variables intact. 
+If the assigned variables are cared variables, we update the cared
+variables by excluding the assigned variables but including
+the variables in the
+expression~(Algorithm~\ref{algorithm:slicing-statements}). In the
+algorithm,  
 the parameter $\mathit{vars}$ denotes the set of cared variables.
-If the given statement assigns to a cared variable, it is returned
-with the updated cared variables by the algorithm. Otherwise, only
+If the given statement assigns to a cared variable, it is
+returned with the updated cared variables. Otherwise, only
 cared variables are returned.
 
 To slice a program, our algorithm proceeds from the last statement
 (Algorithm~\ref{algorithm:slicing-programs}). It invokes
-\textsc{SliceStatement} to see if the current statement is relevant
-and update cared variables if necessary. The algorithm recurses with
-the updated cared variables and all but the last statements.
+\textsc{SliceStmt} to see if the current statement is relevant
+and update cared variables. The algorithm recurses with
+updated cared variables and remaining statements.
 
 \begin{algorithm}
   \begin{algorithmic}[1]
@@ -149,9 +151,9 @@ the updated cared variables and all but the last statements.
 Algorithms~\ref{algorithm:slicing-statements}
 and~\ref{algorithm:slicing-programs} are specified in \gallina. Their
 properties are 
-also specified and proven formally in \coq. Particularly, the
+also specified and proven in \coq. Particularly, the
 soundness and completeness of our program slicing algorithm have been
-certified in the proof assistant. Formally, we have the following theorem:
+certified. Formally, we have the following theorem:
 
 \begin{theorem}
   For every $q, q' \in \Pred$ and $p \in \Prog$,

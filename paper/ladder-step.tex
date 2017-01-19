@@ -4,13 +4,15 @@ Recall that X25519 is based on the Abelian group $\bbfG = (G, \Gplus,
 operation $\Gplus$ requires another sequence of arithmetic computation
 over $\bbfGF(\varrho)$. Errors could still be introduced or even
 implanted in any sequence of computation proclaimed to implement $\Gplus$.
+Our next experiment verifies a critical low-level program implementing
+the group operation.
 
 Let $P \in G$ be a point on Curve25519. We write $[n]P$ for the
-$n$-fold addition ${P \Gplus \cdots \Gplus P} \in G$ when $n \in \bbfN$.
+$n$-fold addition ${P \Gplus \cdots \Gplus P} \in G$ for $n \in \bbfN$.
 In X25519, we want to compute a \emph{point multiplication}, that is,
 the point $[n]P$ for given $n$ and $P$. The standard iterative
-squaring method computes $[n]P$ by examining each bit of $n$ in 
-binary. For each iteration, $[2m]P$ is computed and
+squaring method computes $[n]P$ by examining each bit of $n$ iteratively.
+For each iteration, $[2m]P$ is computed and
 added with another $P$ when the current bit is $1$. Although the
 method is very efficient, it is not constant-time and hence insecure. 
 
@@ -107,12 +109,13 @@ known as the "Co-$Z$ ladder" is available to effect the same
 differential addition chain.
 }
 
-Let primed variables denote values of variables after computation.
+Let unprimed and primed variables denote their values before and after
+computation respectively.
 The Montgomery Ladderstep has the following
-specification~\cite{M:87:SPEC}:\footnote{An amusing fact is that when
-  we carry out the Ladderstep, we find for ourselves the factor of $4$
-  in both the numerator and denominator of the addition formulas,
-  noted on \cite[p.~261]{M:87:SPEC}.}
+specification~\cite{M:87:SPEC}:\footnote{Amusingly, we find for
+  ourselves the factor of $4$ in both the numerator and denominator of
+  the addition formulas during verification, noted on
+  \cite[p.~261]{M:87:SPEC}.}
 \[
 \begin{array}{rcl}
   x'_{m} & \Feq & 4 \Ftimes (x_m \Ftimes x_{m+1} \Fminus z_m \Ftimes z_{m+1})

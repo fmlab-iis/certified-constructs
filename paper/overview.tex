@@ -2,7 +2,7 @@
 Consider any predicates $q, q' \in \Pred$ and well-formed program $p \in
 \Prog$. Let $\theta_0 (v) = 0$ for every $v \in \Var$. By
 Theorem~\ref{theorem:program-slicing}, \ref{theorem:ssa}, and
-\ref{theorem:program-to-q-soundness}, we have the following deduction:
+\ref{theorem:program-to-q-soundness}, we have
 \begin{equation*}
   \begin{array}{cll}
     & \models \hoaretriple{q}{p}{q'}\\
@@ -27,3 +27,10 @@ Theorem~\ref{theorem:program-slicing}, \ref{theorem:ssa}, and
     & \textmd{ (Theorem~\ref{theorem:program-to-q-soundness})}
   \end{array}
 \end{equation*}
+Observe that $\hat{p}$ is well-formed and in static single assignment
+form (Lemma~\ref{lemma:ssa-programs} and~\ref{lemma:ssa-well-formed}).
+Theorem~\ref{theorem:program-to-q-soundness} is applicable in the last
+step. After the translations, an instance of the modular
+polynomial equation entailment problem is obtained from the given
+algebraic specification of a well-formed program in \mydsl. Our next
+goal is to solve the entailment problem.

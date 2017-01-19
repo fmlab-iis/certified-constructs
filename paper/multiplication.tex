@@ -1,19 +1,19 @@
  
 The operator $\Gplus$ is defined by arithmetic computation over
 $\bbfF$. %In order to compute $P_0 \Gplus P_1$ for $P_0, P_1 \in G$,
-Arithmetic operations over $\bbfF$ need to be implemented. Recall that
+Mathematical constructs for
+arithmetic over $\bbfF$ are necessary. Recall that
 an element in $\bbfF$ is represented by a 256-bit number. 
 % The na\"ive implementation for arithmetic operations over $\bbfF$
 % would require rithmetic computation over $\bbfZ$. 
 Arithmetic computation for 255-bit integers however is not yet
 available in commodity computing devices as of the year
-2017. Long-integer arithmetic has to be carried out by limbs where a
+2017. it has to be carried out by limbs where a
 \emph{limb} is a 32- or 64-bit number depending on the underlying
 computer architectures. Figure~\ref{figure:dsl:subtraction}
 (Section~\ref{section:domain-specific-language}) is an
 efficient and secure implementation of subtraction for the AMD64
-architecture.  Notice how it is much more parallel, and also has
-constant execution time.
+architecture. 
 
 
 \hide{
@@ -28,15 +28,16 @@ never be used in cryptographic programs.
 }
 
 Multiplication is another interesting but much more
-complicated operation. The na\"ive implementation for 255-bit
-multiplication would compute a 510-bit result and then find the
+complicated computation. The na\"ive implementation for 255-bit
+multiplication would compute a 510-bit product and then find the
 corresponding 255-bit representation by division. 
 An efficient implementation for 255-bit multiplication avoids the
-division by performing modulo operations aggressively. Observe that
-$2^{255} \Feq 19$ in $\bbfGF(\varrho)$. Whenever an intermediate
-result of the form $c \Ftimes 2^{255}$ is obtained, it is replaced by
-$c \Ftimes 19$. Indeed, the most efficient implementation for AMD64
-architecture does not perform any division \todo{reference?}.
+division by performing modulo operations aggressively. 
+For instance, an intermediate
+result of the form $c \Ftimes 2^{255}$ is immediately replaced by
+$c \Ftimes 19$ since $2^{255} \Feq 19$ in $\bbfGF(\varrho)$. 
+This is indeed how the most efficient multiplication for the AMD64
+architecture is implemented \todo{reference?}.
 
 \hide{
 Recall that 
@@ -67,9 +68,9 @@ are necessarily optimized with various algebraic properties in
 $\bbfF$. 
 }
 
-In our experiments, we took real-world efficient and secure
-low-level implementations of arithmetic operations over
-$\bbfGF(\varrho)$ in~\todo{reference?}, manually translated source
+In our experiment, we took real-world efficient and secure
+low-level implementations of arithmetic computation over
+$\bbfGF(\varrho)$ from~\todo{reference?}, manually translated source
 codes to our domain specific language, specified their algebraic
 properties, and performed certified verification with our technique. 
 Table~\ref{table:arithmetic-operations} summarizes the results.

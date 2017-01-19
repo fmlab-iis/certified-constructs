@@ -12,8 +12,8 @@ $\nu(x)$ for every valuation $\nu \in \St$. We write $\bbfZ \models
 
 Programs in static single assignment form can easily be transformed to
 conjunctions of polynomial equations. An assignment statement is
-translated to a polynomial equation with a single variable on the left
-hand side. For a $\dslcode{Split}$ statement, it is transformed to an
+translated to a polynomial equation with a variable on the left hand side.
+A $\dslcode{Split}$ statement is transformed to an
 equation with a linear expression of the assigned variables on the
 left hand side (Algorithm~\ref{algorithm:polynomial-statements}). 
 \begin{algorithm}
@@ -56,7 +56,7 @@ conjunction of polynomial equations corresponding to its statements
 Algorithm~\ref{algorithm:polynomial-statements}
 and~\ref{algorithm:polynomial-programs} are specified straightforwardly 
 in \gallina. We use the proof assistant \coq to prove properties
-about the algorithms. First, note that $\textsc{ProgToPolyEQ}(p) \in
+about the algorithms. Note that $\textsc{ProgToPolyEQ}(p) \in
 \Pred$ for every $p \in \Prog$. The following theorem shows that any
 behavior of the program $p$ is a solution to the system of polynomial
 equations $\textsc{ProgToPolyEQ}(p)$. In other words,
@@ -79,7 +79,7 @@ program specification.
     q(\vx) \wedge \varphi(\vx) \implies q'(\vx)
   \end{eqnarray*}
   where $\varphi(\vx) =
-  \textsc{ProgramToPolyEQ}(p)$. 
+  \textsc{ProgToPolyEQ}(p)$. 
   \label{definition:program-entailment}
 \end{definition}
 
@@ -114,10 +114,9 @@ program specification.
       {r}^2_4 & = & {r}^1_4 - {y}^0_4
     \end{array}
   \end{array}
-  \right)\\
-    \hspace{.05\textwidth}
-    \implies 
-    \mathit{radix}({x}^0_4, {x}^0_3, {x}^0_2, {x}^0_1, {x}^0_0) -
+  \right) \implies \\
+    %\hspace{.05\textwidth}
+    \mathit{radix51}({x}^0_4, {x}^0_3, {x}^0_2, {x}^0_1, {x}^0_0) -
     \mathit{radix51}({y}^0_4, {y}^0_3, {y}^0_2, {y}^0_1, {y}^0_0)
     \equiv
     \mathit{radix51}({r}^2_4, {r}^2_3, {r}^2_2, {r}^2_1, {r}^2_0)
@@ -135,7 +134,7 @@ algebraic specification of subtraction is shown in
 Figure~\ref{figure:translation:subtraction-polynomial}. The problem
 has 15 polynomial equality constraints with 25 variables. We 
 want to know if $\mathit{radix51}({r}^2_4, {r}^2_3, {r}^2_2,
-{r}^2_1, {r}^2_0)$ is the difference between $\mathit{radix}({x}^0_4,
+{r}^2_1, {r}^2_0)$ is the difference between $\mathit{radix51}({x}^0_4,
 {x}^0_3, {x}^0_2, {x}^0_1, {x}^0_0)$ and $\mathit{radix51}({y}^0_4,
 {y}^0_3, {y}^0_2, {y}^0_1, {y}^0_0)$ in $\bbfGF(\varrho)$ under the
 constraints. 
@@ -145,8 +144,8 @@ is certified in \coq (Theorem~\ref{theorem:program-to-q-soundness}).
 % Its proof is again certified by \coq.
 \begin{theorem}
   \label{theorem:program-to-q-soundness}
-  Let $q, q' \in \Pred$ be predicates, and $p \in \Prog$ a program in
-  static single assignment form and well-formed. 
+  Let $q, q' \in \Pred$ be predicates, and $p \in \Prog$ a well-formed
+  program in static single assignment form.
   If $\bbfZ \models \forall \vx.\Pi(\hoaretriple{q}{p}{q'})$, then
   $\models$ $\hoaretriple{q}{p}{q'}$.
 \end{theorem}
