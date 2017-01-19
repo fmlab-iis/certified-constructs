@@ -115,24 +115,21 @@ The statement $\concat{v_h}{v_l} \leftarrow
 \dslcode{Split}(e, n)$ splits the value of $e$ into two parts;
 the lowest $n$ bits are stored in $v_l$ and the higher bits
 are stored in $v_h$. Define
-\begin{eqnarray*}
-\nu\mymapsto{\vv}{\vd}(v) & \defn &
+$
+\nu\mymapsto{\vv}{\vd}(v) \defn
 \left\{
    \begin{array}{ll}
      d_i & \textmd{if $v = v_i \in \vv$}\\
      \nu(v) & \textmd{otherwise}
    \end{array}
 \right.
-\end{eqnarray*}
+$
 Consider the relation $\Tr \subseteq \St \times \Stmt \times \St$ defined
-as follows. 
-\begin{eqnarray*}
-  (\nu, v \leftarrow e, \nu') \in \Tr & \textmd{if} &
-  \nu' = \nu\mymapsto{v}{\valueof{e}_{\nu}}\\
-  (\nu, \concat{v_h}{v_l} \leftarrow \dslcode{Split} (e, n), \nu') \in
-  \Tr & \textmd{if} &
-  \nu' = \nu\mymapsto{v_h, v_l}{h, l}
-\end{eqnarray*}
+by $(\nu, v \leftarrow e, \nu') \in \Tr \textmd{ if }
+  \nu' = \nu\mymapsto{v}{\valueof{e}_{\nu}}$; and
+  $(\nu, \concat{v_h}{v_l} \leftarrow \dslcode{Split} (e, n), \nu') \in
+  \Tr \textmd{ if }
+  \nu' = \nu\mymapsto{v_h, v_l}{h, l}$
 where
 $l = \valueof{e}_{\nu} \mod 2^{\valueof{n}_{\nu}}$ and
 $h = (\valueof{e}_{\nu} - l) \div 2^{\valueof{n}_{\nu}}$.
@@ -147,14 +144,12 @@ A \emph{program} is a sequence of statements. We denote the empty program by
 $\epsilon$. Observe that conditional branches are not allowed in our
 domain specific language to prevent timing attacks. The semantics of a
 program is defined by the relation 
-$\Tr^* \subseteq \St \times \Prog \times \St$:
-\begin{eqnarray*}
-  (\nu, \epsilon, \nu) \in \Tr^*\\
-  (\nu, s; p, \nu'') \in \Tr^* & \textmd{if} &
+$\Tr^* \subseteq \St \times \Prog \times \St$ where
+$(\nu, \epsilon, \nu) \in \Tr^*$ and
+$(\nu, s; p, \nu'') \in \Tr^* \textmd{ if }
     \textmd{there is a } \nu' \textmd{ with }
-    (\nu, s, \nu') \in \Tr^* \textmd{ and }
-    (\nu, p, \nu'') \in \Tr^*.
-\end{eqnarray*}
+    (\nu, s, \nu') \in \Tr^*$ and
+    $(\nu, p, \nu'') \in \Tr^*$.
 Let $\nu, \nu' \in \St$ and $p = s_1; s_2; \cdots; s_n \in
 \Prog$. $\nu'$ is a state after executing $p$ from $\nu$
 (written $\nu \goesto{p} \nu'$) if there are $\nu_1 = \nu, \nu_2,
@@ -264,7 +259,7 @@ the algebraic specification of the mathematical construct is therefore
 Note that the variables ${r}_i$'s are added with constants
 after they are initizlied with ${x}_i$'s but before
 ${y}_i$'s are subtracted from them. It is not hard to see that
-$2\myprime = \mathit{radix51} (4503599627370458,$ $4503599627370494,$
+$2\myprime = \mathit{radix51}$ $(4503599627370458,$ $4503599627370494,$
 $4503599627370494,$ $4503599627370494,$ $4503599627370494)$
 after tedious computation. Hence $\mathit{radix51}({r}_4,$
 ${r}_3,$ ${r}_2,$ ${r}_1,$ ${r}_0)$ $=$

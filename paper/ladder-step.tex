@@ -1,29 +1,12 @@
 
-\hide{
-\todo{Bo-Yin, please describe how the ladder step is used and why it is 
-important for about .5 page. Maybe another .5 page for its mathematical 
-properties? }
-}
+Recall that X25519 is based on the Abelian group $\bbfG = (G, \Gplus,
+\Gzero)$ induced by the curve Curve25519. As aforementioned, the binary
+operation $\Gplus$ requires another sequence of arithmetic computation
+over $\bbfGF(\varrho)$. Errors could still be introduced or even
+implanted in any sequence of computation proclaimed to implement $\Gplus$.
 
-Recall that X25519 is based on the elliptic curve Curve25519.
-Cryptographic primitives of the key exchange protocol perform
-sequences of algebraic operations on the Abelian group $\bbfG$ induced
-by Curve25519, not on the finite field $\bbfGF(\varrho)$. As
-aforementioned, the binary operation $\Gplus$ requires another
-sequence of arithmetic computation over $\bbfGF(\varrho)$.
-%
-Correctness of arithmetic constructs over $\bbfGF(\varrho)$ does not
-necessarily imply the correctness of the mathematical construct in
-X25519. Errors could still be introduced or even implanted in
-implementations of $\Gplus$.
-
-%The Montgomery Ladderstep is the mathematical
-%construct widely used to implement $\Gplus$ on Curve25519. We 
-%verify a low-level implementation of the mathematical construct in
-%this experiment. 
-Let $P \in G$ be an element of the group $\bbfG$ and hence a point on
-the elliptic curve Curve25519. We write $[n]P$ for
-$\overbrace{P \Gplus \cdots \Gplus P}^n \in G$ when $n \in \bbfN$.
+Let $P \in G$ be a point on Curve25519. We write $[n]P$ for the
+$n$-fold addition ${P \Gplus \cdots \Gplus P} \in G$ when $n \in \bbfN$.
 The operation we want is a ``point multiplication'' which is given $n$
 and $P$ compute $[n]P$.  The na\"ive way to do this is ``double
 and add''.  
@@ -56,7 +39,7 @@ inefficient.  We need something equivalent to steps 4--7 but better.
 \begin{algorithm}[h]
 \label{evaluation:ladder-step:montgomery}
 \begin{algorithmic}[1]
-\Function{ladderstep}{$x_1, x_m, z_m, x_n, z_n$}
+\Function{Ladderstep}{$x_1, x_m, z_m, x_n, z_n$}
 \begin{multicols}{3}
 \State $t_1 \leftarrow x_m \Fplus z_m$
 \State $t_2 \leftarrow x_m \Fminus z_m$
@@ -103,6 +86,27 @@ addition chain and is one of the fundamental ways to avoid timing
 attacks.  For curves not equivalent to a Montgomery curve, a variant
 known as the "Co-$Z$ ladder" is available to effect the same
 differential addition chain.
+
+\[
+\begin{array}{c}
+  \cond{\top}\\
+  (x_{m+n}, z_{m+n}, x_{2m}, z_{2m})=\textsc{Ladderstep}(x_1, x_m, z_m, x_n, z_n)\\
+  \cond{
+  \begin{array}{rcl}
+    x_{m+n} & = & 4 \Ftimes (x_m \Ftimes x_n \Fminus z_m \Ftimes z_n)
+               \Ftimes (x_m \Ftimes x_n \Fminus z_m \Ftimes z_n) \wedge \\
+    z_{m+n} & = & 4 \Ftimes x_1 \Ftimes (x_m \Ftimes z_n \Fminus z_m \Ftimes x_n)
+               \Ftimes (x_m \Ftimes z_n \Fminus z_m \Ftimes x_n) \wedge \\
+    x_{2m} & = & (x_m \Ftimes x_m \Fminus z_m \Ftimes z_m) \Ftimes
+                (x_m \Ftimes x_m \Fminus z_m \Ftimes z_m) \wedge \\
+    z_{2m} & = & 4 \Ftimes x_m \Ftimes z_m \Ftimes
+                (x_m \Ftimes x_m \Fplus 121666 \Ftimes x_m \Ftimes z_m \Fplus
+                 z_m \Ftimes z_m)
+  \end{array}
+  }
+  
+\end{array}
+\]
 
 Montgomery's formulas and his steps are well known
 since~\cite{M:87:SPEC}.  What we showed is that the program carrys out
