@@ -24,15 +24,15 @@ with $G = \{ (x, y) : x, y \textmd{ satisfying } (\ref{eq:curve25519})
 (x_0, -y_0)$ and $P_0 \Gplus P_1 = (x, y)$  where
 \begin{eqnarray}
   m & = & (y_1 \Fminus y_0) \Fdiv (x_1 \Fminus x_0)\\\nonumber
-  x & = & b \Ftimes m \Ftimes m \Fminus a \Fminus x_0 \Fminus x_1\\ \nonumber
+  x & = & m \Ftimes m \Fminus 486662 \Fminus x_0 \Fminus x_1\\ \nonumber
   y & = & %m \Ftimes (x_0 \Fminus x) \Fminus y_0 
      %= m \Ftimes (x_1 \Fminus x) \Fminus y_1.
-          (2 \Ftimes x_1 \Fplus x_2 \Fplus a )\Ftimes m
-          \Fminus b \Ftimes m \Ftimes m \Ftimes m\Fminus y_1
+          (2 \Ftimes x_0 \Fplus x_1 \Fplus 486662 )\Ftimes m
+          \Fminus m \Ftimes m \Ftimes m\Fminus y_0
   \label{eq:curve25519-group}
 \end{eqnarray}
 when $P_0 \neq \pm P_1$. Other cases ($P_0 = \pm P_1$) are defined
-similarly \todo{reference?}. 
+similarly~\cite{C:96:CCANT}.
 $\bbfG$ and similar elliptic curve groups
 are the main objects in elliptic curve cryptography. It is
 essential to implement the commutative binary operation $\Gplus$ very
