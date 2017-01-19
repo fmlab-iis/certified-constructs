@@ -1,15 +1,22 @@
  
 The operator $\Gplus$ is defined by arithmetic computation over
-$\bbfF$. In order to compute $P_0 \Gplus P_1$ for $P_0, P_1 \in G$,
-arithmetic operations over $\bbfF$ need to be implemented. Recall that
-an element in $\bbfF$ is represented by a 256-bit number. The na\"ive
-implementation for arithmetic operations over $\bbfF$ would require
-arithmetic computation over $\bbfZ$. Arithmetic computation for
-255-bit integers however is not available in commodity computing
-devices as of the year 2017. Long-integer arithmetic has to be carried
-out by limbs where a \emph{limb} is a 32- or 64-bit number depending on the
-underlying computer architectures.
+$\bbfF$. %In order to compute $P_0 \Gplus P_1$ for $P_0, P_1 \in G$,
+Arithmetic operations over $\bbfF$ need to be implemented. Recall that
+an element in $\bbfF$ is represented by a 256-bit number. 
+% The na\"ive implementation for arithmetic operations over $\bbfF$
+% would require rithmetic computation over $\bbfZ$. 
+Arithmetic computation for 255-bit integers however is not yet
+available in commodity computing devices as of the year
+2017. Long-integer arithmetic has to be carried out by limbs where a
+\emph{limb} is a 32- or 64-bit number depending on the underlying
+computer architectures. Figure~\ref{figure:dsl:subtraction}
+(Section~\ref{section:domain-specific-language}) is an
+efficient and secure implementation of subtraction for the AMD64
+architecture.  Notice how it is much more parallel, and also has
+constant execution time.
 
+
+\hide{
 In practice, efficient long-integer arithmetic however is more
 complicated. Consider subtracting a long integer from another. The
 na\"ive implementation would simply subtract by limbs, propagate carry
@@ -18,23 +25,21 @@ Executime time of the na\"ive subtraction however varies when minuend
 is less than subtrahend. It thus allows timing attacks and is 
 insecure. The na\"ive implementation of 255-bit subtraction should
 never be used in cryptographic programs.
-Figure~\ref{figure:dsl:subtraction}
-(Section~\ref{section:domain-specific-language}) in fact is an
-%
-efficient and secure implementation of subtraction for the AMD64
-architecture.  Notice how it is much more parallel, and also has
-constant execution time.
+}
 
-Long-integer multiplication is another interesting but much more
+Multiplication is another interesting but much more
 complicated operation. The na\"ive implementation for 255-bit
 multiplication would compute a 510-bit result and then find the
-corresponding 255-bit representation by a modulo operation. The
-modulo operation however requires long-integer division. The na\"ive
-implementation is very inefficient. An efficient implementation for
-255-bit multiplication avoids division by performing modulo operations
-aggressively. Observe that $2^{255} \Feq 19$ in $\bbfGF(\varrho)$. 
-Whenever an intermediate result of the form $c \Ftimes 2^{255}$
-is obtained, it is replaced by $c \Ftimes 19$. Recall that
+corresponding 255-bit representation by division. 
+An efficient implementation for 255-bit multiplication avoids the
+division by performing modulo operations aggressively. Observe that
+$2^{255} \Feq 19$ in $\bbfGF(\varrho)$. Whenever an intermediate
+result of the form $c \Ftimes 2^{255}$ is obtained, it is replaced by
+$c \Ftimes 19$. Indeed, the most efficient implementation for AMD64
+architecture does not perform any division \todo{reference?}.
+
+\hide{
+Recall that 
 elements in $\bbfF$ are represented by five limbs of 51-bit unsigned
 integers. Consider multiplying two 255-bit values
 \begin{equation*}
@@ -53,15 +58,20 @@ The intermediate results $2^{255} x_4 y_1$, $2^{255} x_3 y_2$,
 $2^{255} x_2 y_3$, and $2^{255} x_1 y_4$ can all be replaced by 
 $19 x_4 y_1$, $19 x_3 y_2$, $19 x_2 y_3$, and $19 x_1 y_4$,
 respectively. Division is not needed in such implementations.
+}
 
+\hide{
 We describe but a couple of optimizations in efficient implementations
 of arithmetic operations over $\bbfF$. Real-world implementations
 are necessarily optimized with various algebraic properties in
-$\bbfF$. In our experiments, we took real-world efficient and secure
+$\bbfF$. 
+}
+
+In our experiments, we took real-world efficient and secure
 low-level implementations of arithmetic operations over
 $\bbfGF(\varrho)$ in~\todo{reference?}, manually translated source
-codes to our domain specific language, and specified their algebraic
-properties, and performed certified verification with our new technique. 
+codes to our domain specific language, specified their algebraic
+properties, and performed certified verification with our technique. 
 Table~\ref{table:arithmetic-operations} summarizes the results.
 
 
@@ -86,6 +96,8 @@ Table~\ref{table:arithmetic-operations} summarizes the results.
   \end{tabular}
   \label{table:arithmetic-operations}
 \end{table}
+
+\todo{range check}
 
 %%% Local Variables: 
 %%% mode: latex
