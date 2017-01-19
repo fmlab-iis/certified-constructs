@@ -15,7 +15,6 @@ structural induction. Integers are unchanged. For each variable, its
 most recent copy is returned by looking up the mapping $\theta$. Other
 expressions are transformed recursively. 
 
-\vspace{-1em}
 \begin{algorithm}
   \begin{algorithmic}[1]
     \Function{SSAExpr}{$\theta$, $e$}
@@ -44,7 +43,6 @@ expressions are transformed recursively.
   \caption{Static Single Assignment Transformation for Expressions}
   \label{algorithm:ssa-expressions}
 \end{algorithm}
-\vspace{-1em}
 
 Similarly, predicates must refer to most recent copies of 
 variables. They are transformed according to the finite mapping
@@ -52,7 +50,6 @@ $\theta$. Thanks to the formalization of finite mappings in \coq. Both
 algorithms are easily specified in \gallina.
 
 \hide{
-\vspace{-1em}
 \begin{algorithm}
   \begin{algorithmic}[1]
     \Function{SSAPred}{$\theta$, $q$}
@@ -75,7 +72,6 @@ algorithms are easily specified in \gallina.
   \caption{Static Single Assignment Transformation for Predicates}
   \label{algorithm:ssa-predicates}
 \end{algorithm}
-\vspace{-1em}
 }
 
 Statement transformation is slightly more complicated
