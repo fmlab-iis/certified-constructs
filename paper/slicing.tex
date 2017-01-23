@@ -54,6 +54,7 @@ recursively.
   \label{algorithm:variables-in-expressions}
 \end{algorithm}
 
+\vspace{-1em}
 \begin{algorithm}
 \begin{algorithmic}[1]
   \Function{VarsInPred}{$q$}
@@ -148,10 +149,24 @@ updated cared variables and remaining statements.
   \label{algorithm:slicing-programs}
 \end{algorithm}
 
+To avoid ambiguity, we consider \emph{well-formed} programs where
+\begin{itemize}
+\item for every statement $\concat{v_h}{v_l} \leftarrow
+  \dslcode{Split}(e, n)$ in the program, $v_h \neq v_l$; and
+\item every non-input program variable must be assigned to a value
+  before being used. 
+\end{itemize}
 Algorithms~\ref{algorithm:slicing-statements}
 and~\ref{algorithm:slicing-programs} are specified in \gallina. Their
-properties are 
-also specified and proven in \coq. Particularly, the
+properties are also specified and proven in \coq. 
+Particularly, well-formedness is preserved by program slicing.
+\begin{lemma}
+  $\textsc{SliceProg}(\textsc{VarsInPred}(q'), p)$ is well-formed
+  for every $q' \in \Pred$ and well-formed program $p \in \Prog$.
+  \label{lemma:slicing-well-formed}
+\end{lemma}
+
+Moreover, the
 soundness and completeness of our program slicing algorithm have been
 certified. Formally, we have the following theorem:
 

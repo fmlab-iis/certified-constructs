@@ -138,29 +138,15 @@ continues to transform the next statement with the updated mapping.
 Using the specifications of Algorithm~\ref{algorithm:ssa-statements}
 and~\ref{algorithm:ssa-programs} in \gallina, properties of these
 algorithms are formally proven in \coq. We first show that
-Algorithm~\ref{algorithm:ssa-programs} indeed 
+Algorithm~\ref{algorithm:ssa-programs} preserves well-formedness and
 produces a program in static single assignment form.
 \begin{lemma}
-  Let $\theta_0(v) = 0$ for every $v \in \Var$, $p \in \Prog$, and
-  $\langle \hat{\theta}, \hat{p} \rangle$ $=
-  \textsc{SSAProg}(\theta_0, p)$. Then
-  $\hat{p}$ is in static single assignment form.
-  \label{lemma:ssa-programs}
-\end{lemma}
-
-To avoid ambiguity, we consider \emph{well-formed} programs where
-\begin{itemize}
-\item for every statement $\concat{v_h}{v_l} \leftarrow
-  \dslcode{Split}(e, n)$ in the program, $v_h \neq v_l$; and
-\item every variable in the program must be assigned to a value
-  before being used. 
-\end{itemize}
-Well-formedness is preserved by our transformation. Formally, we have
-\begin{lemma}
   Let $\theta_0(v) = 0$ for every $v \in \Var$ and $p \in \Prog$ a
-  well-formed program. If $\langle \hat{\theta}, \hat{p} \rangle$ $=$ 
-  $\textsc{SSAProg}(\theta_0, p)$, then $\hat{p}$ is well-formed.
-  \label{lemma:ssa-well-formed}
+  well-formed program. If
+  $\langle \hat{\theta}, \hat{p} \rangle$ $=
+  \textsc{SSAProg}(\theta_0, p)$, then
+  $\hat{p}$ is well-formed and in static single assignment form.
+  \label{lemma:ssa-programs}
 \end{lemma}
 
 The next theorem shows that our transformation is both sound and
