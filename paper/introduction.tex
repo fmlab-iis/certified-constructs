@@ -59,7 +59,7 @@ protocol to be correct.
 % numbers in play (255 bits and more) and of the program itself
 % (10,000+ machine instructions).
 
-Several obstacles need be overcome in the verification of mathematical
+Several obstacles need be overcome for the verification of mathematical
 constructs in X25519. The key exchange protocol is based on a
 group induced by Curve25519. The elliptic
 curve is in turn defined over the Galois field $\bbfGF(2^{255} - 19)$. 
@@ -77,30 +77,34 @@ In order to compute the group operation, another sequence of
 arithmetic computation over $\bbfGF(2^{255} - 19)$ is
 needed. Particularly, a crucial step,
 the Montgomery Ladderstep, requires 18 arithmetic 
-computations over $\bbfGF(2^{255} - 19)$. The entire Ladderstep must be
+computations over $\bbfGF(2^{255} - 19)$~\cite{M:87:SPEC}. 
+The entire Ladderstep must be
 verified to ensure security guarantees offered by Curve25519.
 % and hence the ECDH key exchange protocol X25519.
 
-In this paper, we focus on algebraic properties on low-level
+In this paper, we focus on algebraic properties about low-level
 implementations of mathematical constructs in cryptographic programs.
 Mathematical constructs by their nature perform computation on
 underlying algebraic structures. We aim to verify whether they perform
 intended algebraic computation correctly. To this end, we propose the
 domain specific language \mydsl for low-level 
 mathematical constructs. Algebraic pre- and post-conditions of
-programs written in \mydsl are specified as Hoare
-triples. Such an algebraic specification is converted to static single 
+programs in \mydsl are specified as Hoare
+triples~\cite{H:69:ABCP}. 
+Such an algebraic specification is converted to static single 
 assignment form and then translated into an algebraic problem (called 
-the modular polynomial equation entailment problem). We use the computer
-algebra system \singular to solve the algebraic problem. 
+the modular polynomial equation entailment
+problem)~\cite{AWZ:88:DQVP,H:07:AENTP}. We use the computer
+algebra system \singular to solve the algebraic problem~\cite{GP:08:SICA}. 
 Program fragments irrelevant to algebraic properties are also
-removed by slicing to reduce the size of algebraic problems.
-We use \coq to certify the
+removed by slicing to reduce the size of algebraic problems~\cite{W:81:PS}.
+The proof assistant \coq is used to certify the
 correctness of translations, as well as solutions to algebraic
-problems computed by \singular.
+problems computed by \singular~\cite{YC:2004:ITPPDC}.
 
 We report case studies on verifying mathematical constructs used in
-the X25519 ECDH key exchange protocol. For each arithmetic operations
+the X25519 ECDH key exchange protocol~\cite{BDL+:11:HSHSS,BDL+:12:HSHSS}. 
+For each arithmetic operations
 (such as addition, subtraction, and multiplication) over $\bbfGF(2^{255} - 19)$,
 their low-level real-world implementations are converted to our domain
 specific language \mydsl manually. We specify algebraic properties

@@ -5,7 +5,7 @@ operation $\Gplus$ requires another sequence of arithmetic computation
 over $\bbfGF(\varrho)$. Errors could still be introduced or even
 implanted in any sequence of computation proclaimed to implement $\Gplus$.
 Our next experiment verifies a critical low-level program implementing
-the group operation.
+the group operation~\cite{BDL+:11:HSHSS,BDL+:12:HSHSS}.
 
 Let $P \in G$ be a point on Curve25519. We write $[n]P$ for the
 $n$-fold addition ${P \Gplus \cdots \Gplus P} \in G$ for $n \in \bbfN$.
@@ -117,7 +117,7 @@ specification~\cite{M:87:SPEC}:\footnote{Amusingly, we find for
   ourselves the factor of $4$ in both the numerator and denominator of
   the addition formulas during verification, noted on
   \cite[p.~261]{M:87:SPEC}.}
-\vspace{-.5em}
+%\vspace{-.5em}
 \[
 \begin{array}{rcl}
   x'_{m} & \Feq & 4 \Ftimes (x_m \Ftimes x_{m+1} \Fminus z_m \Ftimes z_{m+1})
@@ -131,7 +131,7 @@ specification~\cite{M:87:SPEC}:\footnote{Amusingly, we find for
                  (x_m \Ftimes x_m \Fplus 121666 \Ftimes x_m \Ftimes z_m \Fplus
                  z_m \Ftimes z_m)
 \end{array}
-\vspace{-.5em}
+%\vspace{-.5em}
 \]
 In our experiment, we replace all arithmetic computation over $\bbfF$
 with corresponding mathematical constructs (4 additions, 4 subtractions, 4 squares, 5
