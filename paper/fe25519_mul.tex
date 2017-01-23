@@ -177,3 +177,24 @@ The following \mydsl code implements multiplications over $\bbfGF(2^{255}-19)$:
 \end{align*}
 \end{multicols}
 }
+
+Let $\dslcode{mul}$ denote the above program. Its algebraic
+specification is 
+\[
+\begin{array}{rcl}
+\cond{\top} &
+\dslcode{mul} &
+\cond{
+   \begin{array}{c}
+     \mathit{radix51}(\mathit{x4}, \mathit{x3}, \mathit{x2},
+     \mathit{x1}, \mathit{x0}) \times
+     \mathit{radix51}(\mathit{y4}, \mathit{y3}, \mathit{y2},
+     \mathit{y1}, \mathit{y0})\\
+     \equiv 
+     \mathit{radix51}(\mathit{z4}, \mathit{z3}, \mathit{z2},
+     \mathit{z1}, \mathit{z0})
+     \mod 2^{255}-19
+   \end{array}
+}.
+\end{array}
+\]
