@@ -1,14 +1,15 @@
 
-In order to ensure computer security offered by cryptography,
+In order to take advantages of computer security offered by modern 
+cryptography, 
 cryptosystems must be realized by cryptographic programs where mathematical
 constructs are required to compute on the underlying algebraic
-structures of modern cryptosystems.
+structures of cryptosystems.
 Such mathematical constructs are frequently invoked in cryptographic
 programs. They are often written in low-level assembly languages and
 manually optimized for efficiency. 
 % Cryptographic primitives in cryptosystems are but sequences of
 % algebraic operations on mathematical structures. 
-Cryptosystems could be compromised should programming
+Security of cryptosystems could be compromised should programming
 errors in mathematical constructs be exploited by adversaries.
 Security guarantees of cryptographic programs
 thus depend heavily on the correctness of mathematical constructs.
@@ -108,13 +109,11 @@ For each arithmetic operations
 (such as addition, subtraction, and multiplication) over $\bbfGF(2^{255} - 19)$,
 their low-level real-world implementations are converted to our domain
 specific language \mydsl manually. We specify algebraic properties
-of mathematical constructs. Mathematical constructs
+of mathematical constructs in Hoare triples. Mathematical constructs
 are then verified against their algebraic
-specifications automatically with our technique. 
-The real-world implementation of the Montgomery Ladderstep is 
+specifications with our automatic technique. 
+The implementation of the Montgomery Ladderstep is 
 verified similarly.  
-
-\input{related-work}
 
 We have the following contributions:
 \begin{itemize}
@@ -130,6 +129,9 @@ We have the following contributions:
   and certified verification on real cryptographic programs with
   minimal human intervention.
 \end{itemize}
+
+\input{related-work}
+
 
 This paper is organized as follows. After preliminaries
 (Section~\ref{section:preliminaries}), our domain specific
