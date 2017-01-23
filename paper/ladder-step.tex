@@ -131,11 +131,12 @@ specification~\cite{M:87:SPEC}:\footnote{Amusingly, we find for
 \end{array}
 \]
 In our experiment, we replace all arithmetic computation over $\bbfF$
-with corrresponding mathematical constructs (8 additions, 2 squares, 7
+with corrresponding mathematical constructs (4 additions, 4 subtractions, 4 squares, 5
 multiplications, and 1 multiplication by 121666) written in \mydsl,
 translate the above specification into an algebraic specification, and
-apply our technique to verify the entire Ladderstep (\todo{number of
- statements}). \todo{how much time?}
+apply our technique to verify the entire Ladderstep.
+The verification of the Ladderstep (containing 1462 statements) is carried out in 82 hours.
+SMT solvers finish range checks on the Ladderstep in 19 minutes.
 
 
 \hide{

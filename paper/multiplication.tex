@@ -73,26 +73,35 @@ low-level implementations of arithmetic computation over
 $\bbfGF(\varrho)$ from~\todo{reference?}, manually translated source
 codes to our domain specific language, specified their algebraic
 properties, and performed certified verification with our technique. 
-Table~\ref{table:arithmetic-operations} summarizes the results.
+Table~\ref{table:arithmetic-operations} summarizes the results
+without and with applying the two heuristics in Section~\ref{section:evaluation}.
+The results show that without the two heuristics, multiplication and square
+cannot be verified because the computation of Gr\"oebner basis was killed by the OS
+after running for days.
+With the heuristics, all the implementations can be verified in seconds.
+
+
+
 
 
 \begin{table}[ht]
   \caption{Certified Verification of Arithmetic Operations over
     $\bbfGF(\varrho)$}
   \centering
-  \begin{tabular}{|c|c|c|c|}
+  \begin{tabular}{|c|c|c|c|c|c|}
     \hline
-             & number of lines & time (seconds) & remark\\
+    \multirow{2}{*}{} & \multirow{2}{*}{number of lines} & \multicolumn{3}{|c|}{time (seconds)} & \multirow{2}{*}{remark} \\ \cline{3-5}
+    & & without & with & range & \\
     \hline
-    addition & 10 &                       & $a \Fplus b$ \\
+    addition                 & 10  & 45.40  & 3.24   & 0.49   & $a \Fplus b$ \\
     \hline
-    subtraction & 15 &                    & $a \Fminus b$ \\
+    subtraction              & 15  & 52.18  & 3.65   & 0.83   & $a \Fminus b$ \\
     \hline
-    multiplication & 169 &                & $a \Ftimes b$\\
+    multiplication           & 169 & -      & 24.98  & 19.82 & $a \Ftimes b$\\
     \hline
-    multiplication by 121666 & 31 &       & $121666 \Ftimes a$\\
+    multiplication by 121666 & 21  & 110.39 & 3.87   & 0.62   & $121666 \Ftimes a$\\
     \hline
-    square & 124 &                        & $a \Ftimes a$\\
+    square                   & 124 & -      & 13.08  & 14.33 & $a \Ftimes a$\\
     \hline
   \end{tabular}
   \label{table:arithmetic-operations}
@@ -100,14 +109,13 @@ Table~\ref{table:arithmetic-operations} summarizes the results.
 
 % {range check}
 
-We also perform range checks on the five mathematical constructs in
+We also perform range checks with SMT solers on the five mathematical constructs in
 Table~\ref{table:arithmetic-operations}. The most complicated case
-(multiplication) takes \todo{how much time?}. Compared to
+(multiplication) takes 19.82 seconds. Compared to
 algebraic specifications, verification time for range check is
-insignificant. 
+insignificant. \todo{not insignificant}
 Although our range check is not certified, low-level
 mathematical constructs in X25519 are formally verified. 
-
 
 %%% Local Variables: 
 %%% mode: latex
