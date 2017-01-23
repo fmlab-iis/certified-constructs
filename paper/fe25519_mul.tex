@@ -1,173 +1,179 @@
-
+\subsection{Multiplication over $\bbfGF(2^{255}-19)$}
+\label{appendix:multiplication}
+The following \mydsl code implements multiplications over $\bbfGF(2^{255}-19)$:
 \allowdisplaybreaks[1]
+{\tiny
+\begin{multicols}{2}
 \begin{align*}
-1 & mulrax & \leftarrow x3; \\
-2 & mulrax & \leftarrow mulrax \times 19; \\
-3 & mulx319 & \leftarrow mulrax; \\
-4 & \concat{mulrdx}{mulrax} & \leftarrow \dslcode{Split}(mulrax \times y2, wsize); \\
-5 & r0 & \leftarrow mulrax; \\
-6 & mulr01 & \leftarrow mulrdx; \\
-7 & mulrax & \leftarrow x4; \\
-8 & mulrax & \leftarrow mulrax \times 19; \\
-9 & mulx419 & \leftarrow mulrax; \\
-10 & \concat{mulrdx}{mulrax} & \leftarrow \dslcode{Split}(mulrax \times y1, wsize); \\
-11 & r0 & \leftarrow r0 + mulrax; \\
-12 & \concat{carry}{r0} & \leftarrow \dslcode{Split}(r0, wsize); \\
-13 & mulr01 & \leftarrow mulr01 + mulrdx + carry; \\
-14 & mulrax & \leftarrow x0; \\
-15 & \concat{mulrdx}{mulrax} & \leftarrow \dslcode{Split}(mulrax \times y0, wsize); \\
-16 & r0 & \leftarrow r0 + mulrax; \\
-17 & \concat{carry}{r0} & \leftarrow \dslcode{Split}(r0, wsize); \\
-18 & mulr01 & \leftarrow mulr01 + mulrdx + carry; \\
-19 & mulrax & \leftarrow x0; \\
-20 & \concat{mulrdx}{mulrax} & \leftarrow \dslcode{Split}(mulrax \times y1, wsize); \\
-21 & r1 & \leftarrow mulrax; \\
-22 & mulr11 & \leftarrow mulrdx; \\
-23 & mulrax & \leftarrow x0; \\
-24 & \concat{mulrdx}{mulrax} & \leftarrow \dslcode{Split}(mulrax \times y2, wsize); \\
-25 & r2 & \leftarrow mulrax; \\
-26 & mulr21 & \leftarrow mulrdx; \\
-27 & mulrax & \leftarrow x0; \\
-28 & \concat{mulrdx}{mulrax} & \leftarrow \dslcode{Split}(mulrax \times y3, wsize); \\
-29 & r3 & \leftarrow mulrax; \\
-30 & mulr31 & \leftarrow mulrdx; \\
-31 & mulrax & \leftarrow x0; \\
-32 & \concat{mulrdx}{mulrax} & \leftarrow \dslcode{Split}(mulrax \times y4, wsize); \\
-33 & r4 & \leftarrow mulrax; \\
-34 & mulr41 & \leftarrow mulrdx; \\
-35 & mulrax & \leftarrow x1; \\
-36 & \concat{mulrdx}{mulrax} & \leftarrow \dslcode{Split}(mulrax \times y0, wsize); \\
-37 & r1 & \leftarrow r1 + mulrax; \\
-38 & \concat{carry}{r1} & \leftarrow \dslcode{Split}(r1, wsize); \\
-39 & mulr11 & \leftarrow mulr11 + mulrdx + carry; \\
-40 & mulrax & \leftarrow x1; \\
-41 & \concat{mulrdx}{mulrax} & \leftarrow \dslcode{Split}(mulrax \times y1, wsize); \\
-42 & r2 & \leftarrow r2 + mulrax; \\
-43 & \concat{carry}{r2} & \leftarrow \dslcode{Split}(r2, wsize); \\
-44 & mulr21 & \leftarrow mulr21 + mulrdx + carry; \\
-45 & mulrax & \leftarrow x1; \\
-46 & \concat{mulrdx}{mulrax} & \leftarrow \dslcode{Split}(mulrax \times y2, wsize); \\
-47 & r3 & \leftarrow r3 + mulrax; \\
-48 & \concat{carry}{r3} & \leftarrow \dslcode{Split}(r3, wsize); \\
-49 & mulr31 & \leftarrow mulr31 + mulrdx + carry; \\
-50 & mulrax & \leftarrow x1; \\
-51 & \concat{mulrdx}{mulrax} & \leftarrow \dslcode{Split}(mulrax \times y3, wsize); \\
-52 & r4 & \leftarrow r4 + mulrax; \\
-53 & \concat{carry}{r4} & \leftarrow \dslcode{Split}(r4, wsize); \\
-54 & mulr41 & \leftarrow mulr41 + mulrdx + carry; \\
-55 & mulrax & \leftarrow x1; \\
-56 & mulrax & \leftarrow mulrax \times 19; \\
-57 & \concat{mulrdx}{mulrax} & \leftarrow \dslcode{Split}(mulrax \times y4, wsize); \\
-58 & r0 & \leftarrow r0 + mulrax; \\
-59 & \concat{carry}{r0} & \leftarrow \dslcode{Split}(r0, wsize); \\
-60 & mulr01 & \leftarrow mulr01 + mulrdx + carry; \\
-61 & mulrax & \leftarrow x2; \\
-62 & \concat{mulrdx}{mulrax} & \leftarrow \dslcode{Split}(mulrax \times y0, wsize); \\
-63 & r2 & \leftarrow r2 + mulrax; \\
-64 & \concat{carry}{r2} & \leftarrow \dslcode{Split}(r2, wsize); \\
-65 & mulr21 & \leftarrow mulr21 + mulrdx + carry; \\
-66 & mulrax & \leftarrow x2; \\
-67 & \concat{mulrdx}{mulrax} & \leftarrow \dslcode{Split}(mulrax \times y1, wsize); \\
-68 & r3 & \leftarrow r3 + mulrax; \\
-69 & \concat{carry}{r3} & \leftarrow \dslcode{Split}(r3, wsize); \\
-70 & mulr31 & \leftarrow mulr31 + mulrdx + carry; \\
-71 & mulrax & \leftarrow x2; \\
-72 & \concat{mulrdx}{mulrax} & \leftarrow \dslcode{Split}(mulrax \times y2, wsize); \\
-73 & r4 & \leftarrow r4 + mulrax; \\
-74 & \concat{carry}{r4} & \leftarrow \dslcode{Split}(r4, wsize); \\
-75 & mulr41 & \leftarrow mulr41 + mulrdx + carry; \\
-76 & mulrax & \leftarrow x2; \\
-77 & mulrax & \leftarrow mulrax \times 19; \\
-78 & \concat{mulrdx}{mulrax} & \leftarrow \dslcode{Split}(mulrax \times y3, wsize); \\
-79 & r0 & \leftarrow r0 + mulrax; \\
-80 & \concat{carry}{r0} & \leftarrow \dslcode{Split}(r0, wsize); \\
-81 & mulr01 & \leftarrow mulr01 + mulrdx + carry; \\
-82 & mulrax & \leftarrow x2; \\
-83 & mulrax & \leftarrow mulrax \times 19; \\
-84 & \concat{mulrdx}{mulrax} & \leftarrow \dslcode{Split}(mulrax \times y4, wsize); \\
-85 & r1 & \leftarrow r1 + mulrax; \\
-86 & \concat{carry}{r1} & \leftarrow \dslcode{Split}(r1, wsize); \\
-87 & mulr11 & \leftarrow mulr11 + mulrdx + carry; \\
-88 & mulrax & \leftarrow x3; \\
-89 & \concat{mulrdx}{mulrax} & \leftarrow \dslcode{Split}(mulrax \times y0, wsize); \\
-90 & r3 & \leftarrow r3 + mulrax; \\
-91 & \concat{carry}{r3} & \leftarrow \dslcode{Split}(r3, wsize); \\
-92 & mulr31 & \leftarrow mulr31 + mulrdx + carry; \\
-93 & mulrax & \leftarrow x3; \\
-94 & \concat{mulrdx}{mulrax} & \leftarrow \dslcode{Split}(mulrax \times y1, wsize); \\
-95 & r4 & \leftarrow r4 + mulrax; \\
-96 & \concat{carry}{r4} & \leftarrow \dslcode{Split}(r4, wsize); \\
-97 & mulr41 & \leftarrow mulr41 + mulrdx + carry; \\
-98 & mulrax & \leftarrow mulx319; \\
-99 & \concat{mulrdx}{mulrax} & \leftarrow \dslcode{Split}(mulrax \times y3, wsize); \\
-100 & r1 & \leftarrow r1 + mulrax; \\
-101 & \concat{carry}{r1} & \leftarrow \dslcode{Split}(r1, wsize); \\
-102 & mulr11 & \leftarrow mulr11 + mulrdx + carry; \\
-103 & mulrax & \leftarrow mulx319; \\
-104 & \concat{mulrdx}{mulrax} & \leftarrow \dslcode{Split}(mulrax \times y4, wsize); \\
-105 & r2 & \leftarrow r2 + mulrax; \\
-106 & \concat{carry}{r2} & \leftarrow \dslcode{Split}(r2, wsize); \\
-107 & mulr21 & \leftarrow mulr21 + mulrdx + carry; \\
-108 & mulrax & \leftarrow x4; \\
-109 & \concat{mulrdx}{mulrax} & \leftarrow \dslcode{Split}(mulrax \times y0, wsize); \\
-110 & r4 & \leftarrow r4 + mulrax; \\
-111 & \concat{carry}{r4} & \leftarrow \dslcode{Split}(r4, wsize); \\
-112 & mulr41 & \leftarrow mulr41 + mulrdx + carry; \\
-113 & mulrax & \leftarrow mulx419; \\
-114 & \concat{mulrdx}{mulrax} & \leftarrow \dslcode{Split}(mulrax \times y2, wsize); \\
-115 & r1 & \leftarrow r1 + mulrax; \\
-116 & \concat{carry}{r1} & \leftarrow \dslcode{Split}(r1, wsize); \\
-117 & mulr11 & \leftarrow mulr11 + mulrdx + carry; \\
-118 & mulrax & \leftarrow mulx419; \\
-119 & \concat{mulrdx}{mulrax} & \leftarrow \dslcode{Split}(mulrax \times y3, wsize); \\
-120 & r2 & \leftarrow r2 + mulrax; \\
-121 & \concat{carry}{r2} & \leftarrow \dslcode{Split}(r2, wsize); \\
-122 & mulr21 & \leftarrow mulr21 + mulrdx + carry; \\
-123 & mulrax & \leftarrow mulx419; \\
-124 & \concat{mulrdx}{mulrax} & \leftarrow \dslcode{Split}(mulrax \times y4, wsize); \\
-125 & r3 & \leftarrow r3 + mulrax; \\
-126 & \concat{carry}{r3} & \leftarrow \dslcode{Split}(r3, wsize); \\
-127 & mulr31 & \leftarrow mulr31 + mulrdx + carry; \\
-128 & \concat{tmp}{r0} & \leftarrow \dslcode{Split}(r0, 51); \\
-129 & mulr01 & \leftarrow pow2 mulr01 13 + tmp; \\
-130 & \concat{tmp}{r1} & \leftarrow \dslcode{Split}(r1, 51); \\
-131 & mulr11 & \leftarrow pow2 mulr11 13 + tmp; \\
-132 & r1 & \leftarrow r1 + mulr01; \\
-133 & \concat{tmp}{r2} & \leftarrow \dslcode{Split}(r2, 51); \\
-134 & mulr21 & \leftarrow pow2 mulr21 13 + tmp; \\
-135 & r2 & \leftarrow r2 + mulr11; \\
-136 & \concat{tmp}{r3} & \leftarrow \dslcode{Split}(r3, 51); \\
-137 & mulr31 & \leftarrow pow2 mulr31 13 + tmp; \\
-138 & r3 & \leftarrow r3 + mulr21; \\
-139 & \concat{tmp}{r4} & \leftarrow \dslcode{Split}(r4, 51); \\
-140 & mulr41 & \leftarrow pow2 mulr41 13 + tmp; \\
-141 & r4 & \leftarrow r4 + mulr31; \\
-142 & mulr41 & \leftarrow mulr41 \times 19; \\
-143 & r0 & \leftarrow r0 + mulr41; \\
-144 & mult & \leftarrow r0; \\
-145 & \concat{mult}{tmp} & \leftarrow \dslcode{Split}(mult, 51); \\
-146 & mult & \leftarrow mult + r1; \\
-147 & r1 & \leftarrow mult; \\
-148 & \concat{mult}{tmp2} & \leftarrow \dslcode{Split}(mult, 51); \\
-149 & r0 & \leftarrow tmp; \\
-150 & mult & \leftarrow mult + r2; \\
-151 & r2 & \leftarrow mult; \\
-152 & \concat{mult}{tmp} & \leftarrow \dslcode{Split}(mult, 51); \\
-153 & r1 & \leftarrow tmp2; \\
-154 & mult & \leftarrow mult + r3; \\
-155 & r3 & \leftarrow mult; \\
-156 & \concat{mult}{tmp2} & \leftarrow \dslcode{Split}(mult, 51); \\
-157 & r2 & \leftarrow tmp; \\
-158 & mult & \leftarrow mult + r4; \\
-159 & r4 & \leftarrow mult; \\
-160 & \concat{mult}{tmp} & \leftarrow \dslcode{Split}(mult, 51); \\
-161 & r3 & \leftarrow tmp2; \\
-162 & mult & \leftarrow mult \times 19; \\
-163 & r0 & \leftarrow r0 + mult; \\
-164 & r4 & \leftarrow tmp; \\
-165 & z0 & \leftarrow r0; \\
-166 & z1 & \leftarrow r1; \\
-167 & z2 & \leftarrow r2; \\
-168 & z3 & \leftarrow r3; \\
-169 & z4 & \leftarrow r4; \\
+1 &: \mathit{mulrax} \leftarrow & \mathit{x3}; \\
+2 &: \mathit{mulrax} \leftarrow & \mathit{mulrax} \times 19; \\
+3 &: \mathit{mulx319} \leftarrow & \mathit{mulrax}; \\
+4 &: \concat{\mathit{mulrdx}}{\mathit{mulrax}} \leftarrow & \dslcode{Split}(\mathit{mulrax} \times \mathit{y2}, \mathit{wsize}); \\
+5 &: \mathit{r0} \leftarrow & \mathit{mulrax}; \\
+6 &: \mathit{mulr01} \leftarrow & \mathit{mulrdx}; \\
+7 &: \mathit{mulrax} \leftarrow & \mathit{x4}; \\
+8 &: \mathit{mulrax} \leftarrow & \mathit{mulrax} \times 19; \\
+9 &: \mathit{mulx419} \leftarrow & \mathit{mulrax}; \\
+10 &: \concat{\mathit{mulrdx}}{\mathit{mulrax}} \leftarrow & \dslcode{Split}(\mathit{mulrax} \times \mathit{y1}, \mathit{wsize}); \\
+11 &: \mathit{r0} \leftarrow & \mathit{r0} + \mathit{mulrax}; \\
+12 &: \concat{\mathit{carry}}{\mathit{r0}} \leftarrow & \dslcode{Split}(\mathit{r0}, \mathit{wsize}); \\
+13 &: \mathit{mulr01} \leftarrow & \mathit{mulr01} + \mathit{mulrdx} + \mathit{carry}; \\
+14 &: \mathit{mulrax} \leftarrow & \mathit{x0}; \\
+15 &: \concat{\mathit{mulrdx}}{\mathit{mulrax}} \leftarrow & \dslcode{Split}(\mathit{mulrax} \times \mathit{y0}, \mathit{wsize}); \\
+16 &: \mathit{r0} \leftarrow & \mathit{r0} + \mathit{mulrax}; \\
+17 &: \concat{\mathit{carry}}{\mathit{r0}} \leftarrow & \dslcode{Split}(\mathit{r0}, \mathit{wsize}); \\
+18 &: \mathit{mulr01} \leftarrow & \mathit{mulr01} + \mathit{mulrdx} + \mathit{carry}; \\
+19 &: \mathit{mulrax} \leftarrow & \mathit{x0}; \\
+20 &: \concat{\mathit{mulrdx}}{\mathit{mulrax}} \leftarrow & \dslcode{Split}(\mathit{mulrax} \times \mathit{y1}, \mathit{wsize}); \\
+21 &: \mathit{r1} \leftarrow & \mathit{mulrax}; \\
+22 &: \mathit{mulr11} \leftarrow & \mathit{mulrdx}; \\
+23 &: \mathit{mulrax} \leftarrow & \mathit{x0}; \\
+24 &: \concat{\mathit{mulrdx}}{\mathit{mulrax}} \leftarrow & \dslcode{Split}(\mathit{mulrax} \times \mathit{y2}, \mathit{wsize}); \\
+25 &: \mathit{r2} \leftarrow & \mathit{mulrax}; \\
+26 &: \mathit{mulr21} \leftarrow & \mathit{mulrdx}; \\
+27 &: \mathit{mulrax} \leftarrow & \mathit{x0}; \\
+28 &: \concat{\mathit{mulrdx}}{\mathit{mulrax}} \leftarrow & \dslcode{Split}(\mathit{mulrax} \times \mathit{y3}, \mathit{wsize}); \\
+29 &: \mathit{r3} \leftarrow & \mathit{mulrax}; \\
+30 &: \mathit{mulr31} \leftarrow & \mathit{mulrdx}; \\
+31 &: \mathit{mulrax} \leftarrow & \mathit{x0}; \\
+32 &: \concat{\mathit{mulrdx}}{\mathit{mulrax}} \leftarrow & \dslcode{Split}(\mathit{mulrax} \times \mathit{y4}, \mathit{wsize}); \\
+33 &: \mathit{r4} \leftarrow & \mathit{mulrax}; \\
+34 &: \mathit{mulr41} \leftarrow & \mathit{mulrdx}; \\
+35 &: \mathit{mulrax} \leftarrow & \mathit{x1}; \\
+36 &: \concat{\mathit{mulrdx}}{\mathit{mulrax}} \leftarrow & \dslcode{Split}(\mathit{mulrax} \times \mathit{y0}, \mathit{wsize}); \\
+37 &: \mathit{r1} \leftarrow & \mathit{r1} + \mathit{mulrax}; \\
+38 &: \concat{\mathit{carry}}{\mathit{r1}} \leftarrow & \dslcode{Split}(\mathit{r1}, \mathit{wsize}); \\
+39 &: \mathit{mulr11} \leftarrow & \mathit{mulr11} + \mathit{mulrdx} + \mathit{carry}; \\
+40 &: \mathit{mulrax} \leftarrow & \mathit{x1}; \\
+41 &: \concat{\mathit{mulrdx}}{\mathit{mulrax}} \leftarrow & \dslcode{Split}(\mathit{mulrax} \times \mathit{y1}, \mathit{wsize}); \\
+42 &: \mathit{r2} \leftarrow & \mathit{r2} + \mathit{mulrax}; \\
+43 &: \concat{\mathit{carry}}{\mathit{r2}} \leftarrow & \dslcode{Split}(\mathit{r2}, \mathit{wsize}); \\
+44 &: \mathit{mulr21} \leftarrow & \mathit{mulr21} + \mathit{mulrdx} + \mathit{carry}; \\
+45 &: \mathit{mulrax} \leftarrow & \mathit{x1}; \\
+46 &: \concat{\mathit{mulrdx}}{\mathit{mulrax}} \leftarrow & \dslcode{Split}(\mathit{mulrax} \times \mathit{y2}, \mathit{wsize}); \\
+47 &: \mathit{r3} \leftarrow & \mathit{r3} + \mathit{mulrax}; \\
+48 &: \concat{\mathit{carry}}{\mathit{r3}} \leftarrow & \dslcode{Split}(\mathit{r3}, \mathit{wsize}); \\
+49 &: \mathit{mulr31} \leftarrow & \mathit{mulr31} + \mathit{mulrdx} + \mathit{carry}; \\
+50 &: \mathit{mulrax} \leftarrow & \mathit{x1}; \\
+51 &: \concat{\mathit{mulrdx}}{\mathit{mulrax}} \leftarrow & \dslcode{Split}(\mathit{mulrax} \times \mathit{y3}, \mathit{wsize}); \\
+52 &: \mathit{r4} \leftarrow & \mathit{r4} + \mathit{mulrax}; \\
+53 &: \concat{\mathit{carry}}{\mathit{r4}} \leftarrow & \dslcode{Split}(\mathit{r4}, \mathit{wsize}); \\
+54 &: \mathit{mulr41} \leftarrow & \mathit{mulr41} + \mathit{mulrdx} + \mathit{carry}; \\
+55 &: \mathit{mulrax} \leftarrow & \mathit{x1}; \\
+56 &: \mathit{mulrax} \leftarrow & \mathit{mulrax} \times 19; \\
+57 &: \concat{\mathit{mulrdx}}{\mathit{mulrax}} \leftarrow & \dslcode{Split}(\mathit{mulrax} \times \mathit{y4}, \mathit{wsize}); \\
+58 &: \mathit{r0} \leftarrow & \mathit{r0} + \mathit{mulrax}; \\
+59 &: \concat{\mathit{carry}}{\mathit{r0}} \leftarrow & \dslcode{Split}(\mathit{r0}, \mathit{wsize}); \\
+60 &: \mathit{mulr01} \leftarrow & \mathit{mulr01} + \mathit{mulrdx} + \mathit{carry}; \\
+61 &: \mathit{mulrax} \leftarrow & \mathit{x2}; \\
+62 &: \concat{\mathit{mulrdx}}{\mathit{mulrax}} \leftarrow & \dslcode{Split}(\mathit{mulrax} \times \mathit{y0}, \mathit{wsize}); \\
+63 &: \mathit{r2} \leftarrow & \mathit{r2} + \mathit{mulrax}; \\
+64 &: \concat{\mathit{carry}}{\mathit{r2}} \leftarrow & \dslcode{Split}(\mathit{r2}, \mathit{wsize}); \\
+65 &: \mathit{mulr21} \leftarrow & \mathit{mulr21} + \mathit{mulrdx} + \mathit{carry}; \\
+66 &: \mathit{mulrax} \leftarrow & \mathit{x2}; \\
+67 &: \concat{\mathit{mulrdx}}{\mathit{mulrax}} \leftarrow & \dslcode{Split}(\mathit{mulrax} \times \mathit{y1}, \mathit{wsize}); \\
+68 &: \mathit{r3} \leftarrow & \mathit{r3} + \mathit{mulrax}; \\
+69 &: \concat{\mathit{carry}}{\mathit{r3}} \leftarrow & \dslcode{Split}(\mathit{r3}, \mathit{wsize}); \\
+70 &: \mathit{mulr31} \leftarrow & \mathit{mulr31} + \mathit{mulrdx} + \mathit{carry}; \\
+71 &: \mathit{mulrax} \leftarrow & \mathit{x2}; \\
+72 &: \concat{\mathit{mulrdx}}{\mathit{mulrax}} \leftarrow & \dslcode{Split}(\mathit{mulrax} \times \mathit{y2}, \mathit{wsize}); \\
+73 &: \mathit{r4} \leftarrow & \mathit{r4} + \mathit{mulrax}; \\
+74 &: \concat{\mathit{carry}}{\mathit{r4}} \leftarrow & \dslcode{Split}(\mathit{r4}, \mathit{wsize}); \\
+75 &: \mathit{mulr41} \leftarrow & \mathit{mulr41} + \mathit{mulrdx} + \mathit{carry}; \\
+76 &: \mathit{mulrax} \leftarrow & \mathit{x2}; \\
+77 &: \mathit{mulrax} \leftarrow & \mathit{mulrax} \times 19; \\
+78 &: \concat{\mathit{mulrdx}}{\mathit{mulrax}} \leftarrow & \dslcode{Split}(\mathit{mulrax} \times \mathit{y3}, \mathit{wsize}); \\
+79 &: \mathit{r0} \leftarrow & \mathit{r0} + \mathit{mulrax}; \\
+80 &: \concat{\mathit{carry}}{\mathit{r0}} \leftarrow & \dslcode{Split}(\mathit{r0}, \mathit{wsize}); \\
+81 &: \mathit{mulr01} \leftarrow & \mathit{mulr01} + \mathit{mulrdx} + \mathit{carry}; \\
+82 &: \mathit{mulrax} \leftarrow & \mathit{x2}; \\
+83 &: \mathit{mulrax} \leftarrow & \mathit{mulrax} \times 19; \\
+84 &: \concat{\mathit{mulrdx}}{\mathit{mulrax}} \leftarrow & \dslcode{Split}(\mathit{mulrax} \times \mathit{y4}, \mathit{wsize}); \\
+85 &: \mathit{r1} \leftarrow & \mathit{r1} + \mathit{mulrax}; \\
+86 &: \concat{\mathit{carry}}{\mathit{r1}} \leftarrow & \dslcode{Split}(\mathit{r1}, \mathit{wsize}); \\
+87 &: \mathit{mulr11} \leftarrow & \mathit{mulr11} + \mathit{mulrdx} + \mathit{carry}; \\
+88 &: \mathit{mulrax} \leftarrow & \mathit{x3}; \\
+89 &: \concat{\mathit{mulrdx}}{\mathit{mulrax}} \leftarrow & \dslcode{Split}(\mathit{mulrax} \times \mathit{y0}, \mathit{wsize}); \\
+90 &: \mathit{r3} \leftarrow & \mathit{r3} + \mathit{mulrax}; \\
+91 &: \concat{\mathit{carry}}{\mathit{r3}} \leftarrow & \dslcode{Split}(\mathit{r3}, \mathit{wsize}); \\
+92 &: \mathit{mulr31} \leftarrow & \mathit{mulr31} + \mathit{mulrdx} + \mathit{carry}; \\
+93 &: \mathit{mulrax} \leftarrow & \mathit{x3}; \\
+94 &: \concat{\mathit{mulrdx}}{\mathit{mulrax}} \leftarrow & \dslcode{Split}(\mathit{mulrax} \times \mathit{y1}, \mathit{wsize}); \\
+95 &: \mathit{r4} \leftarrow & \mathit{r4} + \mathit{mulrax}; \\
+96 &: \concat{\mathit{carry}}{\mathit{r4}} \leftarrow & \dslcode{Split}(\mathit{r4}, \mathit{wsize}); \\
+97 &: \mathit{mulr41} \leftarrow & \mathit{mulr41} + \mathit{mulrdx} + \mathit{carry}; \\
+98 &: \mathit{mulrax} \leftarrow & \mathit{mulx319}; \\
+99 &: \concat{\mathit{mulrdx}}{\mathit{mulrax}} \leftarrow & \dslcode{Split}(\mathit{mulrax} \times \mathit{y3}, \mathit{wsize}); \\
+100 &: \mathit{r1} \leftarrow & \mathit{r1} + \mathit{mulrax}; \\
+101 &: \concat{\mathit{carry}}{\mathit{r1}} \leftarrow & \dslcode{Split}(\mathit{r1}, \mathit{wsize}); \\
+102 &: \mathit{mulr11} \leftarrow & \mathit{mulr11} + \mathit{mulrdx} + \mathit{carry}; \\
+103 &: \mathit{mulrax} \leftarrow & \mathit{mulx319}; \\
+104 &: \concat{\mathit{mulrdx}}{\mathit{mulrax}} \leftarrow & \dslcode{Split}(\mathit{mulrax} \times \mathit{y4}, \mathit{wsize}); \\
+105 &: \mathit{r2} \leftarrow & \mathit{r2} + \mathit{mulrax}; \\
+106 &: \concat{\mathit{carry}}{\mathit{r2}} \leftarrow & \dslcode{Split}(\mathit{r2}, \mathit{wsize}); \\
+107 &: \mathit{mulr21} \leftarrow & \mathit{mulr21} + \mathit{mulrdx} + \mathit{carry}; \\
+108 &: \mathit{mulrax} \leftarrow & \mathit{x4}; \\
+109 &: \concat{\mathit{mulrdx}}{\mathit{mulrax}} \leftarrow & \dslcode{Split}(\mathit{mulrax} \times \mathit{y0}, \mathit{wsize}); \\
+110 &: \mathit{r4} \leftarrow & \mathit{r4} + \mathit{mulrax}; \\
+111 &: \concat{\mathit{carry}}{\mathit{r4}} \leftarrow & \dslcode{Split}(\mathit{r4}, \mathit{wsize}); \\
+112 &: \mathit{mulr41} \leftarrow & \mathit{mulr41} + \mathit{mulrdx} + \mathit{carry}; \\
+113 &: \mathit{mulrax} \leftarrow & \mathit{mulx419}; \\
+114 &: \concat{\mathit{mulrdx}}{\mathit{mulrax}} \leftarrow & \dslcode{Split}(\mathit{mulrax} \times \mathit{y2}, \mathit{wsize}); \\
+115 &: \mathit{r1} \leftarrow & \mathit{r1} + \mathit{mulrax}; \\
+116 &: \concat{\mathit{carry}}{\mathit{r1}} \leftarrow & \dslcode{Split}(\mathit{r1}, \mathit{wsize}); \\
+117 &: \mathit{mulr11} \leftarrow & \mathit{mulr11} + \mathit{mulrdx} + \mathit{carry}; \\
+118 &: \mathit{mulrax} \leftarrow & \mathit{mulx419}; \\
+119 &: \concat{\mathit{mulrdx}}{\mathit{mulrax}} \leftarrow & \dslcode{Split}(\mathit{mulrax} \times \mathit{y3}, \mathit{wsize}); \\
+120 &: \mathit{r2} \leftarrow & \mathit{r2} + \mathit{mulrax}; \\
+121 &: \concat{\mathit{carry}}{\mathit{r2}} \leftarrow & \dslcode{Split}(\mathit{r2}, \mathit{wsize}); \\
+122 &: \mathit{mulr21} \leftarrow & \mathit{mulr21} + \mathit{mulrdx} + \mathit{carry}; \\
+123 &: \mathit{mulrax} \leftarrow & \mathit{mulx419}; \\
+124 &: \concat{\mathit{mulrdx}}{\mathit{mulrax}} \leftarrow & \dslcode{Split}(\mathit{mulrax} \times \mathit{y4}, \mathit{wsize}); \\
+125 &: \mathit{r3} \leftarrow & \mathit{r3} + \mathit{mulrax}; \\
+126 &: \concat{\mathit{carry}}{\mathit{r3}} \leftarrow & \dslcode{Split}(\mathit{r3}, \mathit{wsize}); \\
+127 &: \mathit{mulr31} \leftarrow & \mathit{mulr31} + \mathit{mulrdx} + \mathit{carry}; \\
+128 &: \concat{\mathit{tmp}}{\mathit{r0}} \leftarrow & \dslcode{Split}(\mathit{r0}, 51); \\
+129 &: \mathit{mulr01} \leftarrow & \dslcode{Pow}(\mathit{mulr01}, 13) + \mathit{tmp}; \\
+130 &: \concat{\mathit{tmp}}{\mathit{r1}} \leftarrow & \dslcode{Split}(\mathit{r1}, 51); \\
+131 &: \mathit{mulr11} \leftarrow & \dslcode{Pow}(\mathit{mulr11}, 13) + \mathit{tmp}; \\
+132 &: \mathit{r1} \leftarrow & \mathit{r1} + \mathit{mulr01}; \\
+133 &: \concat{\mathit{tmp}}{\mathit{r2}} \leftarrow & \dslcode{Split}(\mathit{r2}, 51); \\
+134 &: \mathit{mulr21} \leftarrow & \dslcode{Pow}(\mathit{mulr21}, 13) + \mathit{tmp}; \\
+135 &: \mathit{r2} \leftarrow & \mathit{r2} + \mathit{mulr11}; \\
+136 &: \concat{\mathit{tmp}}{\mathit{r3}} \leftarrow & \dslcode{Split}(\mathit{r3}, 51); \\
+137 &: \mathit{mulr31} \leftarrow & \dslcode{Pow}(\mathit{mulr31}, 13) + \mathit{tmp}; \\
+138 &: \mathit{r3} \leftarrow & \mathit{r3} + \mathit{mulr21}; \\
+139 &: \concat{\mathit{tmp}}{\mathit{r4}} \leftarrow & \dslcode{Split}(\mathit{r4}, 51); \\
+140 &: \mathit{mulr41} \leftarrow & \dslcode{Pow}(\mathit{mulr41}, 13) + \mathit{tmp}; \\
+141 &: \mathit{r4} \leftarrow & \mathit{r4} + \mathit{mulr31}; \\
+142 &: \mathit{mulr41} \leftarrow & \mathit{mulr41} \times 19; \\
+143 &: \mathit{r0} \leftarrow & \mathit{r0} + \mathit{mulr41}; \\
+144 &: \mathit{mult} \leftarrow & \mathit{r0}; \\
+145 &: \concat{\mathit{mult}}{\mathit{tmp}} \leftarrow & \dslcode{Split}(\mathit{mult}, 51); \\
+146 &: \mathit{mult} \leftarrow & \mathit{mult} + \mathit{r1}; \\
+147 &: \mathit{r1} \leftarrow & \mathit{mult}; \\
+148 &: \concat{\mathit{mult}}{\mathit{tmp2}} \leftarrow & \dslcode{Split}(\mathit{mult}, 51); \\
+149 &: \mathit{r0} \leftarrow & \mathit{tmp}; \\
+150 &: \mathit{mult} \leftarrow & \mathit{mult} + \mathit{r2}; \\
+151 &: \mathit{r2} \leftarrow & \mathit{mult}; \\
+152 &: \concat{\mathit{mult}}{\mathit{tmp}} \leftarrow & \dslcode{Split}(\mathit{mult}, 51); \\
+153 &: \mathit{r1} \leftarrow & \mathit{tmp2}; \\
+154 &: \mathit{mult} \leftarrow & \mathit{mult} + \mathit{r3}; \\
+155 &: \mathit{r3} \leftarrow & \mathit{mult}; \\
+156 &: \concat{\mathit{mult}}{\mathit{tmp2}} \leftarrow & \dslcode{Split}(\mathit{mult}, 51); \\
+157 &: \mathit{r2} \leftarrow & \mathit{tmp}; \\
+158 &: \mathit{mult} \leftarrow & \mathit{mult} + \mathit{r4}; \\
+159 &: \mathit{r4} \leftarrow & \mathit{mult}; \\
+160 &: \concat{\mathit{mult}}{\mathit{tmp}} \leftarrow & \dslcode{Split}(\mathit{mult}, 51); \\
+161 &: \mathit{r3} \leftarrow & \mathit{tmp2}; \\
+162 &: \mathit{mult} \leftarrow & \mathit{mult} \times 19; \\
+163 &: \mathit{r0} \leftarrow & \mathit{r0} + \mathit{mult}; \\
+164 &: \mathit{r4} \leftarrow & \mathit{tmp}; \\
+165 &: \mathit{z0} \leftarrow & \mathit{r0}; \\
+166 &: \mathit{z1} \leftarrow & \mathit{r1}; \\
+167 &: \mathit{z2} \leftarrow & \mathit{r2}; \\
+168 &: \mathit{z3} \leftarrow & \mathit{r3}; \\
+169 &: \mathit{z4} \leftarrow & \mathit{r4}; \\
 \end{align*}
+\end{multicols}
+}
