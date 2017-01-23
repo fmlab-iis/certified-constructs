@@ -12,9 +12,9 @@ $n$-fold addition ${P \Gplus \cdots \Gplus P} \in G$ for $n \in \bbfN$.
 In X25519, we want to compute a \emph{point multiplication}, that is,
 the point $[n]P$ for given $n$ and $P$. The standard iterative
 squaring method computes $[n]P$ by examining each bit of $n$ iteratively.
-For each iteration, $[2m]P$ is computed and
+For each iteration, $[2m]P$ is computed from $[m]P$ and
 added with another $P$ when the current bit is $1$. Although the
-method is very efficient, it is not constant-time and hence insecure. 
+method is reasonably efficient, it is not constant-time and hence insecure. 
 
 \hide{
 The operation we want is a ``point multiplication'' which is given $n$
