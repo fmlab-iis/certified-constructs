@@ -1,9 +1,11 @@
 
+\noindent
+\emph{Related Work}.
 Low-level implementations of mathematical constructs have been formalized and manually proved in proof assistants~\cite{Aff13,ANY12,AM07,MG07,M:13:PPVB}.
-A semi-automatic approach~\cite{C:14:VCS} has successfully verified a hand-optimized assembly implementation of the Montgomery Ladderstep with SMT solvers, manual program annotation, and a few Coq proofs.
-A C implementation of the Montgomery Ladderstep has been automatically verified with gfverif~\cite{BS:16:GFEV}.
+A semi-automatic approach~\cite{C:14:VCS} has successfully verified a hand-optimized assembly implementation of the Montgomery Ladderstep with SMT solvers, manual program annotation, and a few \coq proofs.
+A C implementation of the Montgomery Ladderstep has been automatically verified with \gfverif~\cite{BS:16:GFEV}.
 Re-implementations of mathematical constructs in F*~\cite{project:everest} have been verified using a combination of SMT solving and manual proofs.
-The OpenSSL implementations of SHA-256 and HMAC have been formalized and manually proved in Coq~\cite{A:15:VCPS,B:15:VCSOH}.
+The \openssl implementations of SHA-256 and HMAC have been formalized and manually proved in \coq~\cite{A:15:VCPS,B:15:VCSOH}.
 Synthesis of assembly codes for mathematical constructs has been proposed in~\cite{fiat:crypto}.
 Although the synthesized codes are correct by construction, they are not as efficient as hand-optimized assembly implementations.
 
@@ -12,7 +14,7 @@ Although the synthesized codes are correct by construction, they are not as effi
 
 
 \hide{
-\cite{AM07} manually prove low-level implementations in SmartMIPS with Coq
+\cite{AM07} manually prove low-level implementations in SmartMIPS with \coq
 \cite{ANY12}
 \cite{AFF13} introduce a formalization of data structures for signed multi-precision arithmetic and we experiment it with formal verification of basic functions, using Separation logic
 \cite{MG07} Hoare Logic, HOL4, ARM
@@ -25,7 +27,7 @@ re-implementation; not on verifying existing high-speed cryptographic software.
 Note that miTLS relies on (unverified)
 ``cryptographic providers such as .NET or Bouncy Castle''
 for core cryptographic primitives.
-Also the CryptVer project~\cite{cryptver} aims at re-implementing cryptography such that it can be formally verified.
+Also the \cryptver project~\cite{cryptver} aims at re-implementing cryptography such that it can be formally verified.
 Their approach is to specify cryptographic algorithms in higher-order logic
 and then implement them by formal deductive compilation.
 
