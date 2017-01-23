@@ -133,18 +133,18 @@ The following \mydsl code implements multiplications over $\bbfGF(2^{255}-19)$:
 126 &: \concat{\mathit{carry}}{\mathit{r3}} \leftarrow & \dslcode{Split}(\mathit{r3}, \mathit{wsize}); \\
 127 &: \mathit{mulr31} \leftarrow & \mathit{mulr31} + \mathit{mulrdx} + \mathit{carry}; \\
 128 &: \concat{\mathit{tmp}}{\mathit{r0}} \leftarrow & \dslcode{Split}(\mathit{r0}, 51); \\
-129 &: \mathit{mulr01} \leftarrow & \dslcode{Pow}(\mathit{mulr01}, 13) + \mathit{tmp}; \\
+129 &: \mathit{mulr01} \leftarrow & \mathit{mulr01} \times \dslcode{Pow}(2, 13) + \mathit{tmp}; \\
 130 &: \concat{\mathit{tmp}}{\mathit{r1}} \leftarrow & \dslcode{Split}(\mathit{r1}, 51); \\
-131 &: \mathit{mulr11} \leftarrow & \dslcode{Pow}(\mathit{mulr11}, 13) + \mathit{tmp}; \\
+131 &: \mathit{mulr11} \leftarrow & \mathit{mulr11} \times \dslcode{Pow}(2, 13) + \mathit{tmp}; \\
 132 &: \mathit{r1} \leftarrow & \mathit{r1} + \mathit{mulr01}; \\
 133 &: \concat{\mathit{tmp}}{\mathit{r2}} \leftarrow & \dslcode{Split}(\mathit{r2}, 51); \\
-134 &: \mathit{mulr21} \leftarrow & \dslcode{Pow}(\mathit{mulr21}, 13) + \mathit{tmp}; \\
+134 &: \mathit{mulr21} \leftarrow & \mathit{mulr21} \times \dslcode{Pow}(2, 13) + \mathit{tmp}; \\
 135 &: \mathit{r2} \leftarrow & \mathit{r2} + \mathit{mulr11}; \\
 136 &: \concat{\mathit{tmp}}{\mathit{r3}} \leftarrow & \dslcode{Split}(\mathit{r3}, 51); \\
-137 &: \mathit{mulr31} \leftarrow & \dslcode{Pow}(\mathit{mulr31}, 13) + \mathit{tmp}; \\
+137 &: \mathit{mulr31} \leftarrow & \mathit{mulr31} \times \dslcode{Pow}(2, 13) + \mathit{tmp}; \\
 138 &: \mathit{r3} \leftarrow & \mathit{r3} + \mathit{mulr21}; \\
 139 &: \concat{\mathit{tmp}}{\mathit{r4}} \leftarrow & \dslcode{Split}(\mathit{r4}, 51); \\
-140 &: \mathit{mulr41} \leftarrow & \dslcode{Pow}(\mathit{mulr41}, 13) + \mathit{tmp}; \\
+140 &: \mathit{mulr41} \leftarrow & \mathit{mulr41} \times \dslcode{Pow}(2, 13) + \mathit{tmp}; \\
 141 &: \mathit{r4} \leftarrow & \mathit{r4} + \mathit{mulr31}; \\
 142 &: \mathit{mulr41} \leftarrow & \mathit{mulr41} \times 19; \\
 143 &: \mathit{r0} \leftarrow & \mathit{r0} + \mathit{mulr41}; \\
