@@ -1,16 +1,16 @@
 
 Consider the problem of checking $\models \hoaretriple{q}{p}{q'}$ for
 arbitrary $q, q' \in \Pred$ and $p \in \Prog$. Since $q'$ is arbitrary, the
-program $p$ may contain fragments irrevelant to $q'$. Program slicing
+program $p$ may contain fragments irrelevant to $q'$. Program slicing
 is a simple yet effective technique to improve efficiency of
 verification through simplifying programs~\cite{W:81:PS}.
 
-Here we slice programs in backwardly. We initialize the set
+Here we slice programs backwardly. We initialize the set
 of \emph{cared} variables to be the variables appeared in the
 post-condition $q'$. Starting from the last statement, we check if
-it assigns any cared variables. If so, we keep the last
-statement and update the cared variables; otherwise, we skip the last
-statement. Then we continue to the previous statement.
+it assigns any cared variables. If so, we keep the
+statement and update the cared variables; otherwise, the
+statement is skipped. Then we continue to the previous statement.
 This process repeats until all statements of the
 program are examined.
 
@@ -26,11 +26,11 @@ recursively.
   \begin{algorithmic}[1]
     \Function{VarsInExpr}{$e$}
     \Match{$e$}
-      \Case{$v$}
-        \Return $\{ v \}$
-      \EndCase
       \Case{$i$}
         \Return $\emptyset$
+      \EndCase
+      \Case{$v$}
+        \Return $\{ v \}$
       \EndCase
       \Case{$-e'$}
         \Return \Call{VarsInExpr}{$e'$}
@@ -79,7 +79,7 @@ recursively.
 
 Similarly, Algorithm~\ref{algorithm:variables-in-predicates} computes
 the variables in a predicate. Using the \coq specification
-langauge \gallina, both algorithms are specified in the proof
+language \gallina, both algorithms are specified in the proof
 assistant.
 
 \begin{algorithm}
@@ -132,7 +132,7 @@ updated cared variables and remaining statements.
         \Return $\epsilon$
       \EndCase
       \Case{$pp; s$}
-        \Match{\Call{SliceStatement}{$\mathit{vars}$, $s$}}
+        \Match{\Call{SliceStmt}{$\mathit{vars}$, $s$}}
           \Case{$\mathit{vars}'$}
             \Return \Call{SliceProg}{$\mathit{vars}'$, $pp$}
           \EndCase

@@ -18,7 +18,7 @@ $e_i (\vx), e'_i (\vx), f_j (\vx), f'_j (\vx),
  g_k (\vx), g'_k (\vx), h_l (\vx), h'_l (\vx) \in
  \bbfZ[\vx]$, $n_j, m_l \in \bbfN$ for $i \in [I]$, $j \in [J]$, $k
  \in [K]$, and $l \in [L]$. Since the
-consequence is a conjunction of (modular) equations, it suffces to 
+consequence is a conjunction of (modular) equations, it suffices to 
 prove one conjunct at a time. That is, we aim to show
 \begin{equation*}
   \label{eq:polynomial-equation-implicant}
@@ -118,7 +118,7 @@ The ideal membership problem can be solved by finding a Gr\"obner
 basis for the ideal. 
 Both tactics solve the polynomial equation entailment problem by
 computing Gr\"obner bases for induced ideals. Finding Gr\"obner bases
-for ideals however is NP-complete because it allows us to solve a
+for ideals however is NP-hard because it allows us to solve a
 system of equations over the Boolean field~\cite{GJ:1979:CAI}. 
 Low-level mathematical constructs can have
 hundreds of polynomial equations 
@@ -139,8 +139,8 @@ tactic to simplify polynomial equation entailment problems by
 rewriting variables and then removing polynomial equations.
 
 To further improve scalability, we use the computer algebra system
-\singular to solve the ideal membership problem. Our tactic submits
-the membership problem to \singular and 
+\singular to solve the ideal membership problem~\cite{GP:08:SICA}. 
+Our tactic submits the membership problem to \singular and 
 obtains coefficients from the computer algebra system. 
 Since algorithms used in \singular might be implemented incorrectly, 
 our \coq

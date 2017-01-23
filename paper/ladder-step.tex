@@ -79,9 +79,9 @@ inefficient.  We need something equivalent to steps 4--7 but better.
 
 To have constant execution time, the key idea is to compute \emph{both}
 $[2m]P$ and $[2m+1]P$ at each iteration. The Montgomery Ladderstep is
-an efficient algorithm computes $[2m]P$ and $[2m+1]P$ from $P$,
-$[m]P$, and $[m+1]P$. On Montgomery curves (including Curve25519),
-the algorithm uses only $x$ coordinates of the points. Furthermore,
+an efficient algorithm computing $[2m]P$ and $[2m+1]P$ from $P$,
+$[m]P$, and $[m+1]P$ on Montgomery curves (including Curve25519).
+The algorithm uses only $x$ coordinates of the points. Furthermore,
 expensive divisions are avoided in the Ladderstep by projective
 representations. That is, the algorithm represents $x \Fdiv z$ by the
 pair $x : z$ and works with fractions (Algorithm~\ref{algorithm:ladderstep}).
@@ -89,7 +89,7 @@ pair $x : z$ and works with fractions (Algorithm~\ref{algorithm:ladderstep}).
 \hide{
 Peter Montgomery derived a sequence of computations known
 as the Montgomery Ladderstep, to compute both $P_0+P_1$ and $[2]P_0$
-simultaneously and efficiently knowing $P_1-P_0$.  The ladderstep can
+simultaneously and efficiently knowing $P_1-P_0$.  The Ladderstep can
 be achieved only using $x$ coordinates on a set of curves today known as
 Montgomery curves, which include Curve25519.  Furthermore, we can
 avoid expensive divisions by using projective representations (i.e,
@@ -131,19 +131,19 @@ specification~\cite{M:87:SPEC}:\footnote{Amusingly, we find for
 \end{array}
 \]
 In our experiment, we replace all arithmetic computation over $\bbfF$
-with corrresponding mathematical constructs (4 additions, 4 subtractions, 4 squares, 5
+with corresponding mathematical constructs (4 additions, 4 subtractions, 4 squares, 5
 multiplications, and 1 multiplication by 121666) written in \mydsl,
 translate the above specification into an algebraic specification, and
 apply our technique to verify the entire Ladderstep.
 The verification of the Ladderstep (containing 1462 statements) is carried out in 82 hours.
-SMT solvers finish range checks on the Ladderstep in 19 minutes.
+The SMT solver finishes range checks on the Ladderstep in 19 minutes.
 
 
 \hide{
 Montgomery's formulas and his steps are well known
-since~\cite{M:87:SPEC}.  What we showed is that the program carrys out
+since~\cite{M:87:SPEC}.  What we showed is that the program carries out
 a computation equivalent to his formulas\footnote{An amusing fact is
-  that when we carry out the ladderstep, we find for ourselves the factor of $4$
+  that when we carry out the Ladderstep, we find for ourselves the factor of $4$
   in both the numerator and denominator of the addition formulas, 
   noted on \cite[p.~261]{M:87:SPEC}.}.
 }

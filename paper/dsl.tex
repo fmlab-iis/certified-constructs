@@ -4,7 +4,7 @@ match up with reality. In many situations, unexpected channels
 through which information can leak to the attacker may cause the
 cryptosystem to be broken. Typically this is about timing or
 electric power used. 
-In side-channel resilient implementations the execution time
+In side-channel resilient implementations, the execution time
 are kept constant (as much as possible) to prevent unexpected
 information leakage.
 %Implementations which are not defeated through
@@ -49,7 +49,7 @@ include pseudo-instructions to cover instruction sequences, phrases in
 the language if you will, that is used to achieve the same effect.
 The domain specific language \mydsl is designed based on the same
 principles. Conditional branches and indirect memory accesses are not
-admitted in \mydsl. Program are but a straight line of variable
+admitted in \mydsl. A program is but a straight line of variable
 assignments on expressions. 
 Consider the following syntactic classes:
 \[
@@ -131,7 +131,7 @@ $
 \right.
 $.
 Consider the relation $\Tr \subseteq \St \times \Stmt \times \St$ defined
-by $(\nu, v \leftarrow e, \nu\mymapsto{v}{\valueof{e}_{\nu}}) \in \Tr$; and
+by $(\nu, v \leftarrow e, \nu\mymapsto{v}{\valueof{e}_{\nu}}) \in \Tr$, and
   $(\nu, \concat{v_h}{v_l} \leftarrow \dslcode{Split} (e, n), 
   \nu\mymapsto{v_h}{\mathit{hi}}\mymapsto{v_l}{\mathit{lo}}) \in \Tr$
 where
@@ -150,13 +150,13 @@ $\Tr^* \subseteq \St \times \Prog \times \St$ where
 $(\nu, \epsilon, \nu) \in \Tr^*$ and
 $(\nu, s; p, \nu'') \in \Tr^* \textmd{ if }
     \textmd{there is a } \nu' \textmd{ with }
-    (\nu, s, \nu') \in \Tr^*$ and
+    (\nu, s, \nu') \in \Tr$ and
     $(\nu, p, \nu'') \in \Tr^*$.
 We write $\nu \goesto{p} \nu'$ when $(\nu, p, \nu') \in \Tr^*$.
 
 For algebraic specifications, $\top$ denotes the Boolean value
 $\mathit{tt}$. We admit polynomial equations $e = e'$ and modular
-polynomial equations $e \equiv e \mod n$ as atomic predicates.
+polynomial equations $e \equiv e' \mod n$ as atomic predicates.
 A \emph{predicate} $q \in \Pred$ is a conjunction of atomic
 predicates. For 
 $\nu \in \St$, write $\bbfZ \models q[\nu]$ if $q$
@@ -250,7 +250,7 @@ the algebraic specification of the mathematical construct is therefore
 \]
 
 Note that the variables ${r}_i$'s are added with constants
-after they are initizlied with ${x}_i$'s but before
+after they are initialized with ${x}_i$'s but before
 ${y}_i$'s are subtracted from them. It is not hard to see that
 $2\myprime = \mathit{radix51}$ $(4503599627370494,$ $4503599627370494,$
 $4503599627370494,$ $4503599627370494,$ $4503599627370458)$
