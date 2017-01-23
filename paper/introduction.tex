@@ -20,7 +20,7 @@ security protocol X25519 automatically in this paper.
 
 X25519 is an Elliptic Curve Diffie-Hellman (ECDH) key exchange
 protocol; it is a high-performance cryptosystem designed to 
-use the secure elliptic curve Curve25519. Curve25519 is an elliptic
+use the secure elliptic curve Curve25519~\cite{Ber06}. Curve25519 is an elliptic
 curve offering 128 bits of security when used with ECDH. In addition
 to allowing high-speed elliptic curve arithmetic, it is easier to
 implement properly, not covered by any known patents, and moreover
@@ -36,7 +36,7 @@ Institute of Standards and Technology (NIST).
 Indeed, Curve25519 is currently the
 de facto alternative to the NIST P-256 curve. Consequently, X25519 has
 a wide variety of applications including the default key exchange
-protocol in \openssh since 2014.
+protocol in \openssh since 2014~\cite{W:17:C}.
 
 Most of the computation in X25519, in trade parlance, is in a
 ``variable base point multiplication,'' and the centerpiece 
