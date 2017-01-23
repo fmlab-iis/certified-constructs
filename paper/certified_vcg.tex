@@ -12,8 +12,8 @@
 \usepackage{algorithm,algpseudocode}
 \usepackage[T1]{fontenc}
 \usepackage{times}
-\usepackage{setspace}
-\setstretch{0.94}
+%\usepackage{setspace}
+%\setstretch{0.94}
 \renewcommand{\algorithmicrequire}{\textbf{Input:}}
 \renewcommand{\algorithmicensure}{\textbf{Output:}}
 
@@ -52,8 +52,8 @@ Academia Sinica\\
 \email{mhtsai208@gmail.com, bywang@iis.sinica.edu.tw, by@crypto.tw}
 }
 \else
-\author{\vspace*{-1cm}}
-\institute{\vspace*{-1cm}\ }
+\author{\vspace*{-1.2cm}}
+\institute{\vspace*{-1.2cm}\ }
 \fi
 
 \begin{document}
@@ -77,57 +77,83 @@ Academia Sinica\\
   the Montgomery Ladderstep, a crucial loop  in X25519.
 \end{abstract}
 
+\vspace{-.5em}
 \section{Introduction}
+\vspace{-.5em}
 \label{section:introduction}
 \input{introduction}
 
+\vspace{-.5em}
 \section{Preliminaries}
+\vspace{-.5em}
 \label{section:preliminaries}
 \input{preliminaries}
 
+\vspace{-.5em}
 \section{Domain Specific Language -- \mydsl}
+\vspace{-.5em}
 \label{section:domain-specific-language}
 \input{dsl}
 
+\vspace{-.5em}
 \section{Translation to Algebraic Problems}
+\vspace{-.5em}
 \label{section:translation}
 \input{translation}
 
+\vspace{-.5em}
 \subsection{Program Slicing}
+\vspace{-.5em}
 \label{subsection:translation:slicing}
 \input{slicing}
 
 
+\vspace{-.5em}
 \subsection{Static Single Assignments}
+\vspace{-.5em}
 \label{subsection:translation:static-single-assignment}
 \input{ssa}
 
 
+\vspace{-.5em}
 \subsection{Modular Polynomial Equation Entailment}
+\vspace{-.5em}
 \label{subsection:translation:multivariant-polynomial-equations}
 \input{polynomial-equations}
 
+\vspace{-.5em}
 \subsubsection*{Summary of Translation}
+\vspace{-.5em}
 \input{overview}
 
 
+\vspace{-.5em}
 \section{Solving Modular Polynomial Equation Entailment Problem}
+\vspace{-.5em}
 \label{section:solving-algebraic-equations}
 \input{solver}
 
+\vspace{-.5em}
 \section{Evaluation}
+\vspace{-.5em}
 \label{section:evaluation}
 \input{evaluation}
 
+\vspace{-.5em}
 \subsection{Arithmetic Computation over $\bbfGF(2^{255}-19)$}
+\vspace{-.5em}
 \label{subection:evaluation:multiplication}
 \input{multiplication}
 
+\vspace{-.5em}
 \subsection{The Montgomery Ladderstep}
+\vspace{-.5em}
 \label{subsection:evaluation:ladder-step}
 \input{ladder-step}
 
+\vspace{-.5em}
 \section{Conclusion}
+\vspace{-.5em}
 \label{section:conclusion}
 \input{conclusion}
 
