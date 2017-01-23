@@ -37,7 +37,7 @@ For instance, an intermediate
 result of the form $c \Ftimes 2^{255}$ is immediately replaced by
 $c \Ftimes 19$ since $2^{255} \Feq 19$ in $\bbfGF(\varrho)$. 
 This is indeed how the most efficient multiplication for the AMD64
-architecture is implemented \todo{reference?}.
+architecture is implemented~\cite{BDL+:11:HSHSS,BDL+:12:HSHSS}.
 
 \hide{
 Recall that 
@@ -70,7 +70,8 @@ $\bbfF$.
 
 In our experiment, we took real-world efficient and secure
 low-level implementations of arithmetic computation over
-$\bbfGF(\varrho)$ from~\todo{reference?}, manually translated source
+$\bbfGF(\varrho)$ from~\cite{BDL+:11:HSHSS,BDL+:12:HSHSS}, 
+manually translated source
 codes to our domain specific language, specified their algebraic
 properties, and performed certified verification with our technique. 
 Table~\ref{table:arithmetic-operations} summarizes the results
