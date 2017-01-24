@@ -91,27 +91,27 @@ program specification.
   \left(
   \begin{array}{lclcl}
     \begin{array}{rclc}
-      {r}^0_0 & = & {x}^0_0 & \wedge \\
-      {r}^0_1 & = & {x}^0_1 & \wedge \\
-      {r}^0_2 & = & {x}^0_2 & \wedge \\
-      {r}^0_3 & = & {x}^0_3 & \wedge \\
-      {r}^0_4 & = & {x}^0_4 & \wedge \\
+      {r}^1_0 & = & {x}^0_0 & \wedge \\
+      {r}^1_1 & = & {x}^0_1 & \wedge \\
+      {r}^1_2 & = & {x}^0_2 & \wedge \\
+      {r}^1_3 & = & {x}^0_3 & \wedge \\
+      {r}^1_4 & = & {x}^0_4 & \wedge \\
     \end{array}
     &\hspace{.01\textwidth}&
     \begin{array}{rclc}
-      {r}^1_0 & = & {r}^0_0 + {4503599627370458} & \wedge \\
-      {r}^1_1 & = & {r}^0_1 + {4503599627370494} & \wedge \\
-      {r}^1_2 & = & {r}^0_2 + {4503599627370494} & \wedge \\
-      {r}^1_3 & = & {r}^0_3 + {4503599627370494} & \wedge \\
-      {r}^1_4 & = & {r}^0_4 + {4503599627370494} & \wedge\\
+      {r}^2_0 & = & {r}^1_0 + {4503599627370458} & \wedge \\
+      {r}^2_1 & = & {r}^1_1 + {4503599627370494} & \wedge \\
+      {r}^2_2 & = & {r}^1_2 + {4503599627370494} & \wedge \\
+      {r}^2_3 & = & {r}^1_3 + {4503599627370494} & \wedge \\
+      {r}^2_4 & = & {r}^1_4 + {4503599627370494} & \wedge\\
     \end{array}
     &\hspace{.01\textwidth}&
     \begin{array}{rclc}
-      {r}^2_0 & = & {r}^1_0 - {y}^0_0 & \wedge \\
-      {r}^2_1 & = & {r}^1_1 - {y}^0_1 & \wedge \\
-      {r}^2_2 & = & {r}^1_2 - {y}^0_2 & \wedge \\
-      {r}^2_3 & = & {r}^1_3 - {y}^0_3 & \wedge \\
-      {r}^2_4 & = & {r}^1_4 - {y}^0_4
+      {r}^3_0 & = & {r}^2_0 - {y}^0_0 & \wedge \\
+      {r}^3_1 & = & {r}^2_1 - {y}^0_1 & \wedge \\
+      {r}^3_2 & = & {r}^2_2 - {y}^0_2 & \wedge \\
+      {r}^3_3 & = & {r}^2_3 - {y}^0_3 & \wedge \\
+      {r}^3_4 & = & {r}^2_4 - {y}^0_4
     \end{array}
   \end{array}
   \right) \implies \\
@@ -119,7 +119,7 @@ program specification.
     \mathit{radix51}({x}^0_4, {x}^0_3, {x}^0_2, {x}^0_1, {x}^0_0) -
     \mathit{radix51}({y}^0_4, {y}^0_3, {y}^0_2, {y}^0_1, {y}^0_0)
     \equiv
-    \mathit{radix51}({r}^2_4, {r}^2_3, {r}^2_2, {r}^2_1, {r}^2_0)
+    \mathit{radix51}({r}^3_4, {r}^3_3, {r}^3_2, {r}^3_1, {r}^3_0)
     \mod \myprime
   \end{array}
   \]
@@ -133,8 +133,8 @@ The modular polynomial equation entailment problem corresponding to the
 algebraic specification of subtraction is shown in
 Figure~\ref{figure:translation:subtraction-polynomial}. The problem
 has 15 polynomial equality constraints with 25 variables. We 
-want to know if $\mathit{radix51}({r}^2_4, {r}^2_3, {r}^2_2,
-{r}^2_1, {r}^2_0)$ is the difference between $\mathit{radix51}({x}^0_4,
+want to know if $\mathit{radix51}({r}^3_4, {r}^3_3, {r}^3_2,
+{r}^3_1, {r}^3_0)$ is the difference between $\mathit{radix51}({x}^0_4,
 {x}^0_3, {x}^0_2, {x}^0_1, {x}^0_0)$ and $\mathit{radix51}({y}^0_4,
 {y}^0_3, {y}^0_2, {y}^0_1, {y}^0_0)$ in $\bbfGF(\varrho)$ under the
 constraints. 

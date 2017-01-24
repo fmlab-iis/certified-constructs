@@ -185,32 +185,32 @@ corresponding specification in static single assignment form is valid.
   \[
   \begin{array}{lclcl}
     \begin{array}{rcl}
-    \textmd{1:} && {r}^0_0 \leftarrow {x}^0_0; \\
-    \textmd{2:} && {r}^0_1 \leftarrow {x}^0_1; \\
-    \textmd{3:} && {r}^0_2 \leftarrow {x}^0_2; \\
-    \textmd{4:} && {r}^0_3 \leftarrow {x}^0_3; \\
-    \textmd{5:} && {r}^0_4 \leftarrow {x}^0_4; \\
+    \textmd{1:} && {r}^1_0 \leftarrow {x}^0_0; \\
+    \textmd{2:} && {r}^1_1 \leftarrow {x}^0_1; \\
+    \textmd{3:} && {r}^1_2 \leftarrow {x}^0_2; \\
+    \textmd{4:} && {r}^1_3 \leftarrow {x}^0_3; \\
+    \textmd{5:} && {r}^1_4 \leftarrow {x}^0_4; \\
     \end{array}
     &\hspace{.05\textwidth}&
     \begin{array}{rcl}
     \textmd{6:} && 
-      {r}^1_0 \leftarrow {r}^0_0 + {4503599627370458}; \\
+      {r}^2_0 \leftarrow {r}^1_0 + {4503599627370458}; \\
     \textmd{7:} &&
-      {r}^1_1 \leftarrow {r}^0_1 + {4503599627370494}; \\
+      {r}^2_1 \leftarrow {r}^1_1 + {4503599627370494}; \\
     \textmd{8:} &&
-      {r}^1_2 \leftarrow {r}^0_2 + {4503599627370494}; \\
+      {r}^2_2 \leftarrow {r}^1_2 + {4503599627370494}; \\
     \textmd{9:} &&
-      {r}^1_3 \leftarrow {r}^0_3 + {4503599627370494}; \\
+      {r}^2_3 \leftarrow {r}^1_3 + {4503599627370494}; \\
     \textmd{10:} && 
-      {r}^1_4 \leftarrow {r}^0_4 + {4503599627370494};\\
+      {r}^2_4 \leftarrow {r}^1_4 + {4503599627370494};\\
     \end{array}
     &\hspace{.05\textwidth}&
     \begin{array}{rcl}
-    \textmd{11:} && {r}^2_0 \leftarrow {r}^1_0 - {y}^0_0; \\
-    \textmd{12:} && {r}^2_1 \leftarrow {r}^1_1 - {y}^0_1; \\
-    \textmd{13:} && {r}^2_2 \leftarrow {r}^1_2 - {y}^0_2; \\
-    \textmd{14:} && {r}^2_3 \leftarrow {r}^1_3 - {y}^0_3; \\
-    \textmd{15:} && {r}^2_4 \leftarrow {r}^1_4 - {y}^0_4;
+    \textmd{11:} && {r}^3_0 \leftarrow {r}^2_0 - {y}^0_0; \\
+    \textmd{12:} && {r}^3_1 \leftarrow {r}^2_1 - {y}^0_1; \\
+    \textmd{13:} && {r}^3_2 \leftarrow {r}^2_2 - {y}^0_2; \\
+    \textmd{14:} && {r}^3_3 \leftarrow {r}^2_3 - {y}^0_3; \\
+    \textmd{15:} && {r}^3_4 \leftarrow {r}^2_4 - {y}^0_4;
     \end{array}
   \end{array}
   \]
@@ -228,7 +228,7 @@ Figure~\ref{figure:translation:subtraction-ssa} gives the subtraction program
 index of a variable is incremented when the variable is assigned to an
 expression. After the static single assignment translation, the
 variables ${x}_i$'s, ${y}_i$'s are indexed by $0$ and
-${r}_i$'s are indexed by $2$ for $0 \leq i \leq 4$. 
+${r}_i$'s are indexed by $3$ for $0 \leq i \leq 4$. 
 Subsequently, variables in pre- and post-conditions of the algebraic
 specification for subtraction needs to be indexed. The
 corresponding algebraic specification is as follows.
@@ -241,7 +241,7 @@ corresponding algebraic specification is as follows.
      \mathit{radix51}({x}^0_4, {x}^0_3, {x}^0_2, {x}^0_1, {x}^0_0) -
      \mathit{radix51}({y}^0_4, {y}^0_3, {y}^0_2, {y}^0_1, {y}^0_0) \\
      \equiv
-     \mathit{radix51}({r}^2_4, {r}^2_3, {r}^2_2, {r}^2_1, {r}^2_0)
+     \mathit{radix51}({r}^3_4, {r}^3_3, {r}^3_2, {r}^3_1, {r}^3_0)
      \mod \myprime
    \end{array}
 }.
