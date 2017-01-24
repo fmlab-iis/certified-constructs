@@ -135,7 +135,7 @@ by $(\nu, v \leftarrow e, \nu\mymapsto{v}{\valueof{e}_{\nu}}) \in \Tr$, and
   $(\nu, \concat{v_h}{v_l} \leftarrow \dslcode{Split} (e, n), 
   \nu\mymapsto{v_h}{\mathit{hi}}\mymapsto{v_l}{\mathit{lo}}) \in \Tr$
 where
-$\mathit{hi} = (\valueof{e}_{\nu} - l) \div 2^{\valueof{n}_{\nu}}$ and
+$\mathit{hi} = (\valueof{e}_{\nu} - lo) \div 2^{\valueof{n}_{\nu}}$ and
 $\mathit{lo} = \valueof{e}_{\nu} \mod 2^{\valueof{n}_{\nu}}$.
 Intuitively, $(\nu, s, \nu') \in \Tr$ denotes that the state $\nu$ transits to 
 the state $\nu'$ after executing the statement $s$.
