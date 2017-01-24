@@ -20,7 +20,7 @@ expressions are transformed recursively.
     \Function{SSAExpr}{$\theta$, $e$}
     \Match{$e$}
       \Case{$i$} \Return $i$ \EndCase
-      \Case{$v$} \Return $v^{\theta(e)}$ \EndCase
+      \Case{$v$} \Return $v^{\theta(v)}$ \EndCase
       \Case{$-e'$} \Return $-$\Call{SSAExpr}{$\theta$, $e'$} \EndCase
       \Case{$e' + e''$} 
         \Return \Call{SSAExpr}{$\theta$, $e'$} $+$ 
