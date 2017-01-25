@@ -1,6 +1,6 @@
 
-A program is in \emph{static single assignment} form if every variable
-is assigned at most once~\cite{AWZ:88:DQVP}.
+A program is in \emph{static single assignment} form if every non-input variable
+is assigned at most once and no input variable is assigned~\cite{AWZ:88:DQVP}.
 Our next task is to transform any algebraic specification
 $\hoaretriple{q}{p}{q'}$ to an algebraic specification of $p$ in
 static single  assignment form for any $q, q' \in \Pred$ and $p \in
