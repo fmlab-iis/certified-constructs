@@ -1,0 +1,94 @@
+===========================================================================
+                            CAV'17 Review #58A
+---------------------------------------------------------------------------
+Paper #58: Certified Verification of Algebraic Properties on Low-Level
+           Mathematical Constructs in Cryptographic Programs
+---------------------------------------------------------------------------
+
+                      Overall merit: 2. Weak reject
+
+                         ===== Paper summary =====
+
+The authors propose a domain-specific language (DSL) for elliptic curve cryptography. They formalise the language and an operational semantics in Coq and formally verify that the validity of Hoare triples can be shown by deciding whether a set of polynomial equations over a finite fields implies a set of other polynomial equations over finite fields. They compute the sets of equations from the straight-line programs (no conditionals, no loops) using two simple program transformations (slicing and SSA form). They apply their technique to validate their own implementations of modular arithmetic and the Montgomery ladder for the elliptic curve 25519. The entailments are solved using an external solver and the solution is certified in Coq.
+
+                      ===== Comments for author =====
+
+The verification of cryptographic implementations is an important issue and the paper describes the first technique that can automatically verify the Montgomery ladder for Curve25519 without user annotations. The key idea is to consider very restricted languages for programs and pre/post-conditions such that the validity of Hoare triples can be deduced from entailments between polynomial equations.
+
+
+There are a several weak points:
+
+1. What the authors verify is functional correctness of the algorithms, not security. A security proof would have to specify the attacker model first. The authors emphasize the constant-time nature of their DSL programs (as there are no loops or conditionals), but their execution model is too abstract to capture timing channels, so the timing behaviour (e.g., due to cache effects) cannot be analysed formally.
+
+2. The DSL seems to be tailored to arithmetic, as there is only addition, subtraction, negation, and multiplication. (There's also exponentiation, but that seems like unnecessary syntactic sugar as the exponent must be a literal number, and commodity hardware typically does not have instructions for exponentiation.) In particular, there are no conditionals and loops, so all for-loops must be unrolled. This results in large programs and slow verification times (82 hours). Neither does the language provide bit-wise operations (such as bitwise AND and XOR), which are common in many cryptographic algorithms. So it is not clear whether the approach extends to other cryptographic programs such as SHA256 and AES.
+
+3. There is no formal link between the DSL program and an actual implementation. Previous verifications of Curve25519 started from an assembly language [14] or high-level language [16] that can be compiled into executable code. In this paper, the authors manually translate an assembly implementation into their DSL. Therefore, the guarantees obtained are comparable to those from existing interactive verifications in proof assistants.
+
+
+The program transformations are standard and straightforward given the simplicity of the language. It would be no loss to remove the pseudo-code algorithms 1 to 9. The space could be filled with a discussion about:
+
+a) the heuristics that makes the verification of the multiplication and squaring algorithm succeed. As is, it appears as if the heuristics inlines all assignments, which can make the program grow exponentially in the number of statements in the worst case. What do the heuristics do in detail? What prevents the external solver from performing such optimisations itself?
+
+b) the effect of slicing. In highly optimised assembly code, I would not expect to find an instruction that does not contribute to the overall result. As the Hoare triples specify functional correctness, all result variables should appear in the post condition. What fraction of instructions does slicing remove in practice? And how does this affect the verification times?
+
+c) the time for solving the polynomial equation entailment in the external solver vs. the time for validating the solution within Coq. At present, the validation time is given as a single figure, but it would be interesting to see how hard formal validation is in comparison to unverified solving.
+
+===========================================================================
+                            CAV'17 Review #58B
+---------------------------------------------------------------------------
+Paper #58: Certified Verification of Algebraic Properties on Low-Level
+           Mathematical Constructs in Cryptographic Programs
+---------------------------------------------------------------------------
+
+                      Overall merit: 3. Weak accept
+
+                         ===== Paper summary =====
+
+The paper describes a technique for formally verifying the algebraic specification of low-level implementations of mathematical operations. Since security protocols use mathematical properties of finite objects (groups, fields, etc.), proving the algebraic properties of the implemented mathematical operations is necessary. 
+The paper presents the required modeling for operations over GF(2^255 - 19) and describes how the proof for X25519 is constructed.
+
+                      ===== Comments for author =====
+
+While I am not a security expert, it is well known that verifying cryptographic properties is not an easy task. I therefore think that this paper is interesting.
+
+Yet, I do have some problems with the presentation.
+Section 4 describes 3 transformations that are required in order to reduce the problem to polynomial entailment. I feel like Slicing and the SSA transformation are well-known (in the formal verification community). In my opinion, the authors could skip most of that part and use the space to elaborate more on Section 5.
+
+In Section 5, many of the steps are not so clear. Right at the beginning the breakdown of the implication into the two formulae is not well explained:
+1. The consequence of the original implication is a conjunction, so how come it becomes a problem of proving that either (OR) of the resulting two formulae holds?
+2. There are indices that disappear ([K] and [L]) - why?
+
+After that, there is a transformation that goes into formulae (1) and (2) - this is also unclear. Does it rely on the fact that if A=>B then clearly A&C=>B?
+
+As for the heuristic for solving the polynomial problem. I believe that their rewriting rules are simply a form of variable elimination. As far as I know, this is implemented in other SMT solvers.
+
+In the evaluation, maybe it is a good idea to clarify which implementation the X25519 is verified against (I think it is AMD64 aka X86-64?).
+
+Overall, I think this is an interesting contribution, but I do feel that more attention is needed in the mathematical part.
+
+===========================================================================
+                            CAV'17 Review #58C
+---------------------------------------------------------------------------
+Paper #58: Certified Verification of Algebraic Properties on Low-Level
+           Mathematical Constructs in Cryptographic Programs
+---------------------------------------------------------------------------
+
+                      Overall merit: 3. Weak accept
+
+                         ===== Paper summary =====
+
+The paper presents a novel technique to verify  computations of the algebraic operations in cryptosystems. In particular, the paper develops a certified techniques for verifying  X25519, the default elliptic curve Diffie-Hellman key exchange protocol.
+They translate  an algebraic specification of mathematical constructs into an algebraic problem, which in turn is solved by SINGULAR.  The proof assistant COQ certifies the translation and solution to algebraic problems. The operations
+
+                      ===== Comments for author =====
+
+The paper presents a clear and valuable contribution. Verifying algebraic operations in cryptography is indeed an important challenge, and the techniques presented herein can serve as a foundation for this important, yet somewhat neglected area.
+
+My only concern is that I do not see a link to the COQ  code.   
+
+Other comments
+============
+1. It is not clear how you handle overflows in computations. Could you please explain it in detail?
+2. Can your method be adapted to reason about timing side-channels.
+3. A second case study will help to validate the technique. A case study like Karastuba multiplication will be useful.
+
