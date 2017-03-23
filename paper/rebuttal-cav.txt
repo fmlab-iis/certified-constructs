@@ -1,14 +1,14 @@
 
 We thank reviewers for their time and effort.
 
-We develop an automatic verification technique for algebric properties
+We develop an automatic verification technique for algebraic properties
 on mathematical constructs in cryptographic programs. A major obstacle
 is to verify implementations of 255-bit non-linear multiplication. In
 [14], Boolector and COQ are used to verify an implementation (from [9,
-10] or Appendix A) within 5 hours with user annotations and bit blasting.
-Our new technique verifies the same implementation in 1 minute.
-without annotations. All transformations and verification results
-are moreover certified by COQ. Among others, we successfully
+10] and listed in Appendix A) within 5 hours with user annotations
+and bit blasting. Our new technique verifies the same implementation
+in 1 minute. without annotations. All transformations and verification
+results are moreover certified by COQ. Among others, we successfully 
 demonstrate how to verify an implementation of 255-bit multiplication 
 automatically and feasibly with only the trust base COQ (not SMT, SAT,
 nor any external solvers). We are not aware of any technique offering
@@ -18,27 +18,29 @@ This work certainly does not verify many security properties. We did
 not claim to do so (see the title of our submission). Rather, our
 technique focuses on algebraic properties of mathematical constructs. 
 It is not sufficient for general-purpose low-level cryptographic
-programs. Yet it specifies implementations of mathematical constructs in 
-Curve25519 [9, 10] and is very effective. Our guarantees are indeed
-comparable to interactive verification with proof assistants, but they
-are achieved automatically. External solvers certainly can perform
+programs. However, it does cover implementations of mathematical
+constructs in Curve25519 [9, 10] and is very effective. Our guarantees
+are comparable to interactive verification with proof assistants, but
+they are achieved automatically. External solvers can perform
 heuristics such as inlining assignments. But it is unclear how to
 certify such external heuristics in COQ. For multiplication, the
-validation time is about 69.33 times of unverified solving time (2.288s
-vs. 0.033s). Validation time includes rewriting, preparing inputs to
-external solvers, type checking and so on.
+validation time is about 69.33 times of unverified solving time
+(2.288s vs. 0.033s). Validation time includes rewriting, preparing
+inputs to external solvers, type checking and so on. 
 
 Certified transformations require additional conditions (such as
 well-formedness). Our detailed presentation is meant to convey such
 subtleties in certified verification. In the beginning of Section 5,
 we meant to prove implications of either forms. Indices disappear
 also because we consider implications of this form (with one
-consequent). Most SMT solvers employ heuristics (such as variable
-elimination) for efficiency. Yet they do not certify results. In COQ,
-we perform heuristics explicitly to have results certified by COQ.
+consequent). Several instances of considered forms have to be
+established for conjunctive consequences. Most SMT solvers employ
+heuristics (such as variable elimination) for efficiency. Yet they do
+not certify results. In COQ, we perform heuristics explicitly to have
+results certified by COQ. 
 
-The COQ code is on GitHub: https://github.com/fmlab-iis/certified-constructs/tree/master/code.
-It is not disclosed for light double blind review. 
+The COQ code is at https://github.com/fmlab-iis/certified-constructs/tree/master/code.
+It is not disclosed for light double-blind review. 
 The methods here are primarily to ensure that the results are
 mathematically correct. Such methods would not be directly adaptable 
 towards timing side-channels, or rather, we would need a proof for
