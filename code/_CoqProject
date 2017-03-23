@@ -1,0 +1,6 @@
+-Q lib/CompCert CompCert
+-Q lib/gbarith/src GBArith
+-Q lib/polyop/src PolyOp
+-Q common Common
+-Q mqhasm mQhasm
+-I .

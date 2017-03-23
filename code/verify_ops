@@ -1,0 +1,7 @@
+#!/bin/bash
+
+./verify fe25519/fe25519_add.v
+./verify fe25519/fe25519_sub.v
+./verify fe25519/fe25519_mul121666.v
+./verify fe25519/fe25519_mul.v
+./verify fe25519/fe25519_sq.v
