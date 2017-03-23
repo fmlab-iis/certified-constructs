@@ -37,6 +37,8 @@ consequent). Most SMT solvers employ heuristics (such as variable
 elimination) for efficiency. Yet they do not certify results. In COQ,
 we perform heuristics explicitly to have results certified by COQ.
 
+The COQ code is on GitHub: https://github.com/fmlab-iis/certified-constructs/tree/master/code.
+It is not disclosed for light double blind review. 
 The methods here are primarily to ensure that the results are
 mathematically correct. Such methods would not be directly adaptable 
 towards timing side-channels, or rather, we would need a proof for
@@ -49,6 +51,3 @@ to the relatively small number of limbs and the relative high speed of
 multiplications as compared to additions, especially additions that
 must eventually be carried). We will consider something larger which
 necessitates Karatsuba as our next target. 
-
-Link to the Coq code?
-
