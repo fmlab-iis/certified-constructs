@@ -1,0 +1,6 @@
+#!/bin/bash
+
+./verify fe25519/ladderstep1.v
+./verify fe25519/ladderstep2.v
+./verify fe25519/ladderstep3_1.v
+./verify fe25519/ladderstep3_2.v

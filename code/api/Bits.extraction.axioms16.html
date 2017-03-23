@@ -1,0 +1,621 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>Bits.extraction.axioms16</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library Bits.extraction.axioms16</h1>
+
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="library">mathcomp.ssreflect.ssreflect</span>.<br/>
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab19"></a><h1 class="section">An axiomatization of OCaml native integers</h1>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a name="wordsize"><span class="id" title="definition">wordsize</span></a> := 16.<br/>
+
+<br/>
+<span class="id" title="keyword">Axiom</span> <a name="Int16"><span class="id" title="axiom">Int16</span></a>: <span class="id" title="keyword">Type</span>.<br/>
+<span class="id" title="keyword">Extract</span> <span class="id" title="var">Inlined</span> <span class="id" title="var">Constant</span> <span class="id" title="var">Int16</span> ⇒ "int".<br/>
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Axiom</span> <a name="forallInt16"><span class="id" title="axiom">forallInt16</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">(</span></a><a class="idref" href="Bits.extraction.axioms16.html#Int16"><span class="id" title="axiom">Int16</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Datatypes.html#bool"><span class="id" title="inductive">bool</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">)</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Datatypes.html#bool"><span class="id" title="inductive">bool</span></a>.<br/>
+<span class="id" title="keyword">Extract</span> <span class="id" title="var">Inlined</span> <span class="id" title="var">Constant</span> <span class="id" title="var">forallInt16</span> ⇒ "Forall.forall_int16".<br/>
+
+<br/>
+<span class="id" title="keyword">Axiom</span> <a name="eq"><span class="id" title="axiom">eq</span></a>: <a class="idref" href="Bits.extraction.axioms16.html#Int16"><span class="id" title="axiom">Int16</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="Bits.extraction.axioms16.html#Int16"><span class="id" title="axiom">Int16</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Datatypes.html#bool"><span class="id" title="inductive">bool</span></a>.<br/>
+<span class="id" title="keyword">Extract</span> <span class="id" title="var">Inlined</span> <span class="id" title="var">Constant</span> <span class="id" title="var">eq</span> ⇒ "(=)".<br/>
+
+<br/>
+<span class="id" title="keyword">Section</span> <a name="Trust"><span class="id" title="section">Trust</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Axiom</span> <a name="eqInt16P"><span class="id" title="axiom">eqInt16P</span></a> : <span class="id" title="definition">Equality.axiom</span> <a class="idref" href="Bits.extraction.axioms16.html#eq"><span class="id" title="axiom">eq</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a name="viewP"><span class="id" title="definition">viewP</span></a> (<span class="id" title="var">P</span>: <span class="id" title="definition">pred</span> <a class="idref" href="Bits.extraction.axioms16.html#Int16"><span class="id" title="axiom">Int16</span></a>) (<span class="id" title="var">PP</span>: <a class="idref" href="Bits.extraction.axioms16.html#Int16"><span class="id" title="axiom">Int16</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <span class="id" title="keyword">Prop</span>) := <span class="id" title="keyword">∀</span> <span class="id" title="var">x</span>, <span class="id" title="inductive">reflect</span> (<a class="idref" href="Bits.extraction.axioms16.html#PP"><span class="id" title="variable">PP</span></a> <a class="idref" href="Bits.extraction.axioms16.html#x"><span class="id" title="variable">x</span></a>) (<a class="idref" href="Bits.extraction.axioms16.html#P"><span class="id" title="variable">P</span></a> <a class="idref" href="Bits.extraction.axioms16.html#x"><span class="id" title="variable">x</span></a>).<br/>
+
+<br/>
+<span class="id" title="keyword">Axiom</span> <a name="forallInt16P"><span class="id" title="axiom">forallInt16P</span></a> : <span class="id" title="keyword">∀</span> <span class="id" title="var">P</span> <span class="id" title="var">PP</span>, <a class="idref" href="Bits.extraction.axioms16.html#viewP"><span class="id" title="definition">viewP</span></a> <a class="idref" href="Bits.extraction.axioms16.html#P"><span class="id" title="variable">P</span></a> <a class="idref" href="Bits.extraction.axioms16.html#PP"><span class="id" title="variable">PP</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <span class="id" title="inductive">reflect</span> (<span class="id" title="keyword">∀</span> <span class="id" title="var">x</span>, <a class="idref" href="Bits.extraction.axioms16.html#PP"><span class="id" title="variable">PP</span></a> <a class="idref" href="Bits.extraction.axioms16.html#x"><span class="id" title="variable">x</span></a>) (<a class="idref" href="Bits.extraction.axioms16.html#forallInt16"><span class="id" title="axiom">forallInt16</span></a> (<span class="id" title="keyword">fun</span> <span class="id" title="var">x</span> ⇒ <a class="idref" href="Bits.extraction.axioms16.html#P"><span class="id" title="variable">P</span></a> <a class="idref" href="Bits.extraction.axioms16.html#x"><span class="id" title="variable">x</span></a>)).<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="Bits.extraction.axioms16.html#Trust"><span class="id" title="section">Trust</span></a>.<br/>
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Axiom</span> <a name="zero"><span class="id" title="axiom">zero</span></a> : <a class="idref" href="Bits.extraction.axioms16.html#Int16"><span class="id" title="axiom">Int16</span></a>.<br/>
+<span class="id" title="keyword">Extract</span> <span class="id" title="var">Inlined</span> <span class="id" title="var">Constant</span> <span class="id" title="var">zero</span> ⇒ "0".<br/>
+
+<br/>
+<span class="id" title="keyword">Axiom</span> <a name="one"><span class="id" title="axiom">one</span></a> : <a class="idref" href="Bits.extraction.axioms16.html#Int16"><span class="id" title="axiom">Int16</span></a>.<br/>
+<span class="id" title="keyword">Extract</span> <span class="id" title="var">Inlined</span> <span class="id" title="var">Constant</span> <span class="id" title="var">one</span> ⇒ "1".<br/>
+
+<br/>
+<span class="id" title="keyword">Axiom</span> <a name="succ"><span class="id" title="axiom">succ</span></a> : <a class="idref" href="Bits.extraction.axioms16.html#Int16"><span class="id" title="axiom">Int16</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="Bits.extraction.axioms16.html#Int16"><span class="id" title="axiom">Int16</span></a>.<br/>
+<span class="id" title="keyword">Extract</span> <span class="id" title="var">Constant</span> <span class="id" title="var">succ</span> ⇒ "(fun x -&gt; (x + 1) land 0xffff)".<br/>
+
+<br/>
+<span class="id" title="keyword">Axiom</span> <a name="lor"><span class="id" title="axiom">lor</span></a>: <a class="idref" href="Bits.extraction.axioms16.html#Int16"><span class="id" title="axiom">Int16</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="Bits.extraction.axioms16.html#Int16"><span class="id" title="axiom">Int16</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="Bits.extraction.axioms16.html#Int16"><span class="id" title="axiom">Int16</span></a>.<br/>
+<span class="id" title="keyword">Extract</span> <span class="id" title="var">Inlined</span> <span class="id" title="var">Constant</span> <span class="id" title="var">lor</span> ⇒ "(lor)".<br/>
+
+<br/>
+<span class="id" title="keyword">Axiom</span> <a name="lsl"><span class="id" title="axiom">lsl</span></a>: <a class="idref" href="Bits.extraction.axioms16.html#Int16"><span class="id" title="axiom">Int16</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="Bits.extraction.axioms16.html#Int16"><span class="id" title="axiom">Int16</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="Bits.extraction.axioms16.html#Int16"><span class="id" title="axiom">Int16</span></a>.<br/>
+<span class="id" title="keyword">Extract</span> <span class="id" title="var">Inlined</span> <span class="id" title="var">Constant</span> <span class="id" title="var">lsl</span> ⇒ "(fun x y -&gt; (x lsl y) land 0xffff)".<br/>
+
+<br/>
+<span class="id" title="keyword">Axiom</span> <a name="land"><span class="id" title="axiom">land</span></a>: <a class="idref" href="Bits.extraction.axioms16.html#Int16"><span class="id" title="axiom">Int16</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="Bits.extraction.axioms16.html#Int16"><span class="id" title="axiom">Int16</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="Bits.extraction.axioms16.html#Int16"><span class="id" title="axiom">Int16</span></a>.<br/>
+<span class="id" title="keyword">Extract</span> <span class="id" title="var">Inlined</span> <span class="id" title="var">Constant</span> <span class="id" title="var">land</span> ⇒ "(land)".<br/>
+
+<br/>
+<span class="id" title="keyword">Axiom</span> <a name="lt"><span class="id" title="axiom">lt</span></a>: <a class="idref" href="Bits.extraction.axioms16.html#Int16"><span class="id" title="axiom">Int16</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="Bits.extraction.axioms16.html#Int16"><span class="id" title="axiom">Int16</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Datatypes.html#bool"><span class="id" title="inductive">bool</span></a>.<br/>
+<span class="id" title="keyword">Extract</span> <span class="id" title="var">Inlined</span> <span class="id" title="var">Constant</span> <span class="id" title="var">lt</span> ⇒ "(&lt;)".<br/>
+
+<br/>
+<span class="id" title="keyword">Axiom</span> <a name="lsr"><span class="id" title="axiom">lsr</span></a>: <a class="idref" href="Bits.extraction.axioms16.html#Int16"><span class="id" title="axiom">Int16</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="Bits.extraction.axioms16.html#Int16"><span class="id" title="axiom">Int16</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="Bits.extraction.axioms16.html#Int16"><span class="id" title="axiom">Int16</span></a>.<br/>
+<span class="id" title="keyword">Extract</span> <span class="id" title="var">Inlined</span> <span class="id" title="var">Constant</span> <span class="id" title="var">lsr</span> ⇒ "(lsr)".<br/>
+
+<br/>
+<span class="id" title="keyword">Axiom</span> <a name="neg"><span class="id" title="axiom">neg</span></a>: <a class="idref" href="Bits.extraction.axioms16.html#Int16"><span class="id" title="axiom">Int16</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="Bits.extraction.axioms16.html#Int16"><span class="id" title="axiom">Int16</span></a>.<br/>
+<span class="id" title="keyword">Extract</span> <span class="id" title="var">Inlined</span> <span class="id" title="var">Constant</span> <span class="id" title="var">neg</span> ⇒ "(fun x -&gt; (-x) land 0xffff)".<br/>
+
+<br/>
+<span class="id" title="keyword">Axiom</span> <a name="lnot"><span class="id" title="axiom">lnot</span></a>: <a class="idref" href="Bits.extraction.axioms16.html#Int16"><span class="id" title="axiom">Int16</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="Bits.extraction.axioms16.html#Int16"><span class="id" title="axiom">Int16</span></a>.<br/>
+<span class="id" title="keyword">Extract</span> <span class="id" title="var">Inlined</span> <span class="id" title="var">Constant</span> <span class="id" title="var">lnot</span> ⇒ "(fun x -&gt; (lnot x) land 0xffff)".<br/>
+
+<br/>
+<span class="id" title="keyword">Axiom</span> <a name="lxor"><span class="id" title="axiom">lxor</span></a>: <a class="idref" href="Bits.extraction.axioms16.html#Int16"><span class="id" title="axiom">Int16</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="Bits.extraction.axioms16.html#Int16"><span class="id" title="axiom">Int16</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="Bits.extraction.axioms16.html#Int16"><span class="id" title="axiom">Int16</span></a>.<br/>
+<span class="id" title="keyword">Extract</span> <span class="id" title="var">Inlined</span> <span class="id" title="var">Constant</span> <span class="id" title="var">lxor</span> ⇒ "(lxor)".<br/>
+
+<br/>
+<span class="id" title="keyword">Axiom</span> <a name="dec"><span class="id" title="axiom">dec</span></a>: <a class="idref" href="Bits.extraction.axioms16.html#Int16"><span class="id" title="axiom">Int16</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="Bits.extraction.axioms16.html#Int16"><span class="id" title="axiom">Int16</span></a>.<br/>
+<span class="id" title="keyword">Extract</span> <span class="id" title="var">Constant</span> <span class="id" title="var">dec</span> ⇒ "(fun x -&gt; (x - 1) land 0xffff)".<br/>
+
+<br/>
+<span class="id" title="keyword">Axiom</span> <a name="add"><span class="id" title="axiom">add</span></a>: <a class="idref" href="Bits.extraction.axioms16.html#Int16"><span class="id" title="axiom">Int16</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="Bits.extraction.axioms16.html#Int16"><span class="id" title="axiom">Int16</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="Bits.extraction.axioms16.html#Int16"><span class="id" title="axiom">Int16</span></a>.<br/>
+<span class="id" title="keyword">Extract</span> <span class="id" title="var">Inlined</span> <span class="id" title="var">Constant</span> <span class="id" title="var">add</span> ⇒ "(fun x y -&gt; (x + y) land 0xffff)".<br/>
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <a name="PbitsToInt16"><span class="id" title="definition">PbitsToInt16</span></a> (<span class="id" title="var">p</span>: <span class="id" title="abbreviation">seq</span> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Datatypes.html#bool"><span class="id" title="inductive">bool</span></a>): <a class="idref" href="Bits.extraction.axioms16.html#Int16"><span class="id" title="axiom">Int16</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="Bits.extraction.axioms16.html#p"><span class="id" title="variable">p</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Datatypes.html#true"><span class="id" title="constructor">true</span></a> <span class="id" title="notation">::</span> <span class="id" title="var">p</span> ⇒ <a class="idref" href="Bits.extraction.axioms16.html#lor"><span class="id" title="axiom">lor</span></a> <a class="idref" href="Bits.extraction.axioms16.html#one"><span class="id" title="axiom">one</span></a> (<a class="idref" href="Bits.extraction.axioms16.html#lsl"><span class="id" title="axiom">lsl</span></a> (<a class="idref" href="Bits.extraction.axioms16.html#PbitsToInt16"><span class="id" title="definition">PbitsToInt16</span></a> <a class="idref" href="Bits.extraction.axioms16.html#p"><span class="id" title="variable">p</span></a>) <a class="idref" href="Bits.extraction.axioms16.html#one"><span class="id" title="axiom">one</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Datatypes.html#false"><span class="id" title="constructor">false</span></a> <span class="id" title="notation">::</span> <span class="id" title="var">p</span> ⇒ <a class="idref" href="Bits.extraction.axioms16.html#lsl"><span class="id" title="axiom">lsl</span></a> (<a class="idref" href="Bits.extraction.axioms16.html#PbitsToInt16"><span class="id" title="definition">PbitsToInt16</span></a> <a class="idref" href="Bits.extraction.axioms16.html#p"><span class="id" title="variable">p</span></a>) <a class="idref" href="Bits.extraction.axioms16.html#one"><span class="id" title="axiom">one</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="notation">[::]</span> ⇒ <a class="idref" href="Bits.extraction.axioms16.html#zero"><span class="id" title="axiom">zero</span></a><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a name="bitsToInt16"><span class="id" title="definition">bitsToInt16</span></a> (<span class="id" title="var">bs</span>: <a class="idref" href="Bits.spec.spec.html#BITS"><span class="id" title="definition">BITS</span></a> <a class="idref" href="Bits.extraction.axioms16.html#wordsize"><span class="id" title="definition">wordsize</span></a>): <a class="idref" href="Bits.extraction.axioms16.html#Int16"><span class="id" title="axiom">Int16</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="Bits.spec.spec.html#splitmsb"><span class="id" title="definition">splitmsb</span></a> <a class="idref" href="Bits.extraction.axioms16.html#bs"><span class="id" title="variable">bs</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Datatypes.html#44400027531d4bc3f586a1997dc874c0"><span class="id" title="notation">(</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Datatypes.html#false"><span class="id" title="constructor">false</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Datatypes.html#44400027531d4bc3f586a1997dc874c0"><span class="id" title="notation">,</span></a> <span class="id" title="var">bs'</span><a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Datatypes.html#44400027531d4bc3f586a1997dc874c0"><span class="id" title="notation">)</span></a> ⇒ <a class="idref" href="Bits.extraction.axioms16.html#PbitsToInt16"><span class="id" title="definition">PbitsToInt16</span></a> <span class="id" title="var">bs'</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Datatypes.html#44400027531d4bc3f586a1997dc874c0"><span class="id" title="notation">(</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Datatypes.html#true"><span class="id" title="constructor">true</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Datatypes.html#44400027531d4bc3f586a1997dc874c0"><span class="id" title="notation">,</span></a> <span class="id" title="var">bs'</span><a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Datatypes.html#44400027531d4bc3f586a1997dc874c0"><span class="id" title="notation">)</span></a> ⇒ <a class="idref" href="Bits.extraction.axioms16.html#neg"><span class="id" title="axiom">neg</span></a> (<a class="idref" href="Bits.extraction.axioms16.html#PbitsToInt16"><span class="id" title="definition">PbitsToInt16</span></a> (<a class="idref" href="Bits.spec.operations.html#negB"><span class="id" title="definition">negB</span></a> <a class="idref" href="Bits.extraction.axioms16.html#bs"><span class="id" title="variable">bs</span></a>))<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <a name="bitsFromInt16S"><span class="id" title="definition">bitsFromInt16S</span></a> (<span class="id" title="var">k</span>: <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>)(<span class="id" title="var">n</span>: <a class="idref" href="Bits.extraction.axioms16.html#Int16"><span class="id" title="axiom">Int16</span></a>): <span class="id" title="abbreviation">seq</span> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Datatypes.html#bool"><span class="id" title="inductive">bool</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="Bits.extraction.axioms16.html#k"><span class="id" title="variable">k</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| 0 ⇒ <span class="id" title="notation">[::]</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">k</span><span class="id" title="notation">.+1</span> ⇒<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">let</span> <span class="id" title="var">p</span> := <a class="idref" href="Bits.extraction.axioms16.html#bitsFromInt16S"><span class="id" title="definition">bitsFromInt16S</span></a> <a class="idref" href="Bits.extraction.axioms16.html#k"><span class="id" title="variable">k</span></a> (<a class="idref" href="Bits.extraction.axioms16.html#lsr"><span class="id" title="axiom">lsr</span></a> <a class="idref" href="Bits.extraction.axioms16.html#n"><span class="id" title="variable">n</span></a> <a class="idref" href="Bits.extraction.axioms16.html#one"><span class="id" title="axiom">one</span></a>) <span class="id" title="keyword">in</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="notation">(</span><a class="idref" href="Bits.extraction.axioms16.html#eq"><span class="id" title="axiom">eq</span></a> (<a class="idref" href="Bits.extraction.axioms16.html#land"><span class="id" title="axiom">land</span></a> <a class="idref" href="Bits.extraction.axioms16.html#n"><span class="id" title="variable">n</span></a> <a class="idref" href="Bits.extraction.axioms16.html#one"><span class="id" title="axiom">one</span></a>) <a class="idref" href="Bits.extraction.axioms16.html#one"><span class="id" title="axiom">one</span></a><span class="id" title="notation">)</span> <span class="id" title="notation">::</span> <a class="idref" href="Bits.extraction.axioms16.html#p"><span class="id" title="variable">p</span></a>                           <br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a name="bitsFromInt16P"><span class="id" title="lemma">bitsFromInt16P</span></a> {<span class="id" title="var">k</span>} (<span class="id" title="var">n</span>: <a class="idref" href="Bits.extraction.axioms16.html#Int16"><span class="id" title="axiom">Int16</span></a>): <span class="id" title="definition">size</span> (<a class="idref" href="Bits.extraction.axioms16.html#bitsFromInt16S"><span class="id" title="definition">bitsFromInt16S</span></a> <a class="idref" href="Bits.extraction.axioms16.html#k"><span class="id" title="variable">k</span></a> <a class="idref" href="Bits.extraction.axioms16.html#n"><span class="id" title="variable">n</span></a>) <span class="id" title="notation">==</span> <a class="idref" href="Bits.extraction.axioms16.html#k"><span class="id" title="variable">k</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Canonical</span> <span class="id" title="var">bitsFromInt16</span> (<span class="id" title="var">n</span>: <a class="idref" href="Bits.extraction.axioms16.html#Int16"><span class="id" title="axiom">Int16</span></a>): <a class="idref" href="Bits.spec.spec.html#BITS"><span class="id" title="definition">BITS</span></a> <a class="idref" href="Bits.extraction.axioms16.html#wordsize"><span class="id" title="definition">wordsize</span></a><br/>
+&nbsp;&nbsp;:= <span class="id" title="constructor">Tuple</span> (<a class="idref" href="Bits.extraction.axioms16.html#bitsFromInt16P"><span class="id" title="lemma">bitsFromInt16P</span></a> <a class="idref" href="Bits.extraction.axioms16.html#n"><span class="id" title="variable">n</span></a>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab20"></a><h1 class="section">Cancelation of <span class="inlinecode"><a class="idref" href="Bits.extraction.axioms16.html#bitsToInt16"><span class="id" title="definition">bitsToInt16</span></a></span> on <span class="inlinecode"><a class="idref" href="Bits.extraction.axioms16.html#bitsFromInt16"><span class="id" title="definition">bitsFromInt16</span></a></span></h1>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a name="bitsToInt16K_test"><span class="id" title="definition">bitsToInt16K_test</span></a>: <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Datatypes.html#bool"><span class="id" title="inductive">bool</span></a> :=<br/>
+&nbsp;<span class="id" title="notation">[</span><span class="id" title="keyword">∀</span> <span class="id" title="var">bs</span> <span class="id" title="notation">,</span> <a class="idref" href="Bits.extraction.axioms16.html#bitsFromInt16"><span class="id" title="definition">bitsFromInt16</span></a> (<a class="idref" href="Bits.extraction.axioms16.html#bitsToInt16"><span class="id" title="definition">bitsToInt16</span></a> <span class="id" title="var">bs</span>) <span class="id" title="notation">==</span> <span class="id" title="var">bs</span> <span class="id" title="notation">]</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Axiom</span> <a name="bitsToInt16K_valid"><span class="id" title="axiom">bitsToInt16K_valid</span></a>: <a class="idref" href="Bits.extraction.axioms16.html#bitsToInt16K_test"><span class="id" title="definition">bitsToInt16K_test</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a name="bitsToInt16K"><span class="id" title="lemma">bitsToInt16K</span></a>: <span class="id" title="definition">cancel</span> <a class="idref" href="Bits.extraction.axioms16.html#bitsToInt16"><span class="id" title="definition">bitsToInt16</span></a> <a class="idref" href="Bits.extraction.axioms16.html#bitsFromInt16"><span class="id" title="definition">bitsFromInt16</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab21"></a><h1 class="section">Injectivity of <span class="inlinecode"><a class="idref" href="Bits.extraction.axioms16.html#bitsFromInt16"><span class="id" title="definition">bitsFromInt16</span></a></span></h1>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a name="bitsFromInt16_inj_test"><span class="id" title="definition">bitsFromInt16_inj_test</span></a>: <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Datatypes.html#bool"><span class="id" title="inductive">bool</span></a> := <br/>
+&nbsp;&nbsp;<a class="idref" href="Bits.extraction.axioms16.html#forallInt16"><span class="id" title="axiom">forallInt16</span></a> (<span class="id" title="keyword">fun</span> <span class="id" title="var">x</span> ⇒<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Bits.extraction.axioms16.html#forallInt16"><span class="id" title="axiom">forallInt16</span></a> (<span class="id" title="keyword">fun</span> <span class="id" title="var">y</span> ⇒ <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="notation">(</span><a class="idref" href="Bits.extraction.axioms16.html#bitsFromInt16"><span class="id" title="definition">bitsFromInt16</span></a> <a class="idref" href="Bits.extraction.axioms16.html#x"><span class="id" title="variable">x</span></a> <span class="id" title="notation">==</span> <a class="idref" href="Bits.extraction.axioms16.html#bitsFromInt16"><span class="id" title="definition">bitsFromInt16</span></a> <a class="idref" href="Bits.extraction.axioms16.html#y"><span class="id" title="variable">y</span></a><span class="id" title="notation">)</span> <span class="id" title="notation">==&gt;</span> <span class="id" title="notation">(</span><a class="idref" href="Bits.extraction.axioms16.html#eq"><span class="id" title="axiom">eq</span></a> <a class="idref" href="Bits.extraction.axioms16.html#x"><span class="id" title="variable">x</span></a> <a class="idref" href="Bits.extraction.axioms16.html#y"><span class="id" title="variable">y</span></a><span class="id" title="notation">)</span>)).<br/>
+
+<br/>
+<span class="id" title="keyword">Axiom</span> <a name="bitsFromInt16_inj_valid"><span class="id" title="axiom">bitsFromInt16_inj_valid</span></a>: <a class="idref" href="Bits.extraction.axioms16.html#bitsFromInt16_inj_test"><span class="id" title="definition">bitsFromInt16_inj_test</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a name="bitsFromInt16_inj"><span class="id" title="lemma">bitsFromInt16_inj</span></a>: <span class="id" title="definition">injective</span> <a class="idref" href="Bits.extraction.axioms16.html#bitsFromInt16"><span class="id" title="definition">bitsFromInt16</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a name="bitsFromInt16K"><span class="id" title="lemma">bitsFromInt16K</span></a>: <span class="id" title="definition">cancel</span> <a class="idref" href="Bits.extraction.axioms16.html#bitsFromInt16"><span class="id" title="definition">bitsFromInt16</span></a> <a class="idref" href="Bits.extraction.axioms16.html#bitsToInt16"><span class="id" title="definition">bitsToInt16</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab22"></a><h1 class="section">Bijection <span class="inlinecode"><a class="idref" href="Bits.extraction.axioms16.html#Int16"><span class="id" title="axiom">Int16</span></a></span> vs. <span class="inlinecode"><a class="idref" href="Bits.spec.spec.html#BITS"><span class="id" title="definition">BITS</span></a></span> <span class="inlinecode"><a class="idref" href="Bits.extraction.axioms8.html#wordsize"><span class="id" title="definition">wordsize</span></a></span></h1>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a name="bitsFromInt16_bij"><span class="id" title="lemma">bitsFromInt16_bij</span></a>: <span class="id" title="inductive">bijective</span> <a class="idref" href="Bits.extraction.axioms16.html#bitsFromInt16"><span class="id" title="definition">bitsFromInt16</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab23"></a><h1 class="section">Representation relation</h1>
+
+<div class="paragraph"> </div>
+
+ We say that an <span class="inlinecode"><a class="idref" href="Bits.spec.operations.properties.html#n"><span class="id" title="axiom">n</span></a></span> <span class="inlinecode">:</span> <span class="inlinecode"><a class="idref" href="Bits.extraction.axioms16.html#Int16"><span class="id" title="axiom">Int16</span></a></span> is the representation of a bitvector
+<span class="inlinecode"><a class="idref" href="Bits.extraction.axioms32.html#bs"><span class="id" title="variable">bs</span></a></span> <span class="inlinecode">:</span> <span class="inlinecode"><a class="idref" href="Bits.spec.spec.html#BITS"><span class="id" title="definition">BITS</span></a></span> <span class="inlinecode"></span> if they satisfy the axiom <span class="inlinecode"><span class="id" title="var">repr_native</span></span>. Morally, it
+means that both represent the same number (ie. the same 
+booleans). 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a name="native_repr"><span class="id" title="definition">native_repr</span></a> (<span class="id" title="var">i</span>: <a class="idref" href="Bits.extraction.axioms16.html#Int16"><span class="id" title="axiom">Int16</span></a>)(<span class="id" title="var">bs</span>: <a class="idref" href="Bits.spec.spec.html#BITS"><span class="id" title="definition">BITS</span></a> <a class="idref" href="Bits.extraction.axioms16.html#wordsize"><span class="id" title="definition">wordsize</span></a>): <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Datatypes.html#bool"><span class="id" title="inductive">bool</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="Bits.extraction.axioms16.html#eq"><span class="id" title="axiom">eq</span></a> <a class="idref" href="Bits.extraction.axioms16.html#i"><span class="id" title="variable">i</span></a> (<a class="idref" href="Bits.extraction.axioms16.html#bitsToInt16"><span class="id" title="definition">bitsToInt16</span></a> <a class="idref" href="Bits.extraction.axioms16.html#bs"><span class="id" title="variable">bs</span></a>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab24"></a><h1 class="section">Representation lemma: equality</h1>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a name="eq_adj"><span class="id" title="lemma">eq_adj</span></a>: <span class="id" title="keyword">∀</span> <span class="id" title="var">i</span> <span class="id" title="var">bs</span>, <a class="idref" href="Bits.extraction.axioms16.html#eq"><span class="id" title="axiom">eq</span></a> <a class="idref" href="Bits.extraction.axioms16.html#i"><span class="id" title="variable">i</span></a> (<a class="idref" href="Bits.extraction.axioms16.html#bitsToInt16"><span class="id" title="definition">bitsToInt16</span></a> <a class="idref" href="Bits.extraction.axioms16.html#bs"><span class="id" title="variable">bs</span></a>) <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#1c39bf18749e5cc609e83c0a0ba5a372"><span class="id" title="notation">=</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#1c39bf18749e5cc609e83c0a0ba5a372"><span class="id" title="notation">(</span></a><a class="idref" href="Bits.extraction.axioms16.html#bitsFromInt16"><span class="id" title="definition">bitsFromInt16</span></a> <a class="idref" href="Bits.extraction.axioms16.html#i"><span class="id" title="variable">i</span></a> <span class="id" title="notation">==</span> <a class="idref" href="Bits.extraction.axioms16.html#bs"><span class="id" title="variable">bs</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#1c39bf18749e5cc609e83c0a0ba5a372"><span class="id" title="notation">)</span></a> .<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a name="eq_repr"><span class="id" title="lemma">eq_repr</span></a>:<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">∀</span> <span class="id" title="var">i</span> <span class="id" title="var">i'</span> <span class="id" title="var">bs</span> <span class="id" title="var">bs'</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Bits.extraction.axioms16.html#native_repr"><span class="id" title="definition">native_repr</span></a> <a class="idref" href="Bits.extraction.axioms16.html#i"><span class="id" title="variable">i</span></a> <a class="idref" href="Bits.extraction.axioms16.html#bs"><span class="id" title="variable">bs</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="Bits.extraction.axioms16.html#native_repr"><span class="id" title="definition">native_repr</span></a> <a class="idref" href="Bits.extraction.axioms16.html#i'"><span class="id" title="variable">i'</span></a> <a class="idref" href="Bits.extraction.axioms16.html#bs'"><span class="id" title="variable">bs'</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#1c39bf18749e5cc609e83c0a0ba5a372"><span class="id" title="notation">(</span></a><a class="idref" href="Bits.extraction.axioms16.html#eq"><span class="id" title="axiom">eq</span></a> <a class="idref" href="Bits.extraction.axioms16.html#i"><span class="id" title="variable">i</span></a> <a class="idref" href="Bits.extraction.axioms16.html#i'"><span class="id" title="variable">i'</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#1c39bf18749e5cc609e83c0a0ba5a372"><span class="id" title="notation">)</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#1c39bf18749e5cc609e83c0a0ba5a372"><span class="id" title="notation">=</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#1c39bf18749e5cc609e83c0a0ba5a372"><span class="id" title="notation">(</span></a><a class="idref" href="Bits.extraction.axioms16.html#bs"><span class="id" title="variable">bs</span></a> <span class="id" title="notation">==</span> <a class="idref" href="Bits.extraction.axioms16.html#bs'"><span class="id" title="variable">bs'</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#1c39bf18749e5cc609e83c0a0ba5a372"><span class="id" title="notation">)</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab25"></a><h1 class="section">Representation lemma: individuals</h1>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a name="zero_test"><span class="id" title="definition">zero_test</span></a>: <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Datatypes.html#bool"><span class="id" title="inductive">bool</span></a> <br/>
+&nbsp;&nbsp;:= <a class="idref" href="Bits.extraction.axioms16.html#eq"><span class="id" title="axiom">eq</span></a> <a class="idref" href="Bits.extraction.axioms16.html#zero"><span class="id" title="axiom">zero</span></a> (<a class="idref" href="Bits.extraction.axioms16.html#bitsToInt16"><span class="id" title="definition">bitsToInt16</span></a> <a class="idref" href="Bits.spec.spec.html#6d227b35fcc3fe7899272727b8c73bfc"><span class="id" title="notation">#</span></a>0).<br/>
+
+<br/>
+<span class="id" title="keyword">Axiom</span> <a name="zero_valid"><span class="id" title="axiom">zero_valid</span></a>: <a class="idref" href="Bits.extraction.axioms16.html#zero_test"><span class="id" title="definition">zero_test</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a name="zero_repr"><span class="id" title="lemma">zero_repr</span></a>: <a class="idref" href="Bits.extraction.axioms16.html#native_repr"><span class="id" title="definition">native_repr</span></a> <a class="idref" href="Bits.extraction.axioms16.html#zero"><span class="id" title="axiom">zero</span></a> <a class="idref" href="Bits.spec.spec.html#6d227b35fcc3fe7899272727b8c73bfc"><span class="id" title="notation">#</span></a>0.<br/>
+ 
+<br/>
+<span class="id" title="keyword">Definition</span> <a name="one_test"><span class="id" title="definition">one_test</span></a>: <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Datatypes.html#bool"><span class="id" title="inductive">bool</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="Bits.extraction.axioms16.html#eq"><span class="id" title="axiom">eq</span></a> <a class="idref" href="Bits.extraction.axioms16.html#one"><span class="id" title="axiom">one</span></a> (<a class="idref" href="Bits.extraction.axioms16.html#bitsToInt16"><span class="id" title="definition">bitsToInt16</span></a> <a class="idref" href="Bits.spec.spec.html#6d227b35fcc3fe7899272727b8c73bfc"><span class="id" title="notation">#</span></a>1).<br/>
+
+<br/>
+<span class="id" title="keyword">Axiom</span> <a name="one_valid"><span class="id" title="axiom">one_valid</span></a>: <a class="idref" href="Bits.extraction.axioms16.html#one_test"><span class="id" title="definition">one_test</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a name="one_repr"><span class="id" title="lemma">one_repr</span></a>: <a class="idref" href="Bits.extraction.axioms16.html#native_repr"><span class="id" title="definition">native_repr</span></a> <a class="idref" href="Bits.extraction.axioms16.html#one"><span class="id" title="axiom">one</span></a> <a class="idref" href="Bits.spec.spec.html#6d227b35fcc3fe7899272727b8c73bfc"><span class="id" title="notation">#</span></a>1.<br/>
+ 
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab26"></a><h1 class="section">Representation lemma: successor</h1>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a name="succ_test"><span class="id" title="definition">succ_test</span></a>: <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Datatypes.html#bool"><span class="id" title="inductive">bool</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="Bits.extraction.axioms16.html#forallInt16"><span class="id" title="axiom">forallInt16</span></a> (<span class="id" title="keyword">fun</span> <span class="id" title="var">i</span> ⇒<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Bits.extraction.axioms16.html#native_repr"><span class="id" title="definition">native_repr</span></a> (<a class="idref" href="Bits.extraction.axioms16.html#succ"><span class="id" title="axiom">succ</span></a> <a class="idref" href="Bits.extraction.axioms16.html#i"><span class="id" title="variable">i</span></a>) (<a class="idref" href="Bits.spec.operations.html#incB"><span class="id" title="definition">incB</span></a> (<a class="idref" href="Bits.extraction.axioms16.html#bitsFromInt16"><span class="id" title="definition">bitsFromInt16</span></a> <a class="idref" href="Bits.extraction.axioms16.html#i"><span class="id" title="variable">i</span></a>))).<br/>
+
+<br/>
+<span class="id" title="keyword">Axiom</span> <a name="succ_valid"><span class="id" title="axiom">succ_valid</span></a>: <a class="idref" href="Bits.extraction.axioms16.html#succ_test"><span class="id" title="definition">succ_test</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a name="succ_repr"><span class="id" title="lemma">succ_repr</span></a>: <span class="id" title="keyword">∀</span> <span class="id" title="var">i</span> <span class="id" title="var">bs</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Bits.extraction.axioms16.html#native_repr"><span class="id" title="definition">native_repr</span></a> <a class="idref" href="Bits.extraction.axioms16.html#i"><span class="id" title="variable">i</span></a> <a class="idref" href="Bits.extraction.axioms16.html#bs"><span class="id" title="variable">bs</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="Bits.extraction.axioms16.html#native_repr"><span class="id" title="definition">native_repr</span></a> (<a class="idref" href="Bits.extraction.axioms16.html#succ"><span class="id" title="axiom">succ</span></a> <a class="idref" href="Bits.extraction.axioms16.html#i"><span class="id" title="variable">i</span></a>) (<a class="idref" href="Bits.spec.operations.html#incB"><span class="id" title="definition">incB</span></a> <a class="idref" href="Bits.extraction.axioms16.html#bs"><span class="id" title="variable">bs</span></a>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab27"></a><h1 class="section">Representation lemma: negation</h1>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a name="lnot_test"><span class="id" title="definition">lnot_test</span></a>: <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Datatypes.html#bool"><span class="id" title="inductive">bool</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="Bits.extraction.axioms16.html#forallInt16"><span class="id" title="axiom">forallInt16</span></a> (<span class="id" title="keyword">fun</span> <span class="id" title="var">i</span> ⇒<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Bits.extraction.axioms16.html#native_repr"><span class="id" title="definition">native_repr</span></a> (<a class="idref" href="Bits.extraction.axioms16.html#lnot"><span class="id" title="axiom">lnot</span></a> <a class="idref" href="Bits.extraction.axioms16.html#i"><span class="id" title="variable">i</span></a>) (<a class="idref" href="Bits.spec.operations.html#invB"><span class="id" title="definition">invB</span></a> (<a class="idref" href="Bits.extraction.axioms16.html#bitsFromInt16"><span class="id" title="definition">bitsFromInt16</span></a> <a class="idref" href="Bits.extraction.axioms16.html#i"><span class="id" title="variable">i</span></a>))).<br/>
+
+<br/>
+<span class="id" title="keyword">Axiom</span> <a name="lnot_valid"><span class="id" title="axiom">lnot_valid</span></a>: <a class="idref" href="Bits.extraction.axioms16.html#lnot_test"><span class="id" title="definition">lnot_test</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a name="lnot_repr"><span class="id" title="lemma">lnot_repr</span></a>: <span class="id" title="keyword">∀</span> <span class="id" title="var">i</span> <span class="id" title="var">bs</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Bits.extraction.axioms16.html#native_repr"><span class="id" title="definition">native_repr</span></a> <a class="idref" href="Bits.extraction.axioms16.html#i"><span class="id" title="variable">i</span></a> <a class="idref" href="Bits.extraction.axioms16.html#bs"><span class="id" title="variable">bs</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="Bits.extraction.axioms16.html#native_repr"><span class="id" title="definition">native_repr</span></a> (<a class="idref" href="Bits.extraction.axioms16.html#lnot"><span class="id" title="axiom">lnot</span></a> <a class="idref" href="Bits.extraction.axioms16.html#i"><span class="id" title="variable">i</span></a>) (<a class="idref" href="Bits.spec.operations.html#invB"><span class="id" title="definition">invB</span></a> <a class="idref" href="Bits.extraction.axioms16.html#bs"><span class="id" title="variable">bs</span></a>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab28"></a><h1 class="section">Representation lemma: logical and</h1>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a name="land_test"><span class="id" title="definition">land_test</span></a>: <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Datatypes.html#bool"><span class="id" title="inductive">bool</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="Bits.extraction.axioms16.html#forallInt16"><span class="id" title="axiom">forallInt16</span></a> (<span class="id" title="keyword">fun</span> <span class="id" title="var">i</span> ⇒<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Bits.extraction.axioms16.html#forallInt16"><span class="id" title="axiom">forallInt16</span></a> (<span class="id" title="keyword">fun</span> <span class="id" title="var">i'</span> ⇒<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Bits.extraction.axioms16.html#native_repr"><span class="id" title="definition">native_repr</span></a> (<a class="idref" href="Bits.extraction.axioms16.html#land"><span class="id" title="axiom">land</span></a> <a class="idref" href="Bits.extraction.axioms16.html#i"><span class="id" title="variable">i</span></a> <a class="idref" href="Bits.extraction.axioms16.html#i'"><span class="id" title="variable">i'</span></a>) (<a class="idref" href="Bits.spec.operations.html#andB"><span class="id" title="definition">andB</span></a> (<a class="idref" href="Bits.extraction.axioms16.html#bitsFromInt16"><span class="id" title="definition">bitsFromInt16</span></a> <a class="idref" href="Bits.extraction.axioms16.html#i"><span class="id" title="variable">i</span></a>) (<a class="idref" href="Bits.extraction.axioms16.html#bitsFromInt16"><span class="id" title="definition">bitsFromInt16</span></a> <a class="idref" href="Bits.extraction.axioms16.html#i'"><span class="id" title="variable">i'</span></a>)))).<br/>
+
+<br/>
+<span class="id" title="keyword">Axiom</span> <a name="land_valid"><span class="id" title="axiom">land_valid</span></a>: <a class="idref" href="Bits.extraction.axioms16.html#land_test"><span class="id" title="definition">land_test</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a name="land_repr"><span class="id" title="lemma">land_repr</span></a>: <span class="id" title="keyword">∀</span> <span class="id" title="var">i</span> <span class="id" title="var">i'</span> <span class="id" title="var">bs</span> <span class="id" title="var">bs'</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Bits.extraction.axioms16.html#native_repr"><span class="id" title="definition">native_repr</span></a> <a class="idref" href="Bits.extraction.axioms16.html#i"><span class="id" title="variable">i</span></a> <a class="idref" href="Bits.extraction.axioms16.html#bs"><span class="id" title="variable">bs</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="Bits.extraction.axioms16.html#native_repr"><span class="id" title="definition">native_repr</span></a> <a class="idref" href="Bits.extraction.axioms16.html#i'"><span class="id" title="variable">i'</span></a> <a class="idref" href="Bits.extraction.axioms16.html#bs'"><span class="id" title="variable">bs'</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Bits.extraction.axioms16.html#native_repr"><span class="id" title="definition">native_repr</span></a> (<a class="idref" href="Bits.extraction.axioms16.html#land"><span class="id" title="axiom">land</span></a> <a class="idref" href="Bits.extraction.axioms16.html#i"><span class="id" title="variable">i</span></a> <a class="idref" href="Bits.extraction.axioms16.html#i'"><span class="id" title="variable">i'</span></a>) (<a class="idref" href="Bits.spec.operations.html#andB"><span class="id" title="definition">andB</span></a> <a class="idref" href="Bits.extraction.axioms16.html#bs"><span class="id" title="variable">bs</span></a> <a class="idref" href="Bits.extraction.axioms16.html#bs'"><span class="id" title="variable">bs'</span></a>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab29"></a><h1 class="section">Representation lemma: logical or</h1>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a name="lor_test"><span class="id" title="definition">lor_test</span></a>: <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Datatypes.html#bool"><span class="id" title="inductive">bool</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="Bits.extraction.axioms16.html#forallInt16"><span class="id" title="axiom">forallInt16</span></a> (<span class="id" title="keyword">fun</span> <span class="id" title="var">i</span> ⇒<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Bits.extraction.axioms16.html#forallInt16"><span class="id" title="axiom">forallInt16</span></a> (<span class="id" title="keyword">fun</span> <span class="id" title="var">i'</span> ⇒<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Bits.extraction.axioms16.html#native_repr"><span class="id" title="definition">native_repr</span></a> (<a class="idref" href="Bits.extraction.axioms16.html#lor"><span class="id" title="axiom">lor</span></a> <a class="idref" href="Bits.extraction.axioms16.html#i"><span class="id" title="variable">i</span></a> <a class="idref" href="Bits.extraction.axioms16.html#i'"><span class="id" title="variable">i'</span></a>) (<a class="idref" href="Bits.spec.operations.html#orB"><span class="id" title="definition">orB</span></a> (<a class="idref" href="Bits.extraction.axioms16.html#bitsFromInt16"><span class="id" title="definition">bitsFromInt16</span></a> <a class="idref" href="Bits.extraction.axioms16.html#i"><span class="id" title="variable">i</span></a>) (<a class="idref" href="Bits.extraction.axioms16.html#bitsFromInt16"><span class="id" title="definition">bitsFromInt16</span></a> <a class="idref" href="Bits.extraction.axioms16.html#i'"><span class="id" title="variable">i'</span></a>)))).<br/>
+
+<br/>
+<span class="id" title="keyword">Axiom</span> <a name="lor_valid"><span class="id" title="axiom">lor_valid</span></a>: <a class="idref" href="Bits.extraction.axioms16.html#lor_test"><span class="id" title="definition">lor_test</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a name="lor_repr"><span class="id" title="lemma">lor_repr</span></a>: <span class="id" title="keyword">∀</span> <span class="id" title="var">i</span> <span class="id" title="var">i'</span> <span class="id" title="var">bs</span> <span class="id" title="var">bs'</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Bits.extraction.axioms16.html#native_repr"><span class="id" title="definition">native_repr</span></a> <a class="idref" href="Bits.extraction.axioms16.html#i"><span class="id" title="variable">i</span></a> <a class="idref" href="Bits.extraction.axioms16.html#bs"><span class="id" title="variable">bs</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="Bits.extraction.axioms16.html#native_repr"><span class="id" title="definition">native_repr</span></a> <a class="idref" href="Bits.extraction.axioms16.html#i'"><span class="id" title="variable">i'</span></a> <a class="idref" href="Bits.extraction.axioms16.html#bs'"><span class="id" title="variable">bs'</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Bits.extraction.axioms16.html#native_repr"><span class="id" title="definition">native_repr</span></a> (<a class="idref" href="Bits.extraction.axioms16.html#lor"><span class="id" title="axiom">lor</span></a> <a class="idref" href="Bits.extraction.axioms16.html#i"><span class="id" title="variable">i</span></a> <a class="idref" href="Bits.extraction.axioms16.html#i'"><span class="id" title="variable">i'</span></a>) (<a class="idref" href="Bits.spec.operations.html#orB"><span class="id" title="definition">orB</span></a> <a class="idref" href="Bits.extraction.axioms16.html#bs"><span class="id" title="variable">bs</span></a> <a class="idref" href="Bits.extraction.axioms16.html#bs'"><span class="id" title="variable">bs'</span></a>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab30"></a><h1 class="section">Representation lemma: logical xor</h1>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a name="lxor_test"><span class="id" title="definition">lxor_test</span></a>: <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Datatypes.html#bool"><span class="id" title="inductive">bool</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="Bits.extraction.axioms16.html#forallInt16"><span class="id" title="axiom">forallInt16</span></a> (<span class="id" title="keyword">fun</span> <span class="id" title="var">i</span> ⇒<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Bits.extraction.axioms16.html#forallInt16"><span class="id" title="axiom">forallInt16</span></a> (<span class="id" title="keyword">fun</span> <span class="id" title="var">i'</span> ⇒<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Bits.extraction.axioms16.html#native_repr"><span class="id" title="definition">native_repr</span></a> (<a class="idref" href="Bits.extraction.axioms16.html#lxor"><span class="id" title="axiom">lxor</span></a> <a class="idref" href="Bits.extraction.axioms16.html#i"><span class="id" title="variable">i</span></a> <a class="idref" href="Bits.extraction.axioms16.html#i'"><span class="id" title="variable">i'</span></a>) (<a class="idref" href="Bits.spec.operations.html#xorB"><span class="id" title="definition">xorB</span></a> (<a class="idref" href="Bits.extraction.axioms16.html#bitsFromInt16"><span class="id" title="definition">bitsFromInt16</span></a> <a class="idref" href="Bits.extraction.axioms16.html#i"><span class="id" title="variable">i</span></a>) (<a class="idref" href="Bits.extraction.axioms16.html#bitsFromInt16"><span class="id" title="definition">bitsFromInt16</span></a> <a class="idref" href="Bits.extraction.axioms16.html#i'"><span class="id" title="variable">i'</span></a>)))).<br/>
+
+<br/>
+<span class="id" title="keyword">Axiom</span> <a name="lxor_valid"><span class="id" title="axiom">lxor_valid</span></a>: <a class="idref" href="Bits.extraction.axioms16.html#lxor_test"><span class="id" title="definition">lxor_test</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a name="lxor_repr"><span class="id" title="lemma">lxor_repr</span></a>: <span class="id" title="keyword">∀</span> <span class="id" title="var">i</span> <span class="id" title="var">i'</span> <span class="id" title="var">bs</span> <span class="id" title="var">bs'</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Bits.extraction.axioms16.html#native_repr"><span class="id" title="definition">native_repr</span></a> <a class="idref" href="Bits.extraction.axioms16.html#i"><span class="id" title="variable">i</span></a> <a class="idref" href="Bits.extraction.axioms16.html#bs"><span class="id" title="variable">bs</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="Bits.extraction.axioms16.html#native_repr"><span class="id" title="definition">native_repr</span></a> <a class="idref" href="Bits.extraction.axioms16.html#i'"><span class="id" title="variable">i'</span></a> <a class="idref" href="Bits.extraction.axioms16.html#bs'"><span class="id" title="variable">bs'</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Bits.extraction.axioms16.html#native_repr"><span class="id" title="definition">native_repr</span></a> (<a class="idref" href="Bits.extraction.axioms16.html#lxor"><span class="id" title="axiom">lxor</span></a> <a class="idref" href="Bits.extraction.axioms16.html#i"><span class="id" title="variable">i</span></a> <a class="idref" href="Bits.extraction.axioms16.html#i'"><span class="id" title="variable">i'</span></a>) (<a class="idref" href="Bits.spec.operations.html#xorB"><span class="id" title="definition">xorB</span></a> <a class="idref" href="Bits.extraction.axioms16.html#bs"><span class="id" title="variable">bs</span></a> <a class="idref" href="Bits.extraction.axioms16.html#bs'"><span class="id" title="variable">bs'</span></a>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab31"></a><h1 class="section">Representation of naturals</h1>
+
+<div class="paragraph"> </div>
+
+ We extend the refinement relation (by composition) to natural
+numbers, going through a <span class="inlinecode"><a class="idref" href="Bits.spec.spec.html#BITS"><span class="id" title="definition">BITS</span></a></span> <span class="inlinecode"><a class="idref" href="Bits.extraction.axioms8.html#wordsize"><span class="id" title="definition">wordsize</span></a></span> word. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a name="natural_repr"><span class="id" title="definition">natural_repr</span></a> (<span class="id" title="var">i</span>: <a class="idref" href="Bits.extraction.axioms16.html#Int16"><span class="id" title="axiom">Int16</span></a>)(<span class="id" title="var">n</span>: <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>): <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Datatypes.html#bool"><span class="id" title="inductive">bool</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="notation">[</span><span class="id" title="notation">∃</span> <span class="id" title="var">bs</span><span class="id" title="notation">,</span> <a class="idref" href="Bits.extraction.axioms16.html#native_repr"><span class="id" title="definition">native_repr</span></a> <a class="idref" href="Bits.extraction.axioms16.html#i"><span class="id" title="variable">i</span></a> <span class="id" title="var">bs</span> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Datatypes.html#49ac24efa716d8b0ee8943bc1d1769a9"><span class="id" title="notation">&amp;&amp;</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Datatypes.html#49ac24efa716d8b0ee8943bc1d1769a9"><span class="id" title="notation">(</span></a><a class="idref" href="Bits.spec.spec.html#6d227b35fcc3fe7899272727b8c73bfc"><span class="id" title="notation">#</span></a> <a class="idref" href="Bits.extraction.axioms16.html#n"><span class="id" title="variable">n</span></a> <span class="id" title="notation">==</span> <span class="id" title="var">bs</span><a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Datatypes.html#49ac24efa716d8b0ee8943bc1d1769a9"><span class="id" title="notation">)</span></a><span class="id" title="notation">]</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab32"></a><h1 class="section">Representation lemma: logical shift right</h1>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a name="lsr_test"><span class="id" title="definition">lsr_test</span></a>: <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Datatypes.html#bool"><span class="id" title="inductive">bool</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="Bits.extraction.axioms16.html#forallInt16"><span class="id" title="axiom">forallInt16</span></a> (<span class="id" title="keyword">fun</span> <span class="id" title="var">i</span> ⇒<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Bits.extraction.axioms16.html#forallInt16"><span class="id" title="axiom">forallInt16</span></a> (<span class="id" title="keyword">fun</span> <span class="id" title="var">i'</span> ⇒<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="notation">(</span><a class="idref" href="Bits.spec.spec.html#toNat"><span class="id" title="definition">toNat</span></a> (<a class="idref" href="Bits.extraction.axioms16.html#bitsFromInt16"><span class="id" title="definition">bitsFromInt16</span></a> <a class="idref" href="Bits.extraction.axioms16.html#i'"><span class="id" title="variable">i'</span></a>) <span class="id" title="notation">≤</span> <a class="idref" href="Bits.extraction.axioms16.html#wordsize"><span class="id" title="definition">wordsize</span></a><span class="id" title="notation">)</span> <span class="id" title="notation">==&gt;</span> <a class="idref" href="Bits.extraction.axioms16.html#native_repr"><span class="id" title="definition">native_repr</span></a> (<a class="idref" href="Bits.extraction.axioms16.html#lsr"><span class="id" title="axiom">lsr</span></a> <a class="idref" href="Bits.extraction.axioms16.html#i"><span class="id" title="variable">i</span></a> <a class="idref" href="Bits.extraction.axioms16.html#i'"><span class="id" title="variable">i'</span></a>) (<a class="idref" href="Bits.spec.operations.html#shrBn"><span class="id" title="definition">shrBn</span></a> (<a class="idref" href="Bits.extraction.axioms16.html#bitsFromInt16"><span class="id" title="definition">bitsFromInt16</span></a> <a class="idref" href="Bits.extraction.axioms16.html#i"><span class="id" title="variable">i</span></a>) (<a class="idref" href="Bits.spec.spec.html#toNat"><span class="id" title="definition">toNat</span></a> (<a class="idref" href="Bits.extraction.axioms16.html#bitsFromInt16"><span class="id" title="definition">bitsFromInt16</span></a> <a class="idref" href="Bits.extraction.axioms16.html#i'"><span class="id" title="variable">i'</span></a>))))).<br/>
+
+<br/>
+<span class="id" title="keyword">Axiom</span> <a name="lsr_valid"><span class="id" title="axiom">lsr_valid</span></a>: <a class="idref" href="Bits.extraction.axioms16.html#lsr_test"><span class="id" title="definition">lsr_test</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a name="lsr_repr"><span class="id" title="lemma">lsr_repr</span></a>: <span class="id" title="keyword">∀</span> <span class="id" title="var">i</span> <span class="id" title="var">j</span> <span class="id" title="var">bs</span> <span class="id" title="var">k</span>, <a class="idref" href="Bits.extraction.axioms16.html#k"><span class="id" title="variable">k</span></a> <span class="id" title="notation">≤</span> <a class="idref" href="Bits.extraction.axioms16.html#wordsize"><span class="id" title="definition">wordsize</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Bits.extraction.axioms16.html#native_repr"><span class="id" title="definition">native_repr</span></a> <a class="idref" href="Bits.extraction.axioms16.html#i"><span class="id" title="variable">i</span></a> <a class="idref" href="Bits.extraction.axioms16.html#bs"><span class="id" title="variable">bs</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="Bits.extraction.axioms16.html#natural_repr"><span class="id" title="definition">natural_repr</span></a> <a class="idref" href="Bits.extraction.axioms16.html#j"><span class="id" title="variable">j</span></a> <a class="idref" href="Bits.extraction.axioms16.html#k"><span class="id" title="variable">k</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Bits.extraction.axioms16.html#native_repr"><span class="id" title="definition">native_repr</span></a> (<a class="idref" href="Bits.extraction.axioms16.html#lsr"><span class="id" title="axiom">lsr</span></a> <a class="idref" href="Bits.extraction.axioms16.html#i"><span class="id" title="variable">i</span></a> <a class="idref" href="Bits.extraction.axioms16.html#j"><span class="id" title="variable">j</span></a>) (<a class="idref" href="Bits.spec.operations.html#shrBn"><span class="id" title="definition">shrBn</span></a> <a class="idref" href="Bits.extraction.axioms16.html#bs"><span class="id" title="variable">bs</span></a> <a class="idref" href="Bits.extraction.axioms16.html#k"><span class="id" title="variable">k</span></a>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab33"></a><h1 class="section">Representation lemma: logical shift left</h1>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a name="lsl_test"><span class="id" title="definition">lsl_test</span></a>: <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Datatypes.html#bool"><span class="id" title="inductive">bool</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="Bits.extraction.axioms16.html#forallInt16"><span class="id" title="axiom">forallInt16</span></a> (<span class="id" title="keyword">fun</span> <span class="id" title="var">i</span> ⇒<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Bits.extraction.axioms16.html#forallInt16"><span class="id" title="axiom">forallInt16</span></a> (<span class="id" title="keyword">fun</span> <span class="id" title="var">i'</span> ⇒<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="notation">(</span><a class="idref" href="Bits.spec.spec.html#toNat"><span class="id" title="definition">toNat</span></a> (<a class="idref" href="Bits.extraction.axioms16.html#bitsFromInt16"><span class="id" title="definition">bitsFromInt16</span></a> <a class="idref" href="Bits.extraction.axioms16.html#i'"><span class="id" title="variable">i'</span></a>) <span class="id" title="notation">≤</span> <a class="idref" href="Bits.extraction.axioms16.html#wordsize"><span class="id" title="definition">wordsize</span></a><span class="id" title="notation">)</span> <span class="id" title="notation">==&gt;</span> <a class="idref" href="Bits.extraction.axioms16.html#native_repr"><span class="id" title="definition">native_repr</span></a> (<a class="idref" href="Bits.extraction.axioms16.html#lsl"><span class="id" title="axiom">lsl</span></a> <a class="idref" href="Bits.extraction.axioms16.html#i"><span class="id" title="variable">i</span></a> <a class="idref" href="Bits.extraction.axioms16.html#i'"><span class="id" title="variable">i'</span></a>) (<a class="idref" href="Bits.spec.operations.html#shlBn"><span class="id" title="definition">shlBn</span></a> (<a class="idref" href="Bits.extraction.axioms16.html#bitsFromInt16"><span class="id" title="definition">bitsFromInt16</span></a> <a class="idref" href="Bits.extraction.axioms16.html#i"><span class="id" title="variable">i</span></a>) (<a class="idref" href="Bits.spec.spec.html#toNat"><span class="id" title="definition">toNat</span></a> (<a class="idref" href="Bits.extraction.axioms16.html#bitsFromInt16"><span class="id" title="definition">bitsFromInt16</span></a> <a class="idref" href="Bits.extraction.axioms16.html#i'"><span class="id" title="variable">i'</span></a>))))).<br/>
+
+<br/>
+<span class="id" title="keyword">Axiom</span> <a name="lsl_valid"><span class="id" title="axiom">lsl_valid</span></a>: <a class="idref" href="Bits.extraction.axioms16.html#lsl_test"><span class="id" title="definition">lsl_test</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a name="lsl_repr"><span class="id" title="lemma">lsl_repr</span></a>: <span class="id" title="keyword">∀</span> <span class="id" title="var">i</span> <span class="id" title="var">j</span> <span class="id" title="var">bs</span> <span class="id" title="var">k</span>, <a class="idref" href="Bits.extraction.axioms16.html#k"><span class="id" title="variable">k</span></a> <span class="id" title="notation">≤</span> <a class="idref" href="Bits.extraction.axioms16.html#wordsize"><span class="id" title="definition">wordsize</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Bits.extraction.axioms16.html#native_repr"><span class="id" title="definition">native_repr</span></a> <a class="idref" href="Bits.extraction.axioms16.html#i"><span class="id" title="variable">i</span></a> <a class="idref" href="Bits.extraction.axioms16.html#bs"><span class="id" title="variable">bs</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="Bits.extraction.axioms16.html#natural_repr"><span class="id" title="definition">natural_repr</span></a> <a class="idref" href="Bits.extraction.axioms16.html#j"><span class="id" title="variable">j</span></a> <a class="idref" href="Bits.extraction.axioms16.html#k"><span class="id" title="variable">k</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Bits.extraction.axioms16.html#native_repr"><span class="id" title="definition">native_repr</span></a> (<a class="idref" href="Bits.extraction.axioms16.html#lsl"><span class="id" title="axiom">lsl</span></a> <a class="idref" href="Bits.extraction.axioms16.html#i"><span class="id" title="variable">i</span></a> <a class="idref" href="Bits.extraction.axioms16.html#j"><span class="id" title="variable">j</span></a>) (<a class="idref" href="Bits.spec.operations.html#shlBn"><span class="id" title="definition">shlBn</span></a> <a class="idref" href="Bits.extraction.axioms16.html#bs"><span class="id" title="variable">bs</span></a> <a class="idref" href="Bits.extraction.axioms16.html#k"><span class="id" title="variable">k</span></a>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab34"></a><h1 class="section">Representation lemma: negation</h1>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a name="neg_test"><span class="id" title="definition">neg_test</span></a>: <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Datatypes.html#bool"><span class="id" title="inductive">bool</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="Bits.extraction.axioms16.html#forallInt16"><span class="id" title="axiom">forallInt16</span></a> (<span class="id" title="keyword">fun</span> <span class="id" title="var">i</span> ⇒<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Bits.extraction.axioms16.html#native_repr"><span class="id" title="definition">native_repr</span></a> (<a class="idref" href="Bits.extraction.axioms16.html#neg"><span class="id" title="axiom">neg</span></a> <a class="idref" href="Bits.extraction.axioms16.html#i"><span class="id" title="variable">i</span></a>) (<a class="idref" href="Bits.spec.operations.html#negB"><span class="id" title="definition">negB</span></a> (<a class="idref" href="Bits.extraction.axioms16.html#bitsFromInt16"><span class="id" title="definition">bitsFromInt16</span></a> <a class="idref" href="Bits.extraction.axioms16.html#i"><span class="id" title="variable">i</span></a>))).<br/>
+
+<br/>
+<span class="id" title="keyword">Axiom</span> <a name="neg_valid"><span class="id" title="axiom">neg_valid</span></a>: <a class="idref" href="Bits.extraction.axioms16.html#neg_test"><span class="id" title="definition">neg_test</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a name="neg_repr"><span class="id" title="lemma">neg_repr</span></a>: <span class="id" title="keyword">∀</span> <span class="id" title="var">i</span> <span class="id" title="var">bs</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Bits.extraction.axioms16.html#native_repr"><span class="id" title="definition">native_repr</span></a> <a class="idref" href="Bits.extraction.axioms16.html#i"><span class="id" title="variable">i</span></a> <a class="idref" href="Bits.extraction.axioms16.html#bs"><span class="id" title="variable">bs</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="Bits.extraction.axioms16.html#native_repr"><span class="id" title="definition">native_repr</span></a> (<a class="idref" href="Bits.extraction.axioms16.html#neg"><span class="id" title="axiom">neg</span></a> <a class="idref" href="Bits.extraction.axioms16.html#i"><span class="id" title="variable">i</span></a>) (<a class="idref" href="Bits.spec.operations.html#negB"><span class="id" title="definition">negB</span></a> <a class="idref" href="Bits.extraction.axioms16.html#bs"><span class="id" title="variable">bs</span></a>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab35"></a><h1 class="section">Representation lemma: decrement</h1>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a name="dec_test"><span class="id" title="definition">dec_test</span></a>: <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Datatypes.html#bool"><span class="id" title="inductive">bool</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="Bits.extraction.axioms16.html#forallInt16"><span class="id" title="axiom">forallInt16</span></a> (<span class="id" title="keyword">fun</span> <span class="id" title="var">i</span> ⇒<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Bits.extraction.axioms16.html#native_repr"><span class="id" title="definition">native_repr</span></a> (<a class="idref" href="Bits.extraction.axioms16.html#dec"><span class="id" title="axiom">dec</span></a> <a class="idref" href="Bits.extraction.axioms16.html#i"><span class="id" title="variable">i</span></a>) (<a class="idref" href="Bits.spec.operations.html#decB"><span class="id" title="definition">decB</span></a> (<a class="idref" href="Bits.extraction.axioms16.html#bitsFromInt16"><span class="id" title="definition">bitsFromInt16</span></a> <a class="idref" href="Bits.extraction.axioms16.html#i"><span class="id" title="variable">i</span></a>))).<br/>
+
+<br/>
+<span class="id" title="keyword">Axiom</span> <a name="dec_valid"><span class="id" title="axiom">dec_valid</span></a>: <a class="idref" href="Bits.extraction.axioms16.html#dec_test"><span class="id" title="definition">dec_test</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a name="dec_repr"><span class="id" title="lemma">dec_repr</span></a>: <span class="id" title="keyword">∀</span> <span class="id" title="var">i</span> <span class="id" title="var">bs</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Bits.extraction.axioms16.html#native_repr"><span class="id" title="definition">native_repr</span></a> <a class="idref" href="Bits.extraction.axioms16.html#i"><span class="id" title="variable">i</span></a> <a class="idref" href="Bits.extraction.axioms16.html#bs"><span class="id" title="variable">bs</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="Bits.extraction.axioms16.html#native_repr"><span class="id" title="definition">native_repr</span></a> (<a class="idref" href="Bits.extraction.axioms16.html#dec"><span class="id" title="axiom">dec</span></a> <a class="idref" href="Bits.extraction.axioms16.html#i"><span class="id" title="variable">i</span></a>) (<a class="idref" href="Bits.spec.operations.html#decB"><span class="id" title="definition">decB</span></a> <a class="idref" href="Bits.extraction.axioms16.html#bs"><span class="id" title="variable">bs</span></a>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab36"></a><h1 class="section">Representation lemma: addition</h1>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a name="add_test"><span class="id" title="definition">add_test</span></a>: <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Datatypes.html#bool"><span class="id" title="inductive">bool</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="Bits.extraction.axioms16.html#forallInt16"><span class="id" title="axiom">forallInt16</span></a> (<span class="id" title="keyword">fun</span> <span class="id" title="var">i</span> ⇒<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Bits.extraction.axioms16.html#forallInt16"><span class="id" title="axiom">forallInt16</span></a> (<span class="id" title="keyword">fun</span> <span class="id" title="var">i'</span> ⇒<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Bits.extraction.axioms16.html#native_repr"><span class="id" title="definition">native_repr</span></a> (<a class="idref" href="Bits.extraction.axioms16.html#add"><span class="id" title="axiom">add</span></a> <a class="idref" href="Bits.extraction.axioms16.html#i"><span class="id" title="variable">i</span></a> <a class="idref" href="Bits.extraction.axioms16.html#i'"><span class="id" title="variable">i'</span></a>) (<a class="idref" href="Bits.spec.operations.html#addB"><span class="id" title="abbreviation">addB</span></a> (<a class="idref" href="Bits.extraction.axioms16.html#bitsFromInt16"><span class="id" title="definition">bitsFromInt16</span></a> <a class="idref" href="Bits.extraction.axioms16.html#i"><span class="id" title="variable">i</span></a>) (<a class="idref" href="Bits.extraction.axioms16.html#bitsFromInt16"><span class="id" title="definition">bitsFromInt16</span></a> <a class="idref" href="Bits.extraction.axioms16.html#i'"><span class="id" title="variable">i'</span></a>)))).<br/>
+
+<br/>
+<span class="id" title="keyword">Axiom</span> <a name="add_valid"><span class="id" title="axiom">add_valid</span></a>: <a class="idref" href="Bits.extraction.axioms16.html#add_test"><span class="id" title="definition">add_test</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a name="add_repr"><span class="id" title="lemma">add_repr</span></a>:<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">∀</span> <span class="id" title="var">i</span> <span class="id" title="var">i'</span> <span class="id" title="var">bs</span> <span class="id" title="var">bs'</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Bits.extraction.axioms16.html#native_repr"><span class="id" title="definition">native_repr</span></a> <a class="idref" href="Bits.extraction.axioms16.html#i"><span class="id" title="variable">i</span></a> <a class="idref" href="Bits.extraction.axioms16.html#bs"><span class="id" title="variable">bs</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="Bits.extraction.axioms16.html#native_repr"><span class="id" title="definition">native_repr</span></a> <a class="idref" href="Bits.extraction.axioms16.html#i'"><span class="id" title="variable">i'</span></a> <a class="idref" href="Bits.extraction.axioms16.html#bs'"><span class="id" title="variable">bs'</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Bits.extraction.axioms16.html#native_repr"><span class="id" title="definition">native_repr</span></a> (<a class="idref" href="Bits.extraction.axioms16.html#add"><span class="id" title="axiom">add</span></a> <a class="idref" href="Bits.extraction.axioms16.html#i"><span class="id" title="variable">i</span></a> <a class="idref" href="Bits.extraction.axioms16.html#i'"><span class="id" title="variable">i'</span></a>) (<a class="idref" href="Bits.spec.operations.html#addB"><span class="id" title="abbreviation">addB</span></a> <a class="idref" href="Bits.extraction.axioms16.html#bs"><span class="id" title="variable">bs</span></a> <a class="idref" href="Bits.extraction.axioms16.html#bs'"><span class="id" title="variable">bs'</span></a>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Extract the tests: they should all return true! 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.extraction.ExtrOcamlBasic.html#"><span class="id" title="library">ExtrOcamlBasic</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a name="allb"><span class="id" title="definition">allb</span></a> <span class="id" title="var">s</span> := <span class="id" title="definition">foldr</span> (<a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Datatypes.html#andb"><span class="id" title="definition">andb</span></a>) <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Datatypes.html#true"><span class="id" title="constructor">true</span></a> <a class="idref" href="Bits.extraction.axioms16.html#s"><span class="id" title="variable">s</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a name="binop_tests"><span class="id" title="definition">binop_tests</span></a> <span class="id" title="var">x</span> <span class="id" title="var">y</span> :=<br/>
+&nbsp;&nbsp;<a class="idref" href="Bits.extraction.axioms16.html#allb"><span class="id" title="definition">allb</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="notation">[::</span> <span class="id" title="notation">(</span><a class="idref" href="Bits.extraction.axioms16.html#bitsFromInt16"><span class="id" title="definition">bitsFromInt16</span></a> <a class="idref" href="Bits.extraction.axioms16.html#x"><span class="id" title="variable">x</span></a> <span class="id" title="notation">==</span> <a class="idref" href="Bits.extraction.axioms16.html#bitsFromInt16"><span class="id" title="definition">bitsFromInt16</span></a> <a class="idref" href="Bits.extraction.axioms16.html#y"><span class="id" title="variable">y</span></a><span class="id" title="notation">)</span> <span class="id" title="notation">==&gt;</span> <span class="id" title="notation">(</span><a class="idref" href="Bits.extraction.axioms16.html#eq"><span class="id" title="axiom">eq</span></a> <a class="idref" href="Bits.extraction.axioms16.html#x"><span class="id" title="variable">x</span></a> <a class="idref" href="Bits.extraction.axioms16.html#y"><span class="id" title="variable">y</span></a><span class="id" title="notation">)</span> <span class="id" title="notation">;</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Bits.extraction.axioms16.html#native_repr"><span class="id" title="definition">native_repr</span></a> (<a class="idref" href="Bits.extraction.axioms16.html#land"><span class="id" title="axiom">land</span></a> <a class="idref" href="Bits.extraction.axioms16.html#x"><span class="id" title="variable">x</span></a> <a class="idref" href="Bits.extraction.axioms16.html#y"><span class="id" title="variable">y</span></a>) (<a class="idref" href="Bits.spec.operations.html#andB"><span class="id" title="definition">andB</span></a> (<a class="idref" href="Bits.extraction.axioms16.html#bitsFromInt16"><span class="id" title="definition">bitsFromInt16</span></a> <a class="idref" href="Bits.extraction.axioms16.html#x"><span class="id" title="variable">x</span></a>) (<a class="idref" href="Bits.extraction.axioms16.html#bitsFromInt16"><span class="id" title="definition">bitsFromInt16</span></a> <a class="idref" href="Bits.extraction.axioms16.html#y"><span class="id" title="variable">y</span></a>)) <span class="id" title="notation">;</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Bits.extraction.axioms16.html#native_repr"><span class="id" title="definition">native_repr</span></a> (<a class="idref" href="Bits.extraction.axioms16.html#lor"><span class="id" title="axiom">lor</span></a> <a class="idref" href="Bits.extraction.axioms16.html#x"><span class="id" title="variable">x</span></a> <a class="idref" href="Bits.extraction.axioms16.html#y"><span class="id" title="variable">y</span></a>) (<a class="idref" href="Bits.spec.operations.html#orB"><span class="id" title="definition">orB</span></a> (<a class="idref" href="Bits.extraction.axioms16.html#bitsFromInt16"><span class="id" title="definition">bitsFromInt16</span></a> <a class="idref" href="Bits.extraction.axioms16.html#x"><span class="id" title="variable">x</span></a>) (<a class="idref" href="Bits.extraction.axioms16.html#bitsFromInt16"><span class="id" title="definition">bitsFromInt16</span></a> <a class="idref" href="Bits.extraction.axioms16.html#y"><span class="id" title="variable">y</span></a>)) <span class="id" title="notation">;</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Bits.extraction.axioms16.html#native_repr"><span class="id" title="definition">native_repr</span></a> (<a class="idref" href="Bits.extraction.axioms16.html#lxor"><span class="id" title="axiom">lxor</span></a> <a class="idref" href="Bits.extraction.axioms16.html#x"><span class="id" title="variable">x</span></a> <a class="idref" href="Bits.extraction.axioms16.html#y"><span class="id" title="variable">y</span></a>) (<a class="idref" href="Bits.spec.operations.html#xorB"><span class="id" title="definition">xorB</span></a> (<a class="idref" href="Bits.extraction.axioms16.html#bitsFromInt16"><span class="id" title="definition">bitsFromInt16</span></a> <a class="idref" href="Bits.extraction.axioms16.html#x"><span class="id" title="variable">x</span></a>) (<a class="idref" href="Bits.extraction.axioms16.html#bitsFromInt16"><span class="id" title="definition">bitsFromInt16</span></a> <a class="idref" href="Bits.extraction.axioms16.html#y"><span class="id" title="variable">y</span></a>)) <span class="id" title="notation">;</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="notation">(</span><a class="idref" href="Bits.spec.spec.html#toNat"><span class="id" title="definition">toNat</span></a> (<a class="idref" href="Bits.extraction.axioms16.html#bitsFromInt16"><span class="id" title="definition">bitsFromInt16</span></a> <a class="idref" href="Bits.extraction.axioms16.html#y"><span class="id" title="variable">y</span></a>) <span class="id" title="notation">≤</span> <a class="idref" href="Bits.extraction.axioms16.html#wordsize"><span class="id" title="definition">wordsize</span></a><span class="id" title="notation">)</span> <span class="id" title="notation">==&gt;</span> <a class="idref" href="Bits.extraction.axioms16.html#native_repr"><span class="id" title="definition">native_repr</span></a> (<a class="idref" href="Bits.extraction.axioms16.html#lsr"><span class="id" title="axiom">lsr</span></a> <a class="idref" href="Bits.extraction.axioms16.html#x"><span class="id" title="variable">x</span></a> <a class="idref" href="Bits.extraction.axioms16.html#y"><span class="id" title="variable">y</span></a>) (<a class="idref" href="Bits.spec.operations.html#shrBn"><span class="id" title="definition">shrBn</span></a> (<a class="idref" href="Bits.extraction.axioms16.html#bitsFromInt16"><span class="id" title="definition">bitsFromInt16</span></a> <a class="idref" href="Bits.extraction.axioms16.html#x"><span class="id" title="variable">x</span></a>) (<a class="idref" href="Bits.spec.spec.html#toNat"><span class="id" title="definition">toNat</span></a> (<a class="idref" href="Bits.extraction.axioms16.html#bitsFromInt16"><span class="id" title="definition">bitsFromInt16</span></a> <a class="idref" href="Bits.extraction.axioms16.html#y"><span class="id" title="variable">y</span></a>))) <span class="id" title="notation">;</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="notation">(</span><a class="idref" href="Bits.spec.spec.html#toNat"><span class="id" title="definition">toNat</span></a> (<a class="idref" href="Bits.extraction.axioms16.html#bitsFromInt16"><span class="id" title="definition">bitsFromInt16</span></a> <a class="idref" href="Bits.extraction.axioms16.html#y"><span class="id" title="variable">y</span></a>) <span class="id" title="notation">≤</span> <a class="idref" href="Bits.extraction.axioms16.html#wordsize"><span class="id" title="definition">wordsize</span></a><span class="id" title="notation">)</span> <span class="id" title="notation">==&gt;</span> <a class="idref" href="Bits.extraction.axioms16.html#native_repr"><span class="id" title="definition">native_repr</span></a> (<a class="idref" href="Bits.extraction.axioms16.html#lsl"><span class="id" title="axiom">lsl</span></a> <a class="idref" href="Bits.extraction.axioms16.html#x"><span class="id" title="variable">x</span></a> <a class="idref" href="Bits.extraction.axioms16.html#y"><span class="id" title="variable">y</span></a>) (<a class="idref" href="Bits.spec.operations.html#shlBn"><span class="id" title="definition">shlBn</span></a> (<a class="idref" href="Bits.extraction.axioms16.html#bitsFromInt16"><span class="id" title="definition">bitsFromInt16</span></a> <a class="idref" href="Bits.extraction.axioms16.html#x"><span class="id" title="variable">x</span></a>) (<a class="idref" href="Bits.spec.spec.html#toNat"><span class="id" title="definition">toNat</span></a> (<a class="idref" href="Bits.extraction.axioms16.html#bitsFromInt16"><span class="id" title="definition">bitsFromInt16</span></a> <a class="idref" href="Bits.extraction.axioms16.html#y"><span class="id" title="variable">y</span></a>))) <span class="id" title="notation">;</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Bits.extraction.axioms16.html#native_repr"><span class="id" title="definition">native_repr</span></a> (<a class="idref" href="Bits.extraction.axioms16.html#add"><span class="id" title="axiom">add</span></a> <a class="idref" href="Bits.extraction.axioms16.html#x"><span class="id" title="variable">x</span></a> <a class="idref" href="Bits.extraction.axioms16.html#y"><span class="id" title="variable">y</span></a>) (<a class="idref" href="Bits.spec.operations.html#addB"><span class="id" title="abbreviation">addB</span></a> (<a class="idref" href="Bits.extraction.axioms16.html#bitsFromInt16"><span class="id" title="definition">bitsFromInt16</span></a> <a class="idref" href="Bits.extraction.axioms16.html#x"><span class="id" title="variable">x</span></a>) (<a class="idref" href="Bits.extraction.axioms16.html#bitsFromInt16"><span class="id" title="definition">bitsFromInt16</span></a> <a class="idref" href="Bits.extraction.axioms16.html#y"><span class="id" title="variable">y</span></a>))<span class="id" title="notation">]</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a name="unop_tests"><span class="id" title="definition">unop_tests</span></a> <span class="id" title="var">x</span> :=<br/>
+&nbsp;&nbsp;<a class="idref" href="Bits.extraction.axioms16.html#allb"><span class="id" title="definition">allb</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="notation">[::</span> <a class="idref" href="Bits.extraction.axioms16.html#native_repr"><span class="id" title="definition">native_repr</span></a> (<a class="idref" href="Bits.extraction.axioms16.html#succ"><span class="id" title="axiom">succ</span></a> <a class="idref" href="Bits.extraction.axioms16.html#x"><span class="id" title="variable">x</span></a>) (<a class="idref" href="Bits.spec.operations.html#incB"><span class="id" title="definition">incB</span></a> (<a class="idref" href="Bits.extraction.axioms16.html#bitsFromInt16"><span class="id" title="definition">bitsFromInt16</span></a> <a class="idref" href="Bits.extraction.axioms16.html#x"><span class="id" title="variable">x</span></a>)) <span class="id" title="notation">;</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Bits.extraction.axioms16.html#native_repr"><span class="id" title="definition">native_repr</span></a> (<a class="idref" href="Bits.extraction.axioms16.html#lnot"><span class="id" title="axiom">lnot</span></a> <a class="idref" href="Bits.extraction.axioms16.html#x"><span class="id" title="variable">x</span></a>) (<a class="idref" href="Bits.spec.operations.html#invB"><span class="id" title="definition">invB</span></a> (<a class="idref" href="Bits.extraction.axioms16.html#bitsFromInt16"><span class="id" title="definition">bitsFromInt16</span></a> <a class="idref" href="Bits.extraction.axioms16.html#x"><span class="id" title="variable">x</span></a>)) <span class="id" title="notation">;</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Bits.extraction.axioms16.html#native_repr"><span class="id" title="definition">native_repr</span></a> (<a class="idref" href="Bits.extraction.axioms16.html#neg"><span class="id" title="axiom">neg</span></a> <a class="idref" href="Bits.extraction.axioms16.html#x"><span class="id" title="variable">x</span></a>) (<a class="idref" href="Bits.spec.operations.html#negB"><span class="id" title="definition">negB</span></a> (<a class="idref" href="Bits.extraction.axioms16.html#bitsFromInt16"><span class="id" title="definition">bitsFromInt16</span></a> <a class="idref" href="Bits.extraction.axioms16.html#x"><span class="id" title="variable">x</span></a>)) <span class="id" title="notation">;</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Bits.extraction.axioms16.html#native_repr"><span class="id" title="definition">native_repr</span></a> (<a class="idref" href="Bits.extraction.axioms16.html#dec"><span class="id" title="axiom">dec</span></a> <a class="idref" href="Bits.extraction.axioms16.html#x"><span class="id" title="variable">x</span></a>) (<a class="idref" href="Bits.spec.operations.html#decB"><span class="id" title="definition">decB</span></a> (<a class="idref" href="Bits.extraction.axioms16.html#bitsFromInt16"><span class="id" title="definition">bitsFromInt16</span></a> <a class="idref" href="Bits.extraction.axioms16.html#x"><span class="id" title="variable">x</span></a>)) <span class="id" title="notation">;</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Bits.extraction.axioms16.html#forallInt16"><span class="id" title="axiom">forallInt16</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <span class="id" title="var">y</span> ⇒ <a class="idref" href="Bits.extraction.axioms16.html#binop_tests"><span class="id" title="definition">binop_tests</span></a> <a class="idref" href="Bits.extraction.axioms16.html#x"><span class="id" title="variable">x</span></a> <a class="idref" href="Bits.extraction.axioms16.html#y"><span class="id" title="variable">y</span></a>)<span class="id" title="notation">]</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a name="tests"><span class="id" title="definition">tests</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="Bits.extraction.axioms16.html#allb"><span class="id" title="definition">allb</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="notation">[::</span> <a class="idref" href="Bits.extraction.axioms16.html#bitsToInt16K_test"><span class="id" title="definition">bitsToInt16K_test</span></a> <span class="id" title="notation">;</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Bits.extraction.axioms16.html#zero_test"><span class="id" title="definition">zero_test</span></a> <span class="id" title="notation">;</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Bits.extraction.axioms16.html#one_test"><span class="id" title="definition">one_test</span></a> <span class="id" title="notation">;</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Bits.extraction.axioms16.html#forallInt16"><span class="id" title="axiom">forallInt16</span></a> <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <span class="id" title="var">x</span> ⇒ <a class="idref" href="Bits.extraction.axioms16.html#unop_tests"><span class="id" title="definition">unop_tests</span></a> <a class="idref" href="Bits.extraction.axioms16.html#x"><span class="id" title="variable">x</span></a>)<span class="id" title="notation">]</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a name="implies_unop"><span class="id" title="lemma">implies_unop</span></a> : <a class="idref" href="Bits.extraction.axioms16.html#tests"><span class="id" title="definition">tests</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <span class="id" title="keyword">∀</span> <span class="id" title="var">x</span>, <a class="idref" href="Bits.extraction.axioms16.html#unop_tests"><span class="id" title="definition">unop_tests</span></a> <a class="idref" href="Bits.extraction.axioms16.html#x"><span class="id" title="variable">x</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a name="implies_binop"><span class="id" title="lemma">implies_binop</span></a> : <a class="idref" href="Bits.extraction.axioms16.html#tests"><span class="id" title="definition">tests</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <span class="id" title="keyword">∀</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>, <a class="idref" href="Bits.extraction.axioms16.html#binop_tests"><span class="id" title="definition">binop_tests</span></a> <a class="idref" href="Bits.extraction.axioms16.html#x"><span class="id" title="variable">x</span></a> <a class="idref" href="Bits.extraction.axioms16.html#y"><span class="id" title="variable">y</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a name="implies_bitsToInt16K"><span class="id" title="lemma">implies_bitsToInt16K</span></a> : <a class="idref" href="Bits.extraction.axioms16.html#tests"><span class="id" title="definition">tests</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="Bits.extraction.axioms16.html#bitsToInt16K_test"><span class="id" title="definition">bitsToInt16K_test</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a name="implies_bitsFromInt16_inj"><span class="id" title="lemma">implies_bitsFromInt16_inj</span></a> : <a class="idref" href="Bits.extraction.axioms16.html#tests"><span class="id" title="definition">tests</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="Bits.extraction.axioms16.html#bitsFromInt16_inj_test"><span class="id" title="definition">bitsFromInt16_inj_test</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a name="implies_zero"><span class="id" title="lemma">implies_zero</span></a> : <a class="idref" href="Bits.extraction.axioms16.html#tests"><span class="id" title="definition">tests</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="Bits.extraction.axioms16.html#zero_test"><span class="id" title="definition">zero_test</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a name="implies_one"><span class="id" title="lemma">implies_one</span></a> : <a class="idref" href="Bits.extraction.axioms16.html#tests"><span class="id" title="definition">tests</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="Bits.extraction.axioms16.html#one_test"><span class="id" title="definition">one_test</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a name="implies_succ"><span class="id" title="lemma">implies_succ</span></a> : <a class="idref" href="Bits.extraction.axioms16.html#tests"><span class="id" title="definition">tests</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="Bits.extraction.axioms16.html#succ_test"><span class="id" title="definition">succ_test</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a name="implies_lnot"><span class="id" title="lemma">implies_lnot</span></a> : <a class="idref" href="Bits.extraction.axioms16.html#tests"><span class="id" title="definition">tests</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="Bits.extraction.axioms16.html#lnot_test"><span class="id" title="definition">lnot_test</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a name="implies_land"><span class="id" title="lemma">implies_land</span></a> : <a class="idref" href="Bits.extraction.axioms16.html#tests"><span class="id" title="definition">tests</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="Bits.extraction.axioms16.html#land_test"><span class="id" title="definition">land_test</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a name="implies_lor"><span class="id" title="lemma">implies_lor</span></a> : <a class="idref" href="Bits.extraction.axioms16.html#tests"><span class="id" title="definition">tests</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="Bits.extraction.axioms16.html#lor_test"><span class="id" title="definition">lor_test</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a name="implies_lxor"><span class="id" title="lemma">implies_lxor</span></a> : <a class="idref" href="Bits.extraction.axioms16.html#tests"><span class="id" title="definition">tests</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="Bits.extraction.axioms16.html#lxor_test"><span class="id" title="definition">lxor_test</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a name="implies_lsr"><span class="id" title="lemma">implies_lsr</span></a> : <a class="idref" href="Bits.extraction.axioms16.html#tests"><span class="id" title="definition">tests</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="Bits.extraction.axioms16.html#lsr_test"><span class="id" title="definition">lsr_test</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a name="implies_lsl"><span class="id" title="lemma">implies_lsl</span></a> : <a class="idref" href="Bits.extraction.axioms16.html#tests"><span class="id" title="definition">tests</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="Bits.extraction.axioms16.html#lsl_test"><span class="id" title="definition">lsl_test</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a name="implies_neg"><span class="id" title="lemma">implies_neg</span></a> : <a class="idref" href="Bits.extraction.axioms16.html#tests"><span class="id" title="definition">tests</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="Bits.extraction.axioms16.html#neg_test"><span class="id" title="definition">neg_test</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a name="implies_dec"><span class="id" title="lemma">implies_dec</span></a> : <a class="idref" href="Bits.extraction.axioms16.html#tests"><span class="id" title="definition">tests</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="Bits.extraction.axioms16.html#dec_test"><span class="id" title="definition">dec_test</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a name="implies_add"><span class="id" title="lemma">implies_add</span></a> : <a class="idref" href="Bits.extraction.axioms16.html#tests"><span class="id" title="definition">tests</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="Bits.extraction.axioms16.html#add_test"><span class="id" title="definition">add_test</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Cd</span> "src/extraction".<br/>
+<span class="id" title="keyword">Extraction</span> "axioms16.ml" <span class="id" title="var">tests</span>.<br/>
+<span class="id" title="keyword">Cd</span> "../..".<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

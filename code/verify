@@ -1,0 +1,33 @@
+#!/bin/bash
+COQC=coqc
+PKGS="-Q . Top -Q lib/CompCert CompCert -Q lib/gbarith/src GBArith -Q lib/polyop/src PolyOp -Q common Common -Q qhasm Qhasm -Q sqhasm sQhasm -Q mqhasm mQhasm"
+LOG_GB=log_gb
+case `uname` in
+Linux*)
+  TIME=/usr/bin/time
+  ;;
+Darwin*)
+  TIME=/usr/bin/Time
+  ;;
+esac
+
+if [[ "${1}" == "" ]]; then
+  echo "Usage: ${0} FILE"
+  exit
+elif [[ ! -f "${1}" ]]; then
+  echo "File not found."
+  exit
+fi
+
+OUTPUT=`basename ${1} .v`.log
+
+if [[ -f ${LOG_GB} ]]; then
+  rm ${LOG_GB}
+fi
+
+${TIME} ${COQC} -q ${PKGS} -I . ${1} &> ${OUTPUT}
+
+if [[ -f ${LOG_GB} ]]; then
+  echo -e "\n\n\n===== GB Log =====\n" >> ${OUTPUT}
+  cat ${LOG_GB} >> ${OUTPUT}
+fi
