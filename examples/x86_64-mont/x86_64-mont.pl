@@ -73,6 +73,11 @@ if (!$addx && `$ENV{CC} -v 2>&1` =~ /((?:^clang|LLVM) version|.*based on LLVM) (
 	$addx = ($ver>=3.03);
 }
 
+my $UNROLL=1;	# Assigning this variable value other than 1 unrolls
+		# inner bn_mul_mont loops by corresponding input length.
+		# More importantly it means than subroutine *must*
+		# be called with $num==$UNROLL. [Except when it's 1.]
+
 # int bn_mul_mont(
 $rp="%rdi";	# BN_ULONG *rp,
 $ap="%rsi";	# const BN_ULONG *ap,
@@ -149,10 +154,15 @@ $code.=<<___;
 	mov	%rdx,$hi1
 
 	lea	1($j),$j		# j++
-	jmp	.L1st_enter
+___
+$code.=<<___				if ($UNROLL==1);
+	jmp	.L1st_enter0
 
 .align	16
 .L1st:
+___
+for (my $inner=0; $inner<$UNROLL; $inner++) {
+$code.=<<___				if ($inner || $UNROLL==1);
 	add	%rax,$hi1
 	mov	($ap,$j,8),%rax
 	adc	\$0,%rdx
@@ -162,7 +172,9 @@ $code.=<<___;
 	mov	$hi1,-16(%rsp,$j,8)	# tp[j-1]
 	mov	%rdx,$hi1
 
-.L1st_enter:
+___
+$code.=<<___;
+.L1st_enter$inner:
 	mulq	$m0			# ap[j]*bp[0]
 	add	%rax,$hi0
 	mov	($np,$j,8),%rax
@@ -172,7 +184,12 @@ $code.=<<___;
 
 	mulq	$m1			# np[j]*m1
 	cmp	$num,$j
+___
+$code.=<<___				if ($UNROLL==1);
 	jne	.L1st
+___
+}
+$code.=<<___;
 
 	add	%rax,$hi1
 	mov	($ap),%rax		# ap[0]
@@ -213,10 +230,15 @@ $code.=<<___;
 	mov	%rdx,$hi1
 
 	lea	1($j),$j		# j++
-	jmp	.Linner_enter
+___
+$code.=<<___				if ($UNROLL==1);
+	jmp	.Linner_enter0
 
 .align	16
 .Linner:
+___
+for (my $inner=0; $inner<$UNROLL; $inner++) {
+$code.=<<___				if ($inner || $UNROLL==1);
 	add	%rax,$hi1
 	mov	($ap,$j,8),%rax
 	adc	\$0,%rdx
@@ -226,7 +248,9 @@ $code.=<<___;
 	mov	$hi1,-16(%rsp,$j,8)	# tp[j-1]
 	mov	%rdx,$hi1
 
-.Linner_enter:
+___
+$code.=<<___;
+.Linner_enter$inner:
 	mulq	$m0			# ap[j]*bp[i]
 	add	%rax,$hi0
 	mov	($np,$j,8),%rax
@@ -238,7 +262,12 @@ $code.=<<___;
 
 	mulq	$m1			# np[j]*m1
 	cmp	$num,$j
+___
+$code.=<<___				if ($UNROLL==1);
 	jne	.Linner
+___
+}
+$code.=<<___;
 
 	add	%rax,$hi1
 	mov	($ap),%rax		# ap[0]
