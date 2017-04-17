@@ -156,7 +156,7 @@ $code.=<<___;
 	lea	1($j),$j		# j++
 ___
 $code.=<<___				if ($UNROLL==1);
-	jmp	.L1st_enter0
+	jmp	.L1st_enter00
 
 .align	16
 .L1st:
@@ -174,7 +174,7 @@ $code.=<<___				if ($inner || $UNROLL==1);
 
 ___
 $code.=<<___;
-.L1st_enter$inner:
+.L1st_enter0$inner:
 	mulq	$m0			# ap[j]*bp[0]
 	add	%rax,$hi0
 	mov	($np,$j,8),%rax
@@ -207,9 +207,14 @@ $code.=<<___;
 	mov	%rdx,(%rsp,$num,8)	# store upmost overflow bit
 
 	lea	1($i),$i		# i++
+___
+$code.=<<___				if ($UNROLL==1);
 	jmp	.Louter
 .align	16
 .Louter:
+___
+for (my $outer=1; $outer<($UNROLL==1 ? 2 : $UNROLL); $outer++) {
+$code.=<<___;
 	mov	($bp,$i,8),$m0		# m0=bp[i]
 	xor	$j,$j			# j=0
 	mov	$n0,$m1
@@ -232,7 +237,7 @@ $code.=<<___;
 	lea	1($j),$j		# j++
 ___
 $code.=<<___				if ($UNROLL==1);
-	jmp	.Linner_enter0
+	jmp	.Linner_enter10
 
 .align	16
 .Linner:
@@ -250,7 +255,7 @@ $code.=<<___				if ($inner || $UNROLL==1);
 
 ___
 $code.=<<___;
-.Linner_enter$inner:
+.Linner_enter$outer$inner:
 	mulq	$m0			# ap[j]*bp[i]
 	add	%rax,$hi0
 	mov	($np,$j,8),%rax
@@ -288,7 +293,12 @@ $code.=<<___;
 
 	lea	1($i),$i		# i++
 	cmp	$num,$i
+___
+$code.=<<___				if ($UNROLL==1);
 	jb	.Louter
+___
+}
+$code.=<<___;
 
 	xor	$i,$i			# i=0 and clear CF!
 	mov	(%rsp),%rax		# tp[0]
