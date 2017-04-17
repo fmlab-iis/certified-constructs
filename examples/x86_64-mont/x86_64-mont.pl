@@ -161,7 +161,7 @@ $code.=<<___				if ($UNROLL==1);
 .align	16
 .L1st:
 ___
-for (my $inner=0; $inner<$UNROLL; $inner++) {
+for (my $inner=0; $inner<($UNROLL==1 ? 1 : $UNROLL-1); $inner++) {
 $code.=<<___				if ($inner || $UNROLL==1);
 	add	%rax,$hi1
 	mov	($ap,$j,8),%rax
@@ -242,7 +242,7 @@ $code.=<<___				if ($UNROLL==1);
 .align	16
 .Linner:
 ___
-for (my $inner=0; $inner<$UNROLL; $inner++) {
+for (my $inner=0; $inner<($UNROLL==1 ? 1 : $UNROLL-1); $inner++) {
 $code.=<<___				if ($inner || $UNROLL==1);
 	add	%rax,$hi1
 	mov	($ap,$j,8),%rax
