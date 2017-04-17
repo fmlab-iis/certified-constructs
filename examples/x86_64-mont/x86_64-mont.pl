@@ -73,6 +73,11 @@ if (!$addx && `$ENV{CC} -v 2>&1` =~ /((?:^clang|LLVM) version|.*based on LLVM) (
 	$addx = ($ver>=3.03);
 }
 
+my $UNROLL=1;	# Assigning this variable value other than 1 unrolls
+		# inner bn_mul_mont loops by corresponding input length.
+		# More importantly it means than subroutine *must*
+		# be called with $num==$UNROLL. [Except when it's 1.]
+
 # int bn_mul_mont(
 $rp="%rdi";	# BN_ULONG *rp,
 $ap="%rsi";	# const BN_ULONG *ap,
@@ -149,10 +154,15 @@ $code.=<<___;
 	mov	%rdx,$hi1
 
 	lea	1($j),$j		# j++
-	jmp	.L1st_enter
+___
+$code.=<<___				if ($UNROLL==1);
+	jmp	.L1st_enter00
 
 .align	16
 .L1st:
+___
+for (my $inner=0; $inner<$UNROLL; $inner++) {
+$code.=<<___				if ($inner || $UNROLL==1);
 	add	%rax,$hi1
 	mov	($ap,$j,8),%rax
 	adc	\$0,%rdx
@@ -162,7 +172,9 @@ $code.=<<___;
 	mov	$hi1,-16(%rsp,$j,8)	# tp[j-1]
 	mov	%rdx,$hi1
 
-.L1st_enter:
+___
+$code.=<<___;
+.L1st_enter0$inner:
 	mulq	$m0			# ap[j]*bp[0]
 	add	%rax,$hi0
 	mov	($np,$j,8),%rax
@@ -172,7 +184,12 @@ $code.=<<___;
 
 	mulq	$m1			# np[j]*m1
 	cmp	$num,$j
+___
+$code.=<<___				if ($UNROLL==1);
 	jne	.L1st
+___
+}
+$code.=<<___;
 
 	add	%rax,$hi1
 	mov	($ap),%rax		# ap[0]
@@ -190,9 +207,14 @@ $code.=<<___;
 	mov	%rdx,(%rsp,$num,8)	# store upmost overflow bit
 
 	lea	1($i),$i		# i++
+___
+$code.=<<___				if ($UNROLL==1);
 	jmp	.Louter
 .align	16
 .Louter:
+___
+for (my $outer=1; $outer<($UNROLL==1 ? 2 : $UNROLL); $outer++) {
+$code.=<<___;
 	mov	($bp,$i,8),$m0		# m0=bp[i]
 	xor	$j,$j			# j=0
 	mov	$n0,$m1
@@ -213,10 +235,15 @@ $code.=<<___;
 	mov	%rdx,$hi1
 
 	lea	1($j),$j		# j++
-	jmp	.Linner_enter
+___
+$code.=<<___				if ($UNROLL==1);
+	jmp	.Linner_enter10
 
 .align	16
 .Linner:
+___
+for (my $inner=0; $inner<$UNROLL; $inner++) {
+$code.=<<___				if ($inner || $UNROLL==1);
 	add	%rax,$hi1
 	mov	($ap,$j,8),%rax
 	adc	\$0,%rdx
@@ -226,7 +253,9 @@ $code.=<<___;
 	mov	$hi1,-16(%rsp,$j,8)	# tp[j-1]
 	mov	%rdx,$hi1
 
-.Linner_enter:
+___
+$code.=<<___;
+.Linner_enter$outer$inner:
 	mulq	$m0			# ap[j]*bp[i]
 	add	%rax,$hi0
 	mov	($np,$j,8),%rax
@@ -238,7 +267,12 @@ $code.=<<___;
 
 	mulq	$m1			# np[j]*m1
 	cmp	$num,$j
+___
+$code.=<<___				if ($UNROLL==1);
 	jne	.Linner
+___
+}
+$code.=<<___;
 
 	add	%rax,$hi1
 	mov	($ap),%rax		# ap[0]
@@ -259,7 +293,12 @@ $code.=<<___;
 
 	lea	1($i),$i		# i++
 	cmp	$num,$i
+___
+$code.=<<___				if ($UNROLL==1);
 	jb	.Louter
+___
+}
+$code.=<<___;
 
 	xor	$i,$i			# i=0 and clear CF!
 	mov	(%rsp),%rax		# tp[0]
