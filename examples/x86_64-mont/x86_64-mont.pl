@@ -161,15 +161,15 @@ $code.=<<___				if ($UNROLL==1);
 .align	16
 .L1st:
 ___
-for (my $inner=0; $inner<($UNROLL==1 ? 1 : $UNROLL-1); $inner++) {
+for ($inner=0; $inner<($UNROLL==1 ? 1 : $UNROLL-1); $inner++) {
 $code.=<<___				if ($inner || $UNROLL==1);
 	add	%rax,$hi1
-	mov	($ap,$j,8),%rax
+	mov	($ap,$j,8),%rax				#! $j = `$inner+1`
 	adc	\$0,%rdx
 	add	$hi0,$hi1		# np[j]*m1+ap[j]*bp[0]
 	mov	$lo0,$hi0
 	adc	\$0,%rdx
-	mov	$hi1,-16(%rsp,$j,8)	# tp[j-1]
+	mov	$hi1,-16(%rsp,$j,8)	# tp[j-1]	#! $j = `$inner+1`
 	mov	%rdx,$hi1
 
 ___
@@ -177,7 +177,7 @@ $code.=<<___;
 .L1st_enter0$inner:
 	mulq	$m0			# ap[j]*bp[0]
 	add	%rax,$hi0
-	mov	($np,$j,8),%rax
+	mov	($np,$j,8),%rax				#! $j = `$inner+1`
 	adc	\$0,%rdx
 	lea	1($j),$j		# j++
 	mov	%rdx,$lo0
@@ -196,7 +196,7 @@ $code.=<<___;
 	adc	\$0,%rdx
 	add	$hi0,$hi1		# np[j]*m1+ap[j]*bp[0]
 	adc	\$0,%rdx
-	mov	$hi1,-16(%rsp,$j,8)	# tp[j-1]
+	mov	$hi1,-16(%rsp,$j,8)	# tp[j-1]	#! $j = `$inner+1`
 	mov	%rdx,$hi1
 	mov	$lo0,$hi0
 
@@ -215,7 +215,7 @@ $code.=<<___				if ($UNROLL==1);
 ___
 for (my $outer=1; $outer<($UNROLL==1 ? 2 : $UNROLL); $outer++) {
 $code.=<<___;
-	mov	($bp,$i,8),$m0		# m0=bp[i]
+	mov	($bp,$i,8),$m0		# m0=bp[i]	#! $i = $outer
 	xor	$j,$j			# j=0
 	mov	$n0,$m1
 	mov	(%rsp),$lo0
@@ -242,15 +242,15 @@ $code.=<<___				if ($UNROLL==1);
 .align	16
 .Linner:
 ___
-for (my $inner=0; $inner<($UNROLL==1 ? 1 : $UNROLL-1); $inner++) {
+for ($inner=0; $inner<($UNROLL==1 ? 1 : $UNROLL-1); $inner++) {
 $code.=<<___				if ($inner || $UNROLL==1);
 	add	%rax,$hi1
-	mov	($ap,$j,8),%rax
+	mov	($ap,$j,8),%rax				#! $j = `$inner+1`
 	adc	\$0,%rdx
 	add	$lo0,$hi1		# np[j]*m1+ap[j]*bp[i]+tp[j]
-	mov	(%rsp,$j,8),$lo0
+	mov	(%rsp,$j,8),$lo0			#! $j = `$inner+1`
 	adc	\$0,%rdx
-	mov	$hi1,-16(%rsp,$j,8)	# tp[j-1]
+	mov	$hi1,-16(%rsp,$j,8)	# tp[j-1]	#! $j = `$inner+1`
 	mov	%rdx,$hi1
 
 ___
@@ -258,7 +258,7 @@ $code.=<<___;
 .Linner_enter$outer$inner:
 	mulq	$m0			# ap[j]*bp[i]
 	add	%rax,$hi0
-	mov	($np,$j,8),%rax
+	mov	($np,$j,8),%rax				#! $j = `$inner+1`
 	adc	\$0,%rdx
 	add	$hi0,$lo0		# ap[j]*bp[i]+tp[j]
 	mov	%rdx,$hi0
@@ -278,9 +278,9 @@ $code.=<<___;
 	mov	($ap),%rax		# ap[0]
 	adc	\$0,%rdx
 	add	$lo0,$hi1		# np[j]*m1+ap[j]*bp[i]+tp[j]
-	mov	(%rsp,$j,8),$lo0
+	mov	(%rsp,$j,8),$lo0			#! $j = `$inner+1`
 	adc	\$0,%rdx
-	mov	$hi1,-16(%rsp,$j,8)	# tp[j-1]
+	mov	$hi1,-16(%rsp,$j,8)	# tp[j-1]	#! $j = `$inner+1`
 	mov	%rdx,$hi1
 
 	xor	%rdx,%rdx
@@ -288,8 +288,8 @@ $code.=<<___;
 	adc	\$0,%rdx
 	add	$lo0,$hi1		# pull upmost overflow bit
 	adc	\$0,%rdx
-	mov	$hi1,-8(%rsp,$num,8)
-	mov	%rdx,(%rsp,$num,8)	# store upmost overflow bit
+	mov	$hi1,-8(%rsp,$num,8)			#! $num = `$inner+1`
+	mov	%rdx,(%rsp,$num,8)	# store upmost overflow bit	#! $num = `$inner+1`
 
 	lea	1($i),$i		# i++
 	cmp	$num,$i
@@ -1581,7 +1581,8 @@ ___
 }
 
 foreach(split("\n",$code)) {
-	s/(\@function),[0-9]+/$1/g;
+	s/(\@function),[0-9]+/$1/g	or
+	s/\`([^\`]*)\`/eval($1)/ge;
 
 	print $_,"\n" if (!m/\.cfi_/);
 }
