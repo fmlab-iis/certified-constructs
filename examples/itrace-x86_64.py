@@ -50,8 +50,8 @@ def trace():
         mnemonic = insn["asm"]
         b = branch.search(mnemonic)
         if b:                               # skip over flow control
-            print("\t#{0:s}".format(mnemonic))
             gdb.execute("stepi", to_string=True)
+            print("\t#" + mnemonic)
             if b.group(1) == "call":        # calls are handled recursively
                 trace()
             elif b.group(1) == "ret":
@@ -80,7 +80,7 @@ def trace():
 def header(function):
     frame = gdb.newest_frame()
 
-    print("{0:s}:".format(function))
+    print(function + ":")
     for reg in ("rdi", "rsi", "rdx", "rcx", "r8", "r9"):
         print("# %{0:3s} = 0x{1:x}".format(reg, int(frame.read_register(reg))))
 
@@ -95,7 +95,7 @@ function = os.environ["TRACE_FUNCTION"]
 # quirk: even though gdb.Breakpoint is documented to have pending attribute
 # it didn't work for me :-(
 s = gdb.execute("break " + function, to_string=True)
-if re.search("not defined", s):
+if re.search("not defined", s):             # symbol was not found
     print(s.split("\n")[0])
     sys.exit(-1)
 
