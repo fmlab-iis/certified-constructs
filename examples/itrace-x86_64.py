@@ -15,7 +15,7 @@ try:
     gdb             # gdb module is pre-loaded in gdb context
 except NameError:
     if len(sys.argv) < 3 or not os.access(sys.argv[1], os.X_OK):
-        print("Usage: {0:s} executable funtion [file]".format(sys.argv[0]))
+        print("Usage: {0:s} executable function [file]".format(sys.argv[0]))
         sys.exit(-1)
 
     # pass arguments through environment
@@ -25,9 +25,9 @@ except NameError:
 
     try:
         os.execlpe("gdb", "gdb", "--batch",
-	                         "--command=" + sys.argv[0],
-				 sys.argv[1],
-		   os.environ)
+                                 "--command=" + sys.argv[0],
+                                 sys.argv[1],
+                   os.environ)
     except OSError as e :
         sys.exit(e.errno)
     sys.exit(-1)
