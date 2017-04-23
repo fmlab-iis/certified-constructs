@@ -15,12 +15,11 @@ try:
     gdb             # gdb module is pre-loaded in gdb context
 except NameError:
     if len(sys.argv) < 3 or not os.access(sys.argv[1], os.X_OK):
-        print("Usage: {0:s} executable function [file]".format(sys.argv[0]))
+        print("Usage: {0:s} executable function [output]".format(sys.argv[0]))
         sys.exit(-1)
 
     # pass arguments through environment
     os.environ["TRACE_FUNCTION"] = sys.argv[2]
-    os.environ["TRACE_OUTFILE"] = ""
     if len(sys.argv) > 3 : os.environ["TRACE_OUTFILE"] = sys.argv[3]
 
     try:
@@ -41,8 +40,6 @@ import re
 branch = re.compile(r'^(?:repz\s+)?(j\w*|call|ret)q?')
 eapattern = re.compile(r'(-?(?:0x)?[0-9a-f]+)?\(%([a-z0-9]+)'
                         '(?:,%([a-z0-9]+),([1248]))?\)')
-function = os.environ["TRACE_FUNCTION"]
-outfile = os.environ["TRACE_OUTFILE"]
 
 def trace():
     frame = gdb.newest_frame()
@@ -72,9 +69,9 @@ def trace():
                 if ea.group(3):
                     addr += int(frame.read_register(ea.group(3))) * \
                             int(ea.group(4))
-                print("\t{0:48s}#ea = 0x{1:x}".format(mnemonic, int(addr)))
+                print("\t{0:48s}#ea = 0x{1:x}".format(mnemonic, addr))
             else:
-                print("\t{0:s}".format(mnemonic))
+                print("\t" + mnemonic)
             gdb.execute("stepi", to_string=True)
 
     gdb.execute("stepi", to_string=True)    # step over retq
@@ -90,7 +87,10 @@ def header(function):
     return
 
 # "main"
-if outfile : sys.stdout = open(outfile, "w")
+if "TRACE_OUTFILE" in os.environ:
+    sys.stdout = open(os.environ["TRACE_OUTFILE"], "w")
+
+function = os.environ["TRACE_FUNCTION"]
 
 # quirk: even though gdb.Breakpoint is documented to have pending attribute
 # it didn't work for me :-(
