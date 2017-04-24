@@ -1,0 +1,186 @@
+\documentclass[sigconf,authordraft]{acmart}
+
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+%\usepackage{listings}
+%\usepackage[usenames,dvipsnames]{color}
+\usepackage{xspace}
+\usepackage{multirow}
+\usepackage{multicol}
+\pagestyle{plain}
+%\usepackage{graphicx}
+\usepackage{algorithm,algpseudocode}
+\usepackage[T1]{fontenc}
+\usepackage{times}
+%\usepackage{setspace}
+%\setstretch{0.94}
+\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+\renewcommand{\algorithmicensure}{\textbf{Output:}}
+
+
+%\usepackage{a4wide}
+
+\input{macros}
+
+\usepackage{xcolor}
+\definecolor{linkcolor}{rgb}{0.65,0,0}
+\definecolor{citecolor}{rgb}{0,0.65,0}
+\definecolor{urlcolor}{rgb}{0,0,0.65}
+%\usepackage[colorlinks=true, backref=page, linkcolor=linkcolor, urlcolor=urlcolor, citecolor=citecolor]{hyperref}
+
+\newif\ifpublic
+%\publictrue
+
+\title{Certified Verification of Algebraic Properties on
+Low- \mbox{Level Mathematical Constructs in Cryptographic Programs}}
+
+\ifpublic
+\author{Ming-Hsien Tsai}
+\affiliation{
+  \institution{Academia Sinica}
+  \streetaddress{Taipei, Taiwan}
+}
+\email{mhtsai@iis.sinica.edu.tw}
+
+\author{Bow-Yaw Wang}
+\affiliation{
+  \institution{Academia Sinica}
+  \streetaddress{Taipei, Taiwan}
+}
+\email{bywang@iis.sinica.edu.tw}
+
+\author{Bo-Yin Yang}
+\affiliation{
+  \institution{Academia Sinica}
+  \streetaddress{Taipei, Taiwan}
+}
+\email{byyang@iis.sinica.edu.tw}
+%
+%\thanks{}
+\else
+\author{\vspace*{-1.2cm}}
+\affiliation{\vspace*{-1.2cm}\ }
+\fi
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+  Mathematical constructs are necessary for computation on the
+  underlying algebraic structures of cryptosystems. They are often
+  written in assembly languages and optimized manually for
+  efficiency. We develop a certified technique to verify mathematical
+  constructs in X25519, the default elliptic curve Diffie-Hellman key
+  exchange protocol used in \openssh. Our technique translates an
+  algebraic specification of mathematical constructs into an algebraic
+  problem. The algebraic 
+  problem in turn is solved by the computer algebra system \singular. 
+  The proof assistant 
+  \coq certifies the translation and solution to algebraic
+  problems. We report our case studies on verifying
+  arithmetic computation over a large finite field and
+  the Montgomery Ladderstep, a crucial loop  in X25519.
+\end{abstract}
+
+\vspace{-.5em}
+\section{Introduction}
+\vspace{-.5em}
+\label{section:introduction}
+\input{introduction}
+
+\vspace{-.5em}
+\section{Preliminaries}
+\vspace{-.5em}
+\label{section:preliminaries}
+\input{preliminaries}
+
+\vspace{-.5em}
+\section{Domain Specific Language -- \mydsl}
+\vspace{-.5em}
+\label{section:domain-specific-language}
+\input{dsl}
+
+\vspace{-.5em}
+\section{Translation to Algebraic Problems}
+\vspace{-.5em}
+\label{section:translation}
+\input{translation}
+
+\vspace{-.5em}
+\subsection{Program Slicing}
+\vspace{-.5em}
+\label{subsection:translation:slicing}
+\input{slicing}
+
+
+\vspace{-.5em}
+\subsection{Static Single Assignments}
+\vspace{-.5em}
+\label{subsection:translation:static-single-assignment}
+\input{ssa}
+
+
+\vspace{-.5em}
+\subsection{Modular Polynomial Equation Entailment}
+\vspace{-.5em}
+\label{subsection:translation:multivariant-polynomial-equations}
+\input{polynomial-equations}
+
+\vspace{-.5em}
+\subsubsection*{Summary of Translation}
+\vspace{-.5em}
+\input{overview}
+
+
+\vspace{-.5em}
+\section{Solving Modular Polynomial Equation Entailment Problem}
+\vspace{-.5em}
+\label{section:solving-algebraic-equations}
+\input{solver}
+
+\vspace{-.5em}
+\section{Evaluation}
+\vspace{-.5em}
+\label{section:evaluation}
+\input{evaluation}
+
+\vspace{-.5em}
+\subsection{Arithmetic Computation over $\bbfGF(2^{255}-19)$}
+\vspace{-.5em}
+\label{subection:evaluation:multiplication}
+\input{multiplication}
+
+\vspace{-.5em}
+\subsection{The Montgomery Ladderstep}
+\vspace{-.5em}
+\label{subsection:evaluation:ladder-step}
+\input{ladder-step}
+
+\vspace{-.5em}
+\section{Conclusion}
+\vspace{-.5em}
+\label{section:conclusion}
+\input{conclusion}
+
+\newpage
+
+%\bibliographystyle{splncs-sorted}
+\bibliographystyle{ACM-Reference-Format}
+\bibliography{refs}
+
+\appendix
+\section{Appendix}
+\label{section:appendix}
+
+\input{fe25519_mul}
+
+\end{document}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% eval: (TeX-PDF-mode 1)
+%%% eval: (TeX-source-correlate-mode 1)
+%%% TeX-master: "certified_vcg"
+%%% End: 

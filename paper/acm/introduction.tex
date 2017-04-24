@@ -1,0 +1,151 @@
+
+In order to take advantages of computer security offered by modern 
+cryptography, 
+cryptosystems must be realized by cryptographic programs where mathematical
+constructs are required to compute on the underlying algebraic
+structures of cryptosystems.
+Such mathematical constructs are frequently invoked in cryptographic
+programs. They are often written in low-level assembly languages and
+manually optimized for efficiency. 
+% Cryptographic primitives in cryptosystems are but sequences of
+% algebraic operations on mathematical structures. 
+Security of cryptosystems could be compromised should programming
+errors in mathematical constructs be exploited by adversaries.
+Security guarantees of cryptographic programs
+thus depend heavily on the correctness of mathematical constructs.
+%It is therefore of utmost importance to ensure the correctness of
+%mathematical constructs used in cryptographic programs. 
+In order to build secure cryptosystems, we develop a certified
+technique to verify low-level mathematical constructs used in the
+security protocol X25519 automatically in this paper.
+
+X25519 is an Elliptic Curve Diffie-Hellman (ECDH) key exchange
+protocol; it is a high-performance cryptosystem designed to 
+use the secure elliptic curve Curve25519~\cite{Ber06}. Curve25519 is an elliptic
+curve offering 128 bits of security when used with ECDH. In addition
+to allowing high-speed elliptic curve arithmetic, it is easier to
+implement properly, not covered by any known patents, and moreover
+less susceptible to implementation pitfalls such as weak 
+random-number generators. Its parameters were also selected by
+easily described mathematical principles.
+% without resorting to any random numbers or seeds. 
+These characteristics make Curve25519 a
+preferred choice for those who are leery of curves which might have
+intentionally inserted
+backdoors, such as those standardized by the United States National
+Institute of Standards and Technology (NIST). 
+Indeed, Curve25519 is currently the
+de facto alternative to the NIST P-256 curve. Consequently, X25519 has
+a wide variety of applications including the default key exchange
+protocol in \openssh since 2014~\cite{W:17:C}.
+
+Most of the computation in X25519, in trade parlance, is in a
+``variable base point multiplication,'' and the centerpiece 
+is the Montgomery Ladderstep. This is usually a
+large constant-time assembly program performing the
+finite-field arithmetic that implements the mathematics on Curve25519.
+Should the implementation of Montgomery Ladderstep be incorrect, so
+would that of X25519. Obviously for all its virtues, X25519 would be
+pointless if its implementation is incorrect. This may be even more
+relevant in cryptography than most of engineering, because cryptography is
+one of the few disciplines with the concept of an omnipresent
+adversary, constantly looking for the smallest edge --- and hence
+eager to trigger any unlikely event. Revising a cryptosystem
+due to rare failures potentially leading to a cryptanalysis is not
+unheard of~\cite{HNPPSSW:03:IDFSNE}.
+Thus, it is important for security that we can show the computations
+comprising the Montgomery Ladderstep or (even better) the X25519
+protocol to be correct. 
+% However, such verification is not easy due the size both of the
+% numbers in play (255 bits and more) and of the program itself
+% (10,000+ machine instructions).
+
+Several obstacles need be overcome for the verification of mathematical
+constructs in X25519. The key exchange protocol is based on a
+group induced by Curve25519. The elliptic
+curve is in turn defined over the Galois field $\bbfGF(2^{255} - 19)$. 
+To compute on the elliptic curve group, arithmetic computation over
+$\bbfGF(2^{255} - 19)$ needs to be correctly implemented. 
+Particularly, 255-bit multiplications modulo
+$2^{255} - 19$ must be verified. Worse, commodity computing devices do
+not support 255-bit arithmetic computation directly. Arithmetic over
+the Galois field needs to be implemented by sequences of 32- or 64-bit
+instructions of the underlying architectures. One has to
+verify that a sequence of 32- or 64-bit instructions indeed
+computes, say, a 255-bit multiplication over the finite field. Yet this
+is only a single step in the operation on the elliptic curve group.
+In order to compute the group operation, another sequence of
+arithmetic computation over $\bbfGF(2^{255} - 19)$ is
+needed. Particularly, a crucial step,
+the Montgomery Ladderstep, requires 18 arithmetic 
+computations over $\bbfGF(2^{255} - 19)$~\cite{M:87:SPEC}. 
+The entire Ladderstep must be
+verified to ensure security guarantees offered by Curve25519.
+% and hence the ECDH key exchange protocol X25519.
+
+In this paper, we focus on algebraic properties about low-level
+implementations of mathematical constructs in cryptographic programs.
+Mathematical constructs by their nature perform computation on
+underlying algebraic structures. We aim to verify whether they perform
+intended algebraic computation correctly. To this end, we propose the
+domain specific language \mydsl for low-level 
+mathematical constructs. Algebraic pre- and post-conditions of
+programs in \mydsl are specified as Hoare
+triples~\cite{H:69:ABCP}. 
+Such an algebraic specification is converted to static single 
+assignment form and then translated into an algebraic problem (called 
+the modular polynomial equation entailment
+problem)~\cite{AWZ:88:DQVP,H:07:AENTP}. We use the computer
+algebra system \singular to solve the algebraic problem~\cite{GP:08:SICA}. 
+Program fragments irrelevant to algebraic properties are also
+removed by slicing to reduce the size of algebraic problems~\cite{W:81:PS}.
+The proof assistant \coq is used to certify the
+correctness of translations, as well as solutions to algebraic
+problems computed by \singular~\cite{YC:2004:ITPPDC}.
+
+We report case studies on verifying mathematical constructs used in
+the X25519 ECDH key exchange protocol~\cite{BDL+:11:HSHSS,BDL+:12:HSHSS}. 
+For each arithmetic operations
+(such as addition, subtraction, and multiplication) over $\bbfGF(2^{255} - 19)$,
+their low-level real-world implementations are converted to our domain
+specific language \mydsl manually. We specify algebraic properties
+of mathematical constructs in Hoare triples. Mathematical constructs
+are then verified against their algebraic
+specifications with our automatic technique. 
+The implementation of the Montgomery Ladderstep is 
+verified similarly.  
+
+We have the following contributions:
+\begin{itemize}
+\item We propose a domain specific language \mydsl for modeling low-level
+  mathematical constructs used in cryptographic programs.
+\item We give a certified verification condition generator from
+  algebraic specifications of programs to the modular polynomial
+  equation entailment problem.
+\item We verify arithmetic computation over a finite field of order
+  $2^{255} - 19$ and a
+  critical program (the Montgomery Ladderstep) automatically.
+\item To the best of our knowledge, our work is the first automatic
+  and certified verification on real cryptographic programs with
+  minimal human intervention.
+\end{itemize}
+
+\input{related-work}
+
+
+This paper is organized as follows. After preliminaries
+(Section~\ref{section:preliminaries}), our domain specific
+language is described in Section~\ref{section:domain-specific-language}. 
+Section~\ref{section:translation}
+presents the translation to the algebraic
+problem. A certified solver for the algebraic problem is discussed in
+Section~\ref{section:solving-algebraic-equations}. 
+Section~\ref{section:evaluation} contains experimental results. It is
+followed by conclusions.
+
+%%% Local Variables: 
+%%% mode: latex
+%%% eval: (TeX-PDF-mode 1)
+%%% eval: (TeX-source-correlate-mode 1)
+%%% TeX-master: "certified_vcg"
+%%% End: 

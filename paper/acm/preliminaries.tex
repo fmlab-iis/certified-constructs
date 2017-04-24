@@ -1,0 +1,58 @@
+
+We write $\mathbb{B} = \{ \mathit{ff}, \mathit{tt} \}$ for the Boolean
+domain. Let $\bbfN$ and $\bbfZ$ denote positive and all integers
+respectively. We use $[n]$ to denote the set $\{ 1, 2, \ldots, n \}$
+for $n \in \bbfN$. 
+
+A \emph{monoid} $\mathcal{M} = (M, \epsilon, \cdot)$ consists of a set
+$M$ and an associative binary operator $\cdot$ on $M$ with the
+\emph{identity} $\epsilon \in M$. That is, $\epsilon \cdot m = m \cdot
+\epsilon = m$ for every $m \in M$.
+A \emph{group} $\mathcal{G} = (G, 0, +)$ is an algebraic structure
+where $(G, 0, +)$ is a monoid and there is a $-a \in G$ such that
+$(-a) + a = a + (-a) = 0$ for every $a \in G$. The element $-a$ is
+called the \emph{inverse} of $a$. $\mathcal{G}$ is \emph{Abelian} if
+the operator $+$ is commutative.
+A \emph{ring} $\mathcal{R} = (R, 0, 1, +, \times)$ with $0 \neq 1$ is
+an algebraic structure such that
+\begin{itemize}
+\item $(R, 0, +)$ is an Abelian group; 
+\item $(R, 1, \times)$ is a monoid; and 
+\item $\times$ is distributive over $+$: $a \times (b + c) = a \times
+  b + a \times c$ for every $a, b, c \in R$.
+\end{itemize}
+If $\times$ is commutative, $\mathcal{R}$ is a \emph{commutative}
+ring. 
+% An \emph{integral domain} is a commutative ring where $a \times
+% b = 0$ implies $a = 0$ or $b = 0$. 
+A \emph{field} $\mathcal{F} = (F,
+0, 1, +, \times)$ is a commutative ring where $(F\!\setminus\!\{0\}, 1, \times)$ is also
+a group. $(\bbfN, 1, \times)$ is a monoid. $(\bbfZ, 0, 1, +, \times)$ 
+is a commutative ring but not a field. 
+For any prime number $\varrho$, the set $\{ 0, \ldots, \varrho \}$
+with the addition and multiplication modulo $\varrho$ forms a \emph{Galois
+field} of order $\varrho$ (written $\bbfGF(\varrho)$).
+We focus on Galois fields of very large orders, in particular, $\myprime =
+2^{255} - 19$.
+
+Fix a set of variables $\vx$. $\mathcal{R}[\vx]$ is the set of
+polynomials over $\vx$ with coefficients in the ring
+$\mathcal{R}$. $\mathcal{R}[\vx]$ is a ring. A set $I \subseteq
+\mathcal{R}[\vx]$ is an \emph{ideal} if 
+\begin{itemize}
+\item $f + g \in I$ for every $f, g \in I$; and
+\item $h \times f \in I$ for every $h \in
+  \mathcal{R}[\vx]$ and $f \in I$. 
+\end{itemize}
+Given $G \subseteq \mathcal{R}[\vx]$, $\langle G \rangle$ is the
+minimal ideal containing $G$; $G$ are the \emph{generators}
+of $\langle G \rangle$. The \emph{ideal membership}
+problem is to decide if $f \in I$ for a given ideal $I$ and $f
+\in \mathcal{R}[\vx]$.
+
+%%% Local Variables:
+%%% mode: latex
+%%% eval: (TeX-PDF-mode 1)
+%%% eval: (TeX-source-correlate-mode 1)
+%%% TeX-master: "certified_vcg"
+%%% End:

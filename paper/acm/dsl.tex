@@ -1,0 +1,285 @@
+
+One of the big issues with modern cryptography is how the assumptions
+match up with reality. In many situations, unexpected channels
+through which information can leak to the attacker may cause the
+cryptosystem to be broken. Typically this is about timing or
+electric power used. 
+In side-channel resilient implementations, the execution time
+are kept constant (as much as possible) to prevent unexpected
+information leakage.
+%Implementations which are not defeated through
+%such means are called ``side-channel resilient'' implementations.
+Constant execution time however is harder to achieve than one would imagine.
+%This turns out in some cases to be harder than one would imagine.
+%This is chiefly because 
+Modern processors have caches 
+%and out of order execution 
+and multitasking. This makes it possible for one execution
+thread, even when no privilege is conferred, to affect the running
+time of another -- simply by caching a sufficient amount of its own
+data in correct locations through repeated accesses, and then
+observing the running time of the other thread. The instructions in
+the other thread which uses the ``evicted'' data (to make room for the
+data of the eavesdropping thread) then has to take more time getting
+its data back to the cache~\cite{B:05:CTAA}. 
+% Such attacks are quite practical.
+% \todo{insert reference in bib for D.J. Bernstein ``Cache Timing 
+% Attacks on AES'', https://cr.yp.to/antiforgery/cachetiming-20050414.pdf}
+
+
+\hide{
+As such, modern cryptographic implementations often have to resort to
+seemingly contrived sequences of conditional moves and arithmetic
+manipulations to achieve the same result as simply using the CPU
+instructions designed for the purpose. This of course slows the
+computation down and waste resources but is inevitable because
+secret-dependent conditional actions and table lookups are actually
+very useful tasks that sometimes simply must be performed.
+}
+
+Thus, the innocuous actions of executing (a) a conditional
+branch instruction dependent on a secret bit, and (b) an
+indirect load instruction using a secret value in the register as the
+address, are both potentially dangerous leaks of information.
+%There are some side results of the above, 
+Consequently, we are not often
+faced with secret-dependent branching or table-lookups in the assembly
+instructions, but a language describing cryptographic code might
+include pseudo-instructions to cover instruction sequences, phrases in
+the language if you will, that is used to achieve the same effect.
+The domain specific language \mydsl is designed based on the same
+principles. Conditional branches and indirect memory accesses are not
+admitted in \mydsl. A program is but a straight line of variable
+assignments on expressions. 
+Consider the following syntactic classes:
+\[
+\begin{array}{rclcrclcrcl}
+  \Nat & ::= & {1}\ |\ {2}\ |\ \cdots
+  & \hspace{.02\columnwidth} &
+  \Int & ::= & \cdots \ |\ {-2}\ |\ {-1} \ |\ 0\ |\ 
+             {1}\ |\ {2}\ |\ \cdots
+  & \hspace{.02\columnwidth} &
+  \Var & ::= & {x} \ |\ {y} \ |\ {z} \ |\ \cdots\\
+  \Expr & ::= &  \multicolumn{9}{l}
+               { \Int \ |\ \Var \ |\  {-}\Expr \ |\ 
+                 \Expr {+} \Expr \ |\ \Expr {-} \Expr \ |\ 
+                 \Expr {\times} \Expr \ |\ \dslcode{Pow} (\Expr, \Nat) }
+\end{array}
+\]
+
+We allow exact integers as constants in the domain specific
+language. Variables are thus integer variables. An expression can be a
+constant, a variable, or a negative expression. Additions, subtractions,
+and multiplications of expressions are available. The expression
+$\dslcode{Pow}(e, n)$ denotes $e^n$ for any expression $e$ and positive
+integer $n$. More formally, let $\St \defn \Var \rightarrow
+\bbfZ$ and $\nu \in \St$ be a \emph{state} (or \emph{valuation}). That is,
+a {state} $\nu$ is a mapping from variables to integers. Define the
+semantic function $\valueof{e}_{\nu}$ as follows.
+\[
+\begin{array}{rclcrcl}
+  \valueof{{i}}_{\nu} & \defn & 
+  \multicolumn{3}{c}{
+    \begin{array}{lcccr}
+      i \textmd{  for ${i} \in \Int$} 
+      & \hspace{.02\columnwidth} &
+      \valueof{{v}}_{\nu} \defn \nu({v}) 
+      \textmd{  for ${v} \in \Var$}
+      & \hspace{.02\columnwidth} &
+      \valueof{-e}_{\nu} 
+    \end{array}
+  }
+  & \defn & -_{\bbfZ}\valueof{e}_{\nu}
+  \\
+  \valueof{e_0 + e_1}_{\nu} & \defn & 
+     \valueof{e_0}_{\nu} +_{\bbfZ} \valueof{e_1}_{\nu}
+  & \hspace{.1\columnwidth} &
+  \valueof{e_0 - e_1}_{\nu} & \defn & 
+     \valueof{e_0}_{\nu} -_{\bbfZ} \valueof{e_1}_{\nu}\\
+  \valueof{e_0 \times e_1}_{\nu} & \defn & 
+     \valueof{e_0}_{\nu} \times_{\bbfZ} \valueof{e_1}_{\nu}
+  &&
+  \valueof{\dslcode{Pow}(e, n)}_{\nu} & \defn & 
+     (\valueof{e}_{\nu})^{\valueof{n}_{\nu}}
+\end{array}
+\]
+
+Note that there is no expression for quotients, or bitwise logical
+operations. Bitwise left shifting however can be modeled by
+multiplying $\dslcode{Pow}(2, n)$. Although \mydsl models a (very) 
+small subset of assembly, it suffices to encode low-level
+mathematical constructs in X25519.
+\begin{eqnarray*}
+  \Stmt & ::= & \Var \leftarrow \Expr
+            \ |\  \concat{\Var}{\Var} \leftarrow \dslcode{Split} (\Expr, \Nat)
+\end{eqnarray*}
+In \mydsl, only assignments are allowed.
+The statement $v \leftarrow e$ assigns the value of $e$
+to the variable $v$. For bounded additions, multiplications, and right
+shifting, they are modeled by the construct $\dslcode{Split}$ in \mydsl.
+The statement $\concat{v_h}{v_l} \leftarrow
+\dslcode{Split}(e, n)$ splits the value of $e$ into two parts;
+the lowest $n$ bits are stored in $v_l$ and the remaining higher bits
+are stored in $v_h$. Define
+$
+\nu\mymapsto{v}{d}(u) \defn
+\left\{
+   \begin{array}{ll}
+     d & \textmd{if $u = v$}\\
+     \nu(u) & \textmd{otherwise}
+   \end{array}
+\right.
+$.
+Consider the relation $\Tr \subseteq \St \times \Stmt \times \St$ defined
+by $(\nu, v \leftarrow e, \nu\mymapsto{v}{\valueof{e}_{\nu}}) \in \Tr$, and
+  $(\nu, \concat{v_h}{v_l} \leftarrow \dslcode{Split} (e, n), 
+  \nu\mymapsto{v_h}{\mathit{hi}}\mymapsto{v_l}{\mathit{lo}}) \in \Tr$
+where
+$\mathit{hi} = (\valueof{e}_{\nu} - lo) \div 2^{\valueof{n}_{\nu}}$ and
+$\mathit{lo} = \valueof{e}_{\nu} \mod 2^{\valueof{n}_{\nu}}$.
+Intuitively, $(\nu, s, \nu') \in \Tr$ denotes that the state $\nu$ transits to 
+the state $\nu'$ after executing the statement $s$.
+\begin{eqnarray*}
+  \Prog & ::= & \epsilon \ |\ \Stmt; \Prog
+\end{eqnarray*}
+A \emph{program} is a sequence of statements. We denote the empty program by 
+$\epsilon$. Observe that conditional branches are not allowed in our
+domain specific language to prevent timing attacks. The semantics of a
+program is defined by the relation 
+$\Tr^* \subseteq \St \times \Prog \times \St$ where
+$(\nu, \epsilon, \nu) \in \Tr^*$ and
+$(\nu, s; p, \nu'') \in \Tr^* \textmd{ if }
+    \textmd{there is a } \nu' \textmd{ with }
+    (\nu, s, \nu') \in \Tr$ and
+    $(\nu, p, \nu'') \in \Tr^*$.
+We write $\nu \goesto{p} \nu'$ when $(\nu, p, \nu') \in \Tr^*$.
+
+For algebraic specifications, $\top$ denotes the Boolean value
+$\mathit{tt}$. We admit polynomial equations $e = e'$ and modular
+polynomial equations $e \equiv e' \mod n$ as atomic predicates.
+A \emph{predicate} $q \in \Pred$ is a conjunction of atomic
+predicates. For 
+$\nu \in \St$, write $\bbfZ \models q[\nu]$ if $q$
+evaluates to $\btt$ after replacing each variable $v$ with
+$\nu(v)$; $\nu$ is called a \emph{$q$-state}.
+\begin{eqnarray*}
+  \Pred & ::= & \top
+     \ |\   \Expr = \Expr
+     \ |\   \Expr \equiv \Expr \mod \Nat
+     \ |\   \Pred \wedge \Pred\\
+  \Spec & ::= & \cond{\Pred} \Prog \cond{\Pred}
+\end{eqnarray*}
+We follow Hoare's formalism in algebraic specifications of
+mathematical constructs~\cite{H:69:ABCP}. In an algebraic
+specification $\hoaretriple{q}{p}{q'}$, $q$ and $q'$ are the \emph{pre}- and
+\emph{post-conditions} of $p$ respectively. Given $q, q' \in \Pred$ and $p
+\in \Prog$, $\hoaretriple{q}{p}{q'}$ is \emph{valid}
+(written $\models \hoaretriple{q}{p}{q'}$) if for every $\nu, \nu' \in
+\St$, $\bbfZ \models q[\nu]$ and $\nu \goesto{p} \nu'$ imply
+$\bbfZ \models q'[\nu']$. Less formally, $\models
+\hoaretriple{q}{p}{q'}$ if executing $p$ from a $q$-state always
+results in a $q'$-state. 
+\begin{figure}[ht]
+  \centering
+  \[
+  \begin{array}{lclcl}
+    \begin{array}{rcl}
+    \textmd{1:} && {r}_0 \leftarrow {x}_0; \\
+    \textmd{2:} && {r}_1 \leftarrow {x}_1; \\
+    \textmd{3:} && {r}_2 \leftarrow {x}_2; \\
+    \textmd{4:} && {r}_3 \leftarrow {x}_3; \\
+    \textmd{5:} && {r}_5 \leftarrow {x}_4; \\
+    \end{array}
+    &\hspace{.05\textwidth}&
+    \begin{array}{rcl}
+    \textmd{6:} && 
+      {r}_0 \leftarrow {r}_0 + {4503599627370458}; \\
+    \textmd{7:} &&
+      {r}_1 \leftarrow {r}_1 + {4503599627370494}; \\
+    \textmd{8:} &&
+      {r}_2 \leftarrow {r}_2 + {4503599627370494}; \\
+    \textmd{9:} &&
+      {r}_3 \leftarrow {r}_3 + {4503599627370494}; \\
+    \textmd{10:} && 
+      {r}_4 \leftarrow {r}_4 + {4503599627370494};\\
+    \end{array}
+    &\hspace{.05\textwidth}&
+    \begin{array}{rcl}
+    \textmd{11:} && {r}_0 \leftarrow {r}_0 - {y}_0; \\
+    \textmd{12:} && {r}_1 \leftarrow {r}_1 - {y}_1; \\
+    \textmd{13:} && {r}_2 \leftarrow {r}_2 - {y}_2; \\
+    \textmd{14:} && {r}_3 \leftarrow {r}_3 - {y}_3; \\
+    \textmd{15:} && {r}_4 \leftarrow {r}_4 - {y}_4;
+    \end{array}
+  \end{array}
+  \]
+  \caption{Subtraction \dslcode{sub}}
+%$(\dslcode{x}_0, \dslcode{x}_1, \dslcode{x}_2, \dslcode{x}_3,
+%\dslcode{x}_4, \dslcode{y}_0, \dslcode{y}_1, \dslcode{y}_2,
+%\dslcode{y}_3, \dslcode{y}_4)$
+  \label{figure:dsl:subtraction}
+\end{figure}
+
+Figure~\ref{figure:dsl:subtraction} gives a simple yet real
+implementation of subtraction over $\bbfGF(\myprime)$. 
+In the figure, a number in $\bbfGF(\varrho)$ 
+is represented by five 51-bit non-negative integers. The variables
+${x}_0, {x}_1, {x}_2, {x}_3, {x}_4$ for instance represent 
+$\mathit{radix51}({x}_4, {x}_3, {x}_2, {x}_1, {x}_0) \defn
+2^{51 \times 4} {x}_4 + 2^{51 \times 3} {x}_3 + 
+2^{51 \times 2} {x}_2 + 2^{51 \times 1} {x}_1 + 
+2^{51 \times 0} {x}_0$. The result of
+subtraction is stored in the variables ${r}_0, {r}_1, {r}_2, {r}_3, {r}_4$. 
+Given $0 \leq {x}_0,$ ${x}_1,$ ${x}_2,$ ${x}_3,$ ${x}_4,$ ${y}_0,$ 
+${y}_1,$ ${y}_2,$ ${y}_3,$ ${y}_4 < 2^{51}$, 
+the algebraic specification of the mathematical construct is therefore
+\[
+\begin{array}{rcl}
+\cond{\top} &
+\dslcode{sub} &
+\cond{
+   \begin{array}{c}
+     \mathit{radix51}({x}_4, {x}_3, {x}_2, {x}_1, {x}_0) -
+     \mathit{radix51}({y}_4, {y}_3, {y}_2, {y}_1, {y}_0)\\
+     \equiv 
+     \mathit{radix51}({r}_4, {r}_3, {r}_2, {r}_1, {r}_0)
+     \mod \myprime
+   \end{array}
+}.
+\end{array}
+\]
+
+Note that the variables ${r}_i$'s are added with constants
+after they are initialized with ${x}_i$'s but before
+${y}_i$'s are subtracted from them. It is not hard to see that
+$2\myprime = \mathit{radix51}$ $(4503599627370494,$ $4503599627370494,$
+$4503599627370494,$ $4503599627370494,$ $4503599627370458)$
+after tedious computation. Hence $\mathit{radix51}({r}_4,$
+${r}_3,$ ${r}_2,$ ${r}_1,$ ${r}_0)$ $=$
+$\mathit{radix51}({x}_4,$ ${x}_3,$ ${x}_2,$ ${x}_1,$ ${x}_0)$ $+$ 
+$2 \myprime $ $-$
+$\mathit{radix51}({y}_4,$ ${y}_3,$ ${y}_2,$ ${y}_1,$ ${y}_0)$ 
+$\equiv $
+$\mathit{radix51}({x}_4,$ ${x}_3,$ ${x}_2,$ ${x}_1,$ ${x}_0)$ $-$
+$\mathit{radix51}({y}_4,$ ${y}_3,$ ${y}_2,$ ${y}_1,$ ${y}_0)$ $\mod 
+\ \myprime$. The program in
+Figure~\ref{figure:dsl:subtraction} is correct. 
+Characteristics of large Galois fields are
+regularly exploited in mathematical constructs for correctness and
+efficiency. Our domain specific language can easily model such
+specialized programming techniques. Indeed,
+the reason for
+adding constants is to prevent underflow. If the constants were not
+added, the subtraction in lines~11 to 15 could give negative and hence
+%
+incorrect results. {Please note that ranges are a complicated
+  issue. The subtraction in Figure~\ref{figure:dsl:subtraction} gives results that are correct
+  but possibly {overflowing} ($>\varrho$), which can and must be
+  accounted for later.} 
+
+%%% Local Variables: 
+%%% mode: latex
+%%% eval: (TeX-PDF-mode 1)
+%%% eval: (TeX-source-correlate-mode 1)
+%%% TeX-master: "certified_vcg"
+%%% End: 

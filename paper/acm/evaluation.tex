@@ -1,0 +1,60 @@
+
+We evaluate our techniques in real-world low-level mathematical
+constructs in X25519. 
+In elliptic curve cryptography, arithmetic computation over
+large finite fields is required. For
+instance, Curve25519 defined by $y^2 = x^3 + 486662 x^2 + x$ 
+is over the Galois field $\bbfF = \bbfGF(\varrho)$ with
+$\varrho = 2^{255} - 19$. To
+make the field explicit, we rewrite its definition as:
+\vspace{-.5em}
+\begin{equation}
+  \label{eq:curve25519}
+  y \Ftimes y \Feq x \Ftimes x \Ftimes x \Fplus
+  486662 \Ftimes x \Ftimes x \Fplus x.
+\end{equation}
+
+Since arithmetic computation is over $\bbfF$ whose
+elements can be represented by 255-bit numbers,
+any pair $(x, y)$ satisfying (\ref{eq:curve25519}) (called a
+\emph{point} on the curve) can be represented by a pair of 255-bit
+numbers. It can be shown that points on Curve25519 with the point at
+infinity as the unit (denoted $\Gzero$) form a commutative group $\bbfG = (G, \Gplus, \Gzero)$
+with $G = \{ (x, y) : x, y \textmd{ satisfying } (\ref{eq:curve25519})
+\}$. Let $P_0 = (x_0, y_0), P_1 = (x_1, y_1) \in G$. We have $-P_0 =
+(x_0, -y_0)$ and $P_0 \Gplus P_1 = (x, y)$  where
+\vspace{-.5em}
+\begin{eqnarray}
+  m & = & (y_1 \Fminus y_0) \Fdiv (x_1 \Fminus x_0)\\\nonumber
+  x & = & m \Ftimes m \Fminus 486662 \Fminus x_0 \Fminus x_1\\ \nonumber
+  y & = & %m \Ftimes (x_0 \Fminus x) \Fminus y_0 
+     %= m \Ftimes (x_1 \Fminus x) \Fminus y_1.
+          (2 \Ftimes x_0 \Fplus x_1 \Fplus 486662 )\Ftimes m
+          \Fminus m \Ftimes m \Ftimes m\Fminus y_0
+  \label{eq:curve25519-group}
+\end{eqnarray}
+when $P_0 \neq \pm P_1$. Other cases ($P_0 = \pm P_1$) are defined
+similarly~\cite{C:96:CCANT}.
+$\bbfG$ and similar elliptic curve groups
+are the main objects in elliptic curve cryptography. It is
+essential to implement the commutative binary operation $\Gplus$ very
+efficiently in practice.
+\hide{
+When $P_0=-P_1$, the sum is the point at infinity; When $P_0= P_1$,
+$P_0 \Gplus P_1 = (x, y)$ where
+\begin{eqnarray}
+  \label{eq:curve25519-dbl}
+  m &=& (3  \Ftimes x_1 \Ftimes x_1 \Fplus 2\Ftimes a\Ftimes x_1\Fplus 1) 
+        \Fdiv (2\Ftimes b\Ftimes y_1) \\ \nonumber
+   x &=& b \Ftimes m \Ftimes m \Fminus a \Fminus 2 \Ftimes x_1 \\ \nonumber
+   y &=& (3 \Ftimes x1\Fplus a) \Ftimes m \Fminus b \Ftimes m \Ftimes m \Ftimes m\Fminus y_1
+\end{eqnarray}
+%
+}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% eval: (TeX-PDF-mode 1)
+%%% eval: (TeX-source-correlate-mode 1)
+%%% TeX-master: "certified_vcg"
+%%% End: 

@@ -1,0 +1,181 @@
+
+Consider the problem of checking $\models \hoaretriple{q}{p}{q'}$ for
+arbitrary $q, q' \in \Pred$ and $p \in \Prog$. Since $q'$ is arbitrary, the
+program $p$ may contain fragments irrelevant to $q'$. Program slicing
+is a simple yet effective technique to improve efficiency of
+verification through simplifying programs~\cite{W:81:PS}.
+
+Here we slice programs backwardly. We initialize the set
+of \emph{cared} variables to be the variables appeared in the
+post-condition $q'$. Starting from the last statement, we check if
+it assigns any cared variables. If so, we keep the
+statement and update the cared variables; otherwise, the
+statement is skipped. Then we continue to the previous statement.
+This process repeats until all statements of the
+program are examined.
+
+Our program slicing algorithm requires several auxiliary functions. 
+Algorithm~\ref{algorithm:variables-in-expressions} shows how to
+compute variables in an expression by structural
+induction. If the given expression is an integer,
+the empty set is returned; if it is a variable, the singleton with the
+variable is returned. Variables in other expressions are computed
+recursively. 
+
+\begin{algorithm}
+  \begin{algorithmic}[1]
+    \Function{VarsInExpr}{$e$}
+    \Match{$e$}
+      \Case{$i$}
+        \Return $\emptyset$
+      \EndCase
+      \Case{$v$}
+        \Return $\{ v \}$
+      \EndCase
+      \Case{$-e'$}
+        \Return \Call{VarsInExpr}{$e'$}
+      \EndCase
+      \Case{$e' + e''$}
+        \Return \Call{VarsInExpr}{$e'$} $\cup$ \Call{VarsInExpr}{$e''$}
+      \EndCase
+      \Case{$e' - e''$}
+        \Return \Call{VarsInExpr}{$e'$} $\cup$ \Call{VarsInExpr}{$e''$}
+      \EndCase
+      \Case{$e' \times e''$}
+        \Return \Call{VarsInExpr}{$e'$} $\cup$ \Call{VarsInExpr}{$e''$}
+      \EndCase
+      \Case{ $\dslcode{Pow}(e',$ \uscore$)$ }
+        \Return \Call{VarsInExpr}{$e'$}
+      \EndCase
+    \EndMatch
+    \EndFunction
+  \end{algorithmic}
+  \caption{Variables Occurred in Expressions}
+  \label{algorithm:variables-in-expressions}
+\end{algorithm}
+
+\vspace{-1em}
+\begin{algorithm}
+\begin{algorithmic}[1]
+  \Function{VarsInPred}{$q$}
+  \Match{$q$}
+    \Case{$\top$}
+      \Return $\emptyset$
+    \EndCase
+    \Case{$e' = e''$}
+      \Return \Call{VarsInExpr}{$e'$} $\cup$ \Call{VarsInExpr}{$e''$}
+    \EndCase
+    \Case{ $e' \equiv e''$ $\mod$ \uscore }
+      \Return \Call{VarsInExpr}{$e'$} $\cup$ \Call{VarsInExpr}{$e''$}
+    \EndCase
+    \Case{$q' \wedge q''$}
+      \Return \Call{VarsInPred}{$q'$} $\cup$ \Call{VarsInPred}{$q''$}
+    \EndCase
+  \EndMatch
+  \EndFunction
+\end{algorithmic}
+\caption{Variables Occurred in Predicates}
+\label{algorithm:variables-in-predicates}
+\end{algorithm}
+
+Similarly, Algorithm~\ref{algorithm:variables-in-predicates} computes
+the variables in a predicate. Using the \coq specification
+language \gallina, both algorithms are specified in the proof
+assistant.
+
+\begin{algorithm}
+  \begin{algorithmic}[1]
+    \Function{SliceStmt}{$\mathit{vars}$, $s$}
+    \Match{$s$}
+      \Case{$v \leftarrow e$}
+        \IfThenElse{$v \in \mathit{vars}$}
+          {\Return $\langle$\Call{VarsInExpr}{$e$} 
+            $\cup$ $(\mathit{vars} \setminus \{ v \})$, $s \rangle$}
+          {\Return $\mathit{vars}$}
+      \EndCase
+      \Case{$\concat{v_h}{v_l} \leftarrow \dslcode{Split} (e,$ \uscore$)$}
+        \IfThenElse{$v_h$ or $v_l \in \mathit{vars}$}
+          {\Return $\langle$\Call{VarsInExpr}{$e$} $\cup$ 
+            $(\mathit{vars} \setminus \{ v_h, v_l \})$, $s \rangle$}
+          {\Return $\mathit{vars}$}
+      \EndCase
+    \EndMatch
+    \EndFunction
+  \end{algorithmic}
+  \caption{Slicing Statements}
+  \label{algorithm:slicing-statements}
+\end{algorithm}
+
+To slice a statement, we check if the assigned variables are
+cared variables. If they are not, we leave the cared
+variables intact. 
+If the assigned variables are cared variables, we update the cared
+variables by excluding the assigned variables but including
+the variables in the
+expression~(Algorithm~\ref{algorithm:slicing-statements}). In the
+algorithm,  
+the parameter $\mathit{vars}$ denotes the set of cared variables.
+If the given statement assigns to a cared variable, it is
+returned with the updated cared variables. Otherwise, only
+cared variables are returned.
+
+To slice a program, our algorithm proceeds from the last statement
+(Algorithm~\ref{algorithm:slicing-programs}). It invokes
+\textsc{SliceStmt} to see if the current statement is relevant
+and update cared variables. The algorithm recurses with
+updated cared variables and remaining statements.
+
+\begin{algorithm}
+  \begin{algorithmic}[1]
+    \Function{SliceProg}{$\mathit{vars}$, $p$}
+    \Match{$p$}
+      \Case{$\epsilon$}
+        \Return $\epsilon$
+      \EndCase
+      \Case{$pp; s$}
+        \Match{\Call{SliceStmt}{$\mathit{vars}$, $s$}}
+          \Case{$\mathit{vars}'$}
+            \Return \Call{SliceProg}{$\mathit{vars}'$, $pp$}
+          \EndCase
+          \Case{$\langle \mathit{vars}'$, $s' \rangle$}
+            \Return \Call{SliceProg}{$\mathit{vars}'$, $pp$}$;\ s'$
+          \EndCase
+        \EndMatch
+      \EndCase
+    \EndMatch
+    \EndFunction
+  \end{algorithmic}
+  \caption{Slicing Programs}
+  \label{algorithm:slicing-programs}
+\end{algorithm}
+
+To avoid ambiguity, we consider \emph{well-formed} programs where
+\begin{itemize}
+\item for every statement $\concat{v_h}{v_l} \leftarrow
+  \dslcode{Split}(e, n)$ in the program, $v_h \neq v_l$; and
+\item every non-input program variable must be assigned to a value
+  before being used. 
+\end{itemize}
+Algorithms~\ref{algorithm:slicing-statements}
+and~\ref{algorithm:slicing-programs} are specified in \gallina. Their
+properties are also specified and proven in \coq. 
+Particularly, well-formedness is preserved by program slicing.
+\begin{lemma}
+  $\textsc{SliceProg}(\textsc{VarsInPred}(q'), p)$ is well-formed
+  for every $q' \in \Pred$ and well-formed program $p \in \Prog$.
+  \label{lemma:slicing-well-formed}
+\end{lemma}
+
+Moreover, the
+soundness and completeness of our program slicing algorithm have been
+certified. Formally, we have the following theorem:
+
+\begin{theorem}
+  For every $q, q' \in \Pred$ and $p \in \Prog$,
+  \begin{center}
+  $\models \hoaretriple{q}{p}{q'}$ if and only if
+  $\models \hoaretriple{q}{\textsc{SliceProg}(\textsc{VarsInPred}(q'), p)}
+  {q'}$.
+  \end{center}
+  \label{theorem:program-slicing}
+\end{theorem}

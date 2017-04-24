@@ -1,0 +1,67 @@
+
+\newcommand{\todo}[1]{\textcolor{blue}{TODO: {#1}}}
+\newcommand{\hide}[1]{}
+
+\newcommand{\defn}{\triangleq}
+\newcommand{\dslcode}[1]{\mbox{\textsf{#1}}}
+\newcommand{\code}[1]{\mbox{#1}}
+\newcommand{\uscore}[0]{{\char95}}
+\newcommand{\cond}[1]{{(\!|}{#1}{|\!)}}
+\newcommand{\valueof}[1]{[\![{#1}]\!]}
+\newcommand{\bbfN}{\mathbb{N}}
+\newcommand{\bbfZ}{\mathbb{Z}}
+\newcommand{\bbfF}{\mathbb{K}}
+\newcommand{\bbfGF}{\mathbb{GF}}
+\newcommand{\bbfG}{\mathbb{G}}
+\newcommand{\bff}{\mathit{ff}}
+\newcommand{\btt}{\mathit{tt}}
+\newcommand{\St}{\mathit{St}}
+\newcommand{\Tr}{\mathit{Tr}}
+\newcommand{\coq}{\textsc{Coq}\xspace}
+\newcommand{\openssh}{\textsc{OpenSSH}\xspace}
+\newcommand{\openssl}{\textsc{OpenSSL}\xspace}
+\newcommand{\singular}{\textsc{Singular}\xspace}
+\newcommand{\qhasm}{\textsc{Qhasm}\xspace}
+\newcommand{\gfverif}{\texttt{gfverif}\xspace}
+\newcommand{\gallina}{\textsc{Gallina}\xspace}
+\newcommand{\boolector}{\textsc{Boolector}\xspace}
+\newcommand{\Prog}{\mathit{Prog}}
+\newcommand{\Pred}{\mathit{Pred}}
+\newcommand{\Nat}{\mathit{Nat}}
+\newcommand{\Int}{\mathit{Int}}
+\newcommand{\Var}{\mathit{Var}}
+\newcommand{\Expr}{\mathit{Expr}}
+\newcommand{\Stmt}{\mathit{Stmt}}
+\newcommand{\Spec}{\mathit{Spec}}
+\newcommand{\vx}{\vec{x}}
+\newcommand{\vv}{\vec{v}}
+\newcommand{\vn}{\vec{n}}
+\newcommand{\vd}{\vec{d}}
+\newcommand{\goesto}[1]{\overset{#1}{\Longrightarrow}}
+\newcommand{\myprime}{\varrho}
+\newcommand{\hoaretriple}[3]{\cond{#1}~{#2}~\cond{#3}}
+\newcommand{\concat}[2]{{[}{#1}, {#2}{]}}
+\newcommand{\mymapsto}[2]{\{{#1} \mapsto {#2}\}}
+\newcommand{\Gzero}{0_{\bbfG}}
+\newcommand{\Gplus}{+_{\bbfG}}
+\newcommand{\Geq}{=_{\bbfG}}
+\newcommand{\Fplus}{+_{\bbfF}}
+\newcommand{\Fminus}{-_{\bbfF}}
+\newcommand{\Ftimes}{\cdot_{\bbfF}}
+\newcommand{\Fzero}{0_{\bbfF}}
+\newcommand{\Funit}{1_{\bbfF}}
+\newcommand{\Feq}{=_{\bbfF}}
+\newcommand{\Fdiv}{\div_{\bbfF}}
+\newcommand{\mydsl}{\textsc{CryptoLine}\xspace}
+\renewcommand{\mod}{\mathbin{\textmd{mod}}}
+
+\algnewcommand\algorithmicmatch{\textbf{match}}
+\algnewcommand\algorithmicwith{\textbf{with}}
+\algnewcommand\algorithmiccase{\textbf{case}}
+% New "environments"
+\algdef{SE}[MATCH]{Match}{EndMatch}[1]{\algorithmicmatch\ {#1}\ \algorithmicwith}{\algorithmicend\ \algorithmicmatch}%
+\algdef{SE}[CASE]{Case}{EndCase}[1]{\algorithmiccase\ {#1}:}{\algorithmicend\ \algorithmiccase}%
+\algtext*{EndMatch}%
+\algtext*{EndCase}%
+\algnewcommand{\IfThenElse}[3]{% \IfThenElse{<if>}{<then>}{<else>}
+  \State \algorithmicif\ #1\ \algorithmicthen\ #2\ \algorithmicelse\ #3}

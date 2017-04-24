@@ -1,0 +1,236 @@
+
+A program is in \emph{static single assignment} form if every non-input variable
+is assigned at most once and no input variable is assigned~\cite{AWZ:88:DQVP}.
+Our next task is to transform any algebraic specification
+$\hoaretriple{q}{p}{q'}$ to an algebraic specification of $p$ in
+static single  assignment form for any $q, q' \in \Pred$ and $p \in
+\Prog$. Our transformation 
+maintains a finite mapping $\theta$ from variables to
+non-negative integers. For any variable $v$, $v^{\theta(v)}$ is
+the most recently assigned copy of $v$. Only the most recent copies of
+variables are referred in
+expressions. Algorithm~\ref{algorithm:ssa-expressions} 
+transforms expressions with the finite mapping $\theta$ by
+structural induction. Integers are unchanged. For each variable, its
+most recent copy is returned by looking up the mapping $\theta$. Other
+expressions are transformed recursively. 
+
+\begin{algorithm}
+  \begin{algorithmic}[1]
+    \Function{SSAExpr}{$\theta$, $e$}
+    \Match{$e$}
+      \Case{$i$} \Return $i$ \EndCase
+      \Case{$v$} \Return $v^{\theta(v)}$ \EndCase
+      \Case{$-e'$} \Return $-$\Call{SSAExpr}{$\theta$, $e'$} \EndCase
+      \Case{$e' + e''$} 
+        \Return \Call{SSAExpr}{$\theta$, $e'$} $+$ 
+                \Call{SSAExpr}{$\theta$, $e''$}
+      \EndCase
+      \Case{$e' - e''$} 
+        \Return \Call{SSAExpr}{$\theta$, $e'$} $-$ 
+                \Call{SSAExpr}{$\theta$, $e''$}
+      \EndCase
+      \Case{$e' \times e''$} 
+        \Return \Call{SSAExpr}{$\theta$, $e'$} $\times$ 
+                \Call{SSAExpr}{$\theta$, $e''$}
+      \EndCase
+      \Case{$\dslcode{Pow}$($e'$, $n$)}
+        \Return $\dslcode{Pow}$(\Call{SSAExpr}{$\theta$, $e'$}, $n$)
+      \EndCase
+    \EndMatch
+    \EndFunction
+  \end{algorithmic}
+  \caption{Static Single Assignment Transformation for Expressions}
+  \label{algorithm:ssa-expressions}
+\end{algorithm}
+
+Similarly, predicates must refer to most recent copies of 
+variables. They are transformed according to the finite mapping
+$\theta$. Thanks to the formalization of finite mappings in \coq. Both 
+algorithms are easily specified in \gallina.
+
+\hide{
+\begin{algorithm}
+  \begin{algorithmic}[1]
+    \Function{SSAPred}{$\theta$, $q$}
+    \Match{$q$}
+      \Case{$\top$} \Return $\top$ \EndCase
+      \Case{$e' = e''$} 
+        \Return \Call{SSAExpr}{$\theta$, $e$} = \Call{SSAExpr}{$\theta$, $e'$}
+      \EndCase
+      \Case{$e' \equiv e'' \mod n$} 
+        \Return \Call{SSAExpr}{$\theta$, $e$} $\equiv$ 
+                \Call{SSAExpr}{$\theta$, $e'$} $\mod n$
+      \EndCase
+      \Case{$q' \wedge q''$}
+        \Return \Call{SSAPred}{$\theta$, $q'$} $\wedge$
+                \Call{SSAPred}{$\theta$, $q''$}
+      \EndCase
+    \EndMatch
+    \EndFunction
+  \end{algorithmic}
+  \caption{Static Single Assignment Transformation for Predicates}
+  \label{algorithm:ssa-predicates}
+\end{algorithm}
+}
+
+Statement transformation is slightly more complicated
+(Algorithm~\ref{algorithm:ssa-statements}). For 
+expressions on the right hand side, they are transformed by the given
+finite mapping $\theta$. The algorithm then updates $\theta$ and
+replaces assigned variables with their latest copies. 
+%In the algorithm, $\theta\mymapsto{v}{n}$ denotes updating the finite
+%mapping $\theta$ by abusing the notation. 
+
+\begin{algorithm}
+  \begin{algorithmic}[1]
+    \Function{SSAStmt}{$\theta$, $s$}
+    \Match{$s$}
+      \Case{$v \leftarrow e$}
+        \State{$\theta' \leftarrow \theta\mymapsto{v}{\theta(v) + 1}$}
+        \State{\Return $\langle \theta'$, 
+                $v^{\theta'(v)} \leftarrow$ \Call{SSAExpr}{$\theta$, $e$}$\rangle$}
+      \EndCase
+      \Case{$\concat{v_h}{v_l} \leftarrow \dslcode{Split}(e, n)$}
+        \State{$\theta_h \leftarrow \theta\mymapsto{v_h}{\theta(v_h) + 1}$}
+        \State{$\theta_l \leftarrow \theta_h\mymapsto{v_l}{\theta_h(v_l) + 1}$}
+        \State{\Return $\langle \theta_l$,
+                $\concat{v_h^{\theta_h(v_h)}}{v_l^{\theta_l(v_l)}} \leftarrow
+                \dslcode{Split}($\Call{SSAExpr}{$\theta$, $e$}$, n)
+                \rangle$
+              }
+      \EndCase
+    \EndMatch
+    \EndFunction
+  \end{algorithmic}
+  \caption{Static Single Assignment Transformation for Statements}
+  \label{algorithm:ssa-statements}
+\end{algorithm}
+
+It is straightforward to transform programs to static single
+assignment form (Algorithm~\ref{algorithm:ssa-programs}). Using the
+initial mapping from variables to $0$, 
+the algorithm starts from the first statement and obtains an
+updated mapping with the statement in static single assignment form. It
+continues to transform the next statement with the updated mapping. 
+
+\begin{algorithm}
+  \begin{algorithmic}[1]
+    \Function{SSAProg}{$\theta$, $p$}
+    \Match{$p$}
+      \Case{$\epsilon$}
+        \Return $\langle \theta,$ $\epsilon \rangle$
+      \EndCase
+      \Case{$s; pp$}
+        \State{$\langle \theta'$, $s' \rangle$ $\leftarrow$ 
+                 \Call{SSAStmt}{$\theta$, $s$}}
+        \State{$\langle \theta''$, $pp'' \rangle$ $\leftarrow$ 
+                 \Call{SSAProg}{$\theta'$, $pp$}}
+        \State{\Return $\langle \theta''$, $s'; pp'' \rangle$}
+      \EndCase
+    \EndMatch
+    \EndFunction
+  \end{algorithmic}
+  \caption{Static Single Assignment for Programs}
+  \label{algorithm:ssa-programs}
+\end{algorithm}
+
+Using the specifications of Algorithm~\ref{algorithm:ssa-statements}
+and~\ref{algorithm:ssa-programs} in \gallina, properties of these
+algorithms are formally proven in \coq. We first show that
+Algorithm~\ref{algorithm:ssa-programs} preserves well-formedness and
+produces a program in static single assignment form.
+\begin{lemma}
+  Let $\theta_0(v) = 0$ for every $v \in \Var$ and $p \in \Prog$ a
+  well-formed program. If
+  $\langle \hat{\theta}, \hat{p} \rangle$ $=
+  \textsc{SSAProg}(\theta_0, p)$, then
+  $\hat{p}$ is well-formed and in static single assignment form.
+  \label{lemma:ssa-programs}
+\end{lemma}
+
+The next theorem shows that our transformation is both sound and
+complete. That is, an algebraic specification is valid if and only if its
+corresponding specification in static single assignment form is valid.
+\begin{theorem}
+  Let $\theta_0(v) = 0$ for every $v \in \Var$. For every $q, q' \in \Pred$
+  and $p \in \Prog$,
+  \begin{center}
+    $\models \hoaretriple{q}{p}{q'}$ if and only if
+    $\models \hoaretriple{\textsc{SSAPred}(\theta_0, q)}
+    {\hat{p}}
+    {\textsc{SSAPred}(\hat{\theta}, q')}$
+  \end{center}
+  where $\langle \hat{\theta}, \hat{p} \rangle =
+  \textsc{SSAProg}(\theta_0, p)$.
+  \label{theorem:ssa}
+\end{theorem}
+
+\begin{figure}
+  \centering
+  \[
+  \begin{array}{lclcl}
+    \begin{array}{rcl}
+    \textmd{1:} && {r}^1_0 \leftarrow {x}^0_0; \\
+    \textmd{2:} && {r}^1_1 \leftarrow {x}^0_1; \\
+    \textmd{3:} && {r}^1_2 \leftarrow {x}^0_2; \\
+    \textmd{4:} && {r}^1_3 \leftarrow {x}^0_3; \\
+    \textmd{5:} && {r}^1_4 \leftarrow {x}^0_4; \\
+    \end{array}
+    &\hspace{.05\textwidth}&
+    \begin{array}{rcl}
+    \textmd{6:} && 
+      {r}^2_0 \leftarrow {r}^1_0 + {4503599627370458}; \\
+    \textmd{7:} &&
+      {r}^2_1 \leftarrow {r}^1_1 + {4503599627370494}; \\
+    \textmd{8:} &&
+      {r}^2_2 \leftarrow {r}^1_2 + {4503599627370494}; \\
+    \textmd{9:} &&
+      {r}^2_3 \leftarrow {r}^1_3 + {4503599627370494}; \\
+    \textmd{10:} && 
+      {r}^2_4 \leftarrow {r}^1_4 + {4503599627370494};\\
+    \end{array}
+    &\hspace{.05\textwidth}&
+    \begin{array}{rcl}
+    \textmd{11:} && {r}^3_0 \leftarrow {r}^2_0 - {y}^0_0; \\
+    \textmd{12:} && {r}^3_1 \leftarrow {r}^2_1 - {y}^0_1; \\
+    \textmd{13:} && {r}^3_2 \leftarrow {r}^2_2 - {y}^0_2; \\
+    \textmd{14:} && {r}^3_3 \leftarrow {r}^2_3 - {y}^0_3; \\
+    \textmd{15:} && {r}^3_4 \leftarrow {r}^2_4 - {y}^0_4;
+    \end{array}
+  \end{array}
+  \]
+  \caption{Subtraction \dslcode{subSSA} in Static Single Assignment Form}
+% $(\dslcode{x}_0, \dslcode{x}_1, \dslcode{x}_2, \dslcode{x}_3,
+% \dslcode{x}_4, \dslcode{y}_0, \dslcode{y}_1, \dslcode{y}_2,
+% \dslcode{y}_3, \dslcode{y}_4)$
+  \label{figure:translation:subtraction-ssa}
+\end{figure}
+
+\noindent
+\emph{Example.}
+Figure~\ref{figure:translation:subtraction-ssa} gives the subtraction program
+\dslcode{sub} in static single assignment form. Starting from $0$, the
+index of a variable is incremented when the variable is assigned to an
+expression. After the static single assignment translation, the
+variables ${x}_i$'s, ${y}_i$'s are indexed by $0$ and
+${r}_i$'s are indexed by $3$ for $0 \leq i \leq 4$. 
+Subsequently, variables in pre- and post-conditions of the algebraic
+specification for subtraction needs to be indexed. The
+corresponding algebraic specification is as follows.
+\[
+\begin{array}{rcl}
+\cond{\top} &
+\dslcode{subSSA} &
+\cond{
+   \begin{array}{c}
+     \mathit{radix51}({x}^0_4, {x}^0_3, {x}^0_2, {x}^0_1, {x}^0_0) -
+     \mathit{radix51}({y}^0_4, {y}^0_3, {y}^0_2, {y}^0_1, {y}^0_0) \\
+     \equiv
+     \mathit{radix51}({r}^3_4, {r}^3_3, {r}^3_2, {r}^3_1, {r}^3_0)
+     \mod \myprime
+   \end{array}
+}.
+\end{array}
+\]
+

@@ -1,0 +1,152 @@
+
+The last step transforms any algebraic program specification to the 
+modular polynomial equation entailment problem. For
+$q \in \Pred$, we write $q(\vx)$ to signify the free variables $\vx$
+occurred in $q$. Given $q(\vx), q'(\vx) \in \Pred$, the \emph{modular
+  polynomial equation entailment} problem decides whether 
+$q(\vx) \implies q'(\vx)$ holds when $\vx$ are substituted for
+arbitrary integers. That is, we want to check if $q(\vx) \implies
+q'(\vx)$ evaluates to $\btt$ after each variable $x$ is replaced by
+$\nu(x)$ for every valuation $\nu \in \St$. We write $\bbfZ \models
+\forall \vx. q(\vx) \implies q'(\vx)$ if it is indeed the case.
+
+Programs in static single assignment form can easily be transformed to
+conjunctions of polynomial equations. An assignment statement is
+translated to a polynomial equation with a variable on the left hand side.
+A $\dslcode{Split}$ statement is transformed to an
+equation with a linear expression of the assigned variables on the
+left hand side (Algorithm~\ref{algorithm:polynomial-statements}). 
+\begin{algorithm}
+  \begin{algorithmic}[1]
+    \Function{StmtToPolyEQ}{$s$}
+    \Match{$s$}
+      \Case{$v \leftarrow e$}
+        \Return $v = e$
+      \EndCase
+      \Case{$\concat{v_h}{v_l} \leftarrow \dslcode{Split}(e, n)$}
+        \Return $v_l + 2^n v_h = e$
+      \EndCase
+    \EndMatch
+    \EndFunction
+  \end{algorithmic}
+  \caption{Polynomial Equation Transformation for Statements}
+  \label{algorithm:polynomial-statements}
+\end{algorithm}
+
+A program in static single assignment form is transformed to the
+conjunction of polynomial equations corresponding to its statements
+(Algorithm~\ref{algorithm:polynomial-programs}). 
+
+\begin{algorithm}
+  \begin{algorithmic}[1]
+    \Function{ProgToPolyEQ}{$p$}
+    \Match{$p$}
+      \Case{$\epsilon$} \Return $\top$ \EndCase
+      \Case{$s; pp$}
+        \Return \Call{StmtToPolyEQ}{$s$} $\wedge$
+                \Call{ProgToPolyEQ}{$pp$}
+      \EndCase
+    \EndMatch
+    \EndFunction
+  \end{algorithmic}
+  \caption{Polynomial Equation Transformation for Programs}
+  \label{algorithm:polynomial-programs}
+\end{algorithm}
+
+Algorithm~\ref{algorithm:polynomial-statements}
+and~\ref{algorithm:polynomial-programs} are specified straightforwardly 
+in \gallina. We use the proof assistant \coq to prove properties
+about the algorithms. Note that $\textsc{ProgToPolyEQ}(p) \in
+\Pred$ for every $p \in \Prog$. The following theorem shows that any
+behavior of the program $p$ is a solution to the system of polynomial
+equations $\textsc{ProgToPolyEQ}(p)$. In other words,
+$\textsc{ProgToPolyEQ}(p)$ gives an abstraction of the program $p$.
+
+\begin{theorem}
+  Let $p \in \Prog$ be a well-formed program in static single assignment
+  form. For every $\nu, \nu' \in \St$ with $\nu \goesto{p} \nu'$, 
+  we have $\bbfZ \models \textsc{ProgToPolyEQ}(p) [\nu']$.
+\end{theorem}
+
+Definition~\ref{definition:program-entailment} gives the modular
+polynomial equation entailment problem corresponding to an algebraic
+program specification.
+\begin{definition}
+  For $q, q' \in \Pred$ and $p \in \Prog$ in static single assignment
+  form, define
+  \begin{eqnarray*}
+    \Pi(\hoaretriple{q}{p}{q'}) & \defn &
+    q(\vx) \wedge \varphi(\vx) \implies q'(\vx)
+  \end{eqnarray*}
+  where $\varphi(\vx) =
+  \textsc{ProgToPolyEQ}(p)$. 
+  \label{definition:program-entailment}
+\end{definition}
+
+\begin{figure}
+  \centering
+  \[
+  \begin{array}{l}
+  \top \wedge
+  \left(
+  \begin{array}{lclcl}
+    \begin{array}{rclc}
+      {r}^1_0 & = & {x}^0_0 & \wedge \\
+      {r}^1_1 & = & {x}^0_1 & \wedge \\
+      {r}^1_2 & = & {x}^0_2 & \wedge \\
+      {r}^1_3 & = & {x}^0_3 & \wedge \\
+      {r}^1_4 & = & {x}^0_4 & \wedge \\
+    \end{array}
+    &\hspace{.01\textwidth}&
+    \begin{array}{rclc}
+      {r}^2_0 & = & {r}^1_0 + {4503599627370458} & \wedge \\
+      {r}^2_1 & = & {r}^1_1 + {4503599627370494} & \wedge \\
+      {r}^2_2 & = & {r}^1_2 + {4503599627370494} & \wedge \\
+      {r}^2_3 & = & {r}^1_3 + {4503599627370494} & \wedge \\
+      {r}^2_4 & = & {r}^1_4 + {4503599627370494} & \wedge\\
+    \end{array}
+    &\hspace{.01\textwidth}&
+    \begin{array}{rclc}
+      {r}^3_0 & = & {r}^2_0 - {y}^0_0 & \wedge \\
+      {r}^3_1 & = & {r}^2_1 - {y}^0_1 & \wedge \\
+      {r}^3_2 & = & {r}^2_2 - {y}^0_2 & \wedge \\
+      {r}^3_3 & = & {r}^2_3 - {y}^0_3 & \wedge \\
+      {r}^3_4 & = & {r}^2_4 - {y}^0_4
+    \end{array}
+  \end{array}
+  \right) \implies \\
+    %\hspace{.05\textwidth}
+    \mathit{radix51}({x}^0_4, {x}^0_3, {x}^0_2, {x}^0_1, {x}^0_0) -
+    \mathit{radix51}({y}^0_4, {y}^0_3, {y}^0_2, {y}^0_1, {y}^0_0)
+    \equiv
+    \mathit{radix51}({r}^3_4, {r}^3_3, {r}^3_2, {r}^3_1, {r}^3_0)
+    \mod \myprime
+  \end{array}
+  \]
+  \caption{Modular Polynomial Equation Entailment for \dslcode{subSSA}}
+  \label{figure:translation:subtraction-polynomial}
+\end{figure}
+
+\noindent
+\emph{Example}.
+The modular polynomial equation entailment problem corresponding to the
+algebraic specification of subtraction is shown in
+Figure~\ref{figure:translation:subtraction-polynomial}. The problem
+has 15 polynomial equality constraints with 25 variables. We 
+want to know if $\mathit{radix51}({r}^3_4, {r}^3_3, {r}^3_2,
+{r}^3_1, {r}^3_0)$ is the difference between $\mathit{radix51}({x}^0_4,
+{x}^0_3, {x}^0_2, {x}^0_1, {x}^0_0)$ and $\mathit{radix51}({y}^0_4,
+{y}^0_3, {y}^0_2, {y}^0_1, {y}^0_0)$ in $\bbfGF(\varrho)$ under the
+constraints. 
+
+The soundness of Algorithm~\ref{algorithm:polynomial-programs}
+is certified in \coq (Theorem~\ref{theorem:program-to-q-soundness}).
+% Its proof is again certified by \coq.
+\begin{theorem}
+  \label{theorem:program-to-q-soundness}
+  Let $q, q' \in \Pred$ be predicates, and $p \in \Prog$ a well-formed
+  program in static single assignment form.
+  If $\bbfZ \models \forall \vx.\Pi(\hoaretriple{q}{p}{q'})$, then
+  $\models$ $\hoaretriple{q}{p}{q'}$.
+\end{theorem}
+

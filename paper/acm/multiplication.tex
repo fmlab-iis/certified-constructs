@@ -1,0 +1,126 @@
+ 
+The operation $\Gplus$ is defined by arithmetic computation over
+$\bbfF$. %In order to compute $P_0 \Gplus P_1$ for $P_0, P_1 \in G$,
+Mathematical constructs for
+arithmetic over $\bbfF$ are hence necessary. Recall that
+an element in $\bbfF$ is represented by a 256-bit number. 
+% The na\"ive implementation for arithmetic operations over $\bbfF$
+% would require rithmetic computation over $\bbfZ$. 
+Arithmetic computation for 255-bit integers however is not yet
+available in commodity computing devices as of the year
+2017; it has to be carried out by limbs where a
+\emph{limb} is a 32- or 64-bit number depending on the underlying
+computer architectures. Figure~\ref{figure:dsl:subtraction}
+(Section~\ref{section:domain-specific-language}) is such an
+implementation of subtraction for the AMD64 architecture. 
+
+
+\hide{
+In practice, efficient long-integer arithmetic however is more
+complicated. Consider subtracting a long integer from another. The
+na\"ive implementation would simply subtract by limbs, propagate carry
+flags, and add the prime number $\varrho$ if necessary. 
+Execution time of the na\"ive subtraction however varies when minuend
+is less than subtrahend. It thus allows timing attacks and is 
+insecure. The na\"ive implementation of 255-bit subtraction should
+never be used in cryptographic programs.
+}
+
+Multiplication is another interesting but much more
+complicated computation. The na\"ive implementation for 255-bit
+multiplication would compute a 510-bit product and then find the
+corresponding 255-bit representation by division. 
+An efficient implementation for 255-bit multiplication avoids
+division by performing modulo operations aggressively. 
+For instance, an intermediate
+result of the form $c \Ftimes 2^{255}$ is immediately replaced by
+$c \Ftimes 19$ since $2^{255} \Feq 19$ in $\bbfGF(\varrho)$. 
+This is indeed how the most efficient multiplication for the AMD64
+architecture is implemented (Appendix~\ref{appendix:multiplication})~\cite{BDL+:11:HSHSS,BDL+:12:HSHSS}.
+
+\hide{
+Recall that 
+elements in $\bbfF$ are represented by five limbs of 51-bit unsigned
+integers. Consider multiplying two 255-bit values
+\begin{equation*}
+  \begin{array}{lcccccccccccl}
+    x & = & \mathit{radix51} (x_4, x_3, x_2, x_1, x_0) & = &
+            2^{51 \times 4} x_4 & + & 2^{51 \times 3} x_3 & + &
+            2^{51 \times 2} x_2 & + & 2^{51 \times 1} x_1 & + &
+            2^{51 \times 0} x_0 \textmd{ and}\\
+    y & = & \mathit{radix51} (y_4, y_3, y_2, y_1, y_0) & = &
+            2^{51 \times 4} y_4 & + & 2^{51 \times 3} y_3 & + &
+            2^{51 \times 2} y_2 & + & 2^{51 \times 1} y_1 & + &
+            2^{51 \times 0} y_0.
+  \end{array}
+\end{equation*}
+The intermediate results $2^{255} x_4 y_1$, $2^{255} x_3 y_2$,
+$2^{255} x_2 y_3$, and $2^{255} x_1 y_4$ can all be replaced by 
+$19 x_4 y_1$, $19 x_3 y_2$, $19 x_2 y_3$, and $19 x_1 y_4$,
+respectively. Division is not needed in such implementations.
+}
+
+\hide{
+We describe but a couple of optimizations in efficient implementations
+of arithmetic operations over $\bbfF$. Real-world implementations
+are necessarily optimized with various algebraic properties in
+$\bbfF$. 
+}
+
+In our experiment, we took real-world efficient and secure
+low-level implementations of arithmetic computation over
+$\bbfGF(\varrho)$ from~\cite{BDL+:11:HSHSS,BDL+:12:HSHSS}, 
+manually translated source
+codes to our domain specific language, specified their algebraic
+properties, and performed certified verification with our technique. 
+Table~\ref{table:arithmetic-operations} summarizes the results
+without and with applying the two heuristics in Section~\ref{section:solving-algebraic-equations}.
+The results show that without the two heuristics, multiplication and square
+cannot be verified because the computation of Gr\"obner bases was killed by the OS
+after running for days.
+With the heuristics, all the implementations can be verified in seconds.
+
+
+
+\vspace{-1em}
+\begin{table}[ht]
+  \caption{Certified Verification of Arithmetic Operations over
+    $\bbfGF(\varrho)$}
+  \centering
+  \begin{tabular}{|c|c|c|c|c|c|}
+    \hline
+    \multirow{2}{*}{} & \multirow{2}{*}{number of lines} & \multicolumn{3}{|c|}{time (seconds)} & \multirow{2}{*}{remark} \\ \cline{3-5}
+    & & without & with & range & \\
+    \hline
+    addition                 & 10  & 45.40  & 3.24   & 0.49   & $a \Fplus b$ \\
+    \hline
+    subtraction              & 15  & 52.18  & 3.65   & 0.83   & $a \Fminus b$ \\
+    \hline
+    multiplication           & 169 & -      & 24.98  & 19.82 & $a \Ftimes b$\\
+    \hline
+    multiplication by 121666 & 21  & 110.39 & 3.87   & 0.62   & $121666 \Ftimes a$\\
+    \hline
+    square                   & 124 & -      & 13.08  & 14.33 & $a \Ftimes a$\\
+    \hline
+  \end{tabular}
+  \label{table:arithmetic-operations}
+\end{table}
+\vspace{-1em}
+
+% {range check}
+
+We also perform range checks with the SMT solver \boolector on the
+five mathematical constructs in 
+Table~\ref{table:arithmetic-operations}~\cite{boolector}. The most complicated case
+(multiplication) takes 19.82 seconds.
+% Compared to algebraic specifications, verification time for range
+% check is insignificant.
+Although our range check is not yet certified, low-level
+mathematical constructs in X25519 are formally verified automatically.
+
+%%% Local Variables: 
+%%% mode: latex
+%%% eval: (TeX-PDF-mode 1)
+%%% eval: (TeX-source-correlate-mode 1)
+%%% TeX-master: "certified_vcg"
+%%% End: 
