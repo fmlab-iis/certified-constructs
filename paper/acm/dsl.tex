@@ -1,55 +1,4 @@
-
-One of the big issues with modern cryptography is how the assumptions
-match up with reality. In many situations, unexpected channels
-through which information can leak to the attacker may cause the
-cryptosystem to be broken. Typically this is about timing or
-electric power used. 
-In side-channel resilient implementations, the execution time
-are kept constant (as much as possible) to prevent unexpected
-information leakage.
-%Implementations which are not defeated through
-%such means are called ``side-channel resilient'' implementations.
-Constant execution time however is harder to achieve than one would imagine.
-%This turns out in some cases to be harder than one would imagine.
-%This is chiefly because 
-Modern processors have caches 
-%and out of order execution 
-and multitasking. This makes it possible for one execution
-thread, even when no privilege is conferred, to affect the running
-time of another -- simply by caching a sufficient amount of its own
-data in correct locations through repeated accesses, and then
-observing the running time of the other thread. The instructions in
-the other thread which uses the ``evicted'' data (to make room for the
-data of the eavesdropping thread) then has to take more time getting
-its data back to the cache~\cite{B:05:CTAA}. 
-% Such attacks are quite practical.
-% \todo{insert reference in bib for D.J. Bernstein ``Cache Timing 
-% Attacks on AES'', https://cr.yp.to/antiforgery/cachetiming-20050414.pdf}
-
-
-\hide{
-As such, modern cryptographic implementations often have to resort to
-seemingly contrived sequences of conditional moves and arithmetic
-manipulations to achieve the same result as simply using the CPU
-instructions designed for the purpose. This of course slows the
-computation down and waste resources but is inevitable because
-secret-dependent conditional actions and table lookups are actually
-very useful tasks that sometimes simply must be performed.
-}
-
-Thus, the innocuous actions of executing (a) a conditional
-branch instruction dependent on a secret bit, and (b) an
-indirect load instruction using a secret value in the register as the
-address, are both potentially dangerous leaks of information.
-%There are some side results of the above, 
-Consequently, we are not often
-faced with secret-dependent branching or table-lookups in the assembly
-instructions, but a language describing cryptographic code might
-include pseudo-instructions to cover instruction sequences, phrases in
-the language if you will, that is used to achieve the same effect.
-The domain specific language \mydsl is designed based on the same
-principles. Conditional branches and indirect memory accesses are not
-admitted in \mydsl. A program is but a straight line of variable
+A program is but a straight line of variable
 assignments on expressions. 
 Consider the following syntactic classes:
 \[
@@ -106,30 +55,21 @@ semantic function $\valueof{e}_{\nu}$ as follows.
 
 Note that there is no expression for quotients, or bitwise logical
 operations. Bitwise left shifting however can be modeled by
-multiplying $\dslcode{Pow}(2, n)$. Although \mydsl models a (very) 
+multiplying $\dslcode{Pow}(2, n)$. Although \zdsl models a (very) 
 small subset of assembly, it suffices to encode low-level
 mathematical constructs in X25519.
 \begin{eqnarray*}
   \Stmt & ::= & \Var \leftarrow \Expr
             \ |\  \concat{\Var}{\Var} \leftarrow \dslcode{Split} (\Expr, \Nat)
 \end{eqnarray*}
-In \mydsl, only assignments are allowed.
+In \zdsl, only assignments are allowed.
 The statement $v \leftarrow e$ assigns the value of $e$
 to the variable $v$. For bounded additions, multiplications, and right
-shifting, they are modeled by the construct $\dslcode{Split}$ in \mydsl.
+shifting, they are modeled by the construct $\dslcode{Split}$ in \zdsl.
 The statement $\concat{v_h}{v_l} \leftarrow
 \dslcode{Split}(e, n)$ splits the value of $e$ into two parts;
 the lowest $n$ bits are stored in $v_l$ and the remaining higher bits
-are stored in $v_h$. Define
-$
-\nu\mymapsto{v}{d}(u) \defn
-\left\{
-   \begin{array}{ll}
-     d & \textmd{if $u = v$}\\
-     \nu(u) & \textmd{otherwise}
-   \end{array}
-\right.
-$.
+are stored in $v_h$. 
 Consider the relation $\Tr \subseteq \St \times \Stmt \times \St$ defined
 by $(\nu, v \leftarrow e, \nu\mymapsto{v}{\valueof{e}_{\nu}}) \in \Tr$, and
   $(\nu, \concat{v_h}{v_l} \leftarrow \dslcode{Split} (e, n), 

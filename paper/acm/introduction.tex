@@ -84,44 +84,80 @@ verified to ensure security guarantees offered by Curve25519.
 % and hence the ECDH key exchange protocol X25519.
 
 In this paper, we focus on algebraic properties about low-level
-implementations of mathematical constructs in cryptographic programs.
+implementations of mathematical constructs in cryptographic programs
+plus range properties about program outputs.
 Mathematical constructs by their nature perform computation on
 underlying algebraic structures. We aim to verify whether they perform
 intended algebraic computation correctly. To this end, we propose the
-domain specific language \mydsl for low-level 
+domain specific language \bvdsl with operations on fixed-width bit-vectors for low-level
 mathematical constructs. Algebraic pre- and post-conditions of
-programs in \mydsl are specified as Hoare
-triples~\cite{H:69:ABCP}. 
-Such an algebraic specification is converted to static single 
-assignment form and then translated into an algebraic problem (called 
+programs together with range information about inputs and outputs in \bvdsl are specified as Hoare
+triples~\cite{H:69:ABCP}.
+Such a specification is converted to static single
+assignment form and then translated into (1) an algebraic problem (called
 the modular polynomial equation entailment
-problem)~\cite{AWZ:88:DQVP,H:07:AENTP}. We use the computer
-algebra system \singular to solve the algebraic problem~\cite{GP:08:SICA}. 
-Program fragments irrelevant to algebraic properties are also
-removed by slicing to reduce the size of algebraic problems~\cite{W:81:PS}.
+problem)~\cite{AWZ:88:DQVP,H:07:AENTP} via \zdsl with operations on $\bbfZ$, (2) a range problem, and (3) the absence of program overflows. We use the computer
+algebra system \singular to solve the algebraic problem~\cite{GP:08:SICA}.
 The proof assistant \coq is used to certify the
 correctness of translations, as well as solutions to algebraic
 problems computed by \singular~\cite{YC:2004:ITPPDC}.
+As range problems are hard to be solved automatically with proof assistants, the range problem and the absence of program overflows are verified by SMT (Satisfiability Modulo Theories) solvers without certified proof.
+
+\begin{figure}
+\begin{tikzpicture}[
+node distance=0.6cm,
+box/.style={rectangle, text width=6cm, fill=white, draw=black},
+dot/.style={rectangle, dashed, text width=6cm, fill=white, draw=black},
+coord/.style={coordinate},
+align=center
+]
+\node (bvdsl) [box] {algebraic and range specifications in \bvdsl};
+\node (bvssa) [box] [below=of bvdsl] {SSA form of algebraic and range specification in \bvdsl};
+\node (zssa) [box] [below=of bvssa] {SSA form of algebraic specification in \zdsl};
+\node (poly) [box] [below=of zssa] {polynomial equation entailment};
+\node (singular) [box] [below=of poly] {\singular};
+\node (range) [box] [below=of singular] {range specification};
+\node (overflow) [box] [below=of range] {overflow check};
+\node (smt) [dot] [below=of overflow] {SMT solvers};
+\node (c1) [coord] [left=of bvssa] {};
+\node (c2) [coord] [right=of range] {};
+\node (c3) [coord] [right=of overflow] {};
+\draw[->] (bvdsl) -- node [xshift=1.4cm] {to SSA (Sec. \ref{subsection:translation:static-single-assignment})} (bvssa);
+\draw[-] (bvssa.west) -- node [yshift=-0.7cm,xshift=1.6cm] {to \zdsl (Sec. \ref{subsection:domain-specific-language-zdsl})} (c1);
+\draw[->] (c1) |- node {} (zssa.west);
+\draw[->] (c1) |- node {} (range.west);
+\draw[->] (c1) |- node {} (overflow.west);
+\draw[->] (zssa) -- node  [xshift=1.8cm] {to entailment (Sec. \ref{subsection:translation:multivariant-polynomial-equations})} (poly);
+\draw[->] (poly) -- node  [xshift=1.4cm] {solved by (Sec. \ref{section:solving-algebraic-equations})} (singular);
+\draw[-] (range.east) -- node {} (c2);
+\draw[-] (overflow.east) -- node {} (c3);
+\draw[->] (c2) |- node {} (smt.east);
+\draw[->] (c3) |- node [xshift=-1cm,yshift=0.5cm] {solved by} (smt.east);
+\end{tikzpicture}
+\caption{The verification flow. Except the answers from SMT solvers, all the translations and the answers from \singular are certified by \coq.}
+\label{fig:overview}
+\end{figure}
 
 We report case studies on verifying mathematical constructs used in
-the X25519 ECDH key exchange protocol~\cite{BDL+:11:HSHSS,BDL+:12:HSHSS}. 
+the X25519 ECDH key exchange protocol~\cite{BDL+:11:HSHSS,BDL+:12:HSHSS}.
 For each arithmetic operations
 (such as addition, subtraction, and multiplication) over $\bbfGF(2^{255} - 19)$,
 their low-level real-world implementations are converted to our domain
-specific language \mydsl manually. We specify algebraic properties
+specific language \bvdsl manually. We specify algebraic properties
 of mathematical constructs in Hoare triples. Mathematical constructs
 are then verified against their algebraic
-specifications with our automatic technique. 
-The implementation of the Montgomery Ladderstep is 
-verified similarly.  
+specifications with our automatic technique.
+The implementation of the Montgomery Ladderstep is
+verified similarly.
 
 We have the following contributions:
 \begin{itemize}
-\item We propose a domain specific language \mydsl for modeling low-level
+\item We propose a domain specific language \bvdsl for modeling low-level
   mathematical constructs used in cryptographic programs.
 \item We give a certified verification condition generator from
   algebraic specifications of programs to the modular polynomial
   equation entailment problem.
+\item We give a certified translation from range problems and overflow checks to SMT formulas.
 \item We verify arithmetic computation over a finite field of order
   $2^{255} - 19$ and a
   critical program (the Montgomery Ladderstep) automatically.
@@ -135,17 +171,17 @@ We have the following contributions:
 
 This paper is organized as follows. After preliminaries
 (Section~\ref{section:preliminaries}), our domain specific
-language is described in Section~\ref{section:domain-specific-language}. 
+language is described in Section~\ref{section:domain-specific-language-bvdsl}.
 Section~\ref{section:translation}
 presents the translation to the algebraic
 problem. A certified solver for the algebraic problem is discussed in
-Section~\ref{section:solving-algebraic-equations}. 
+Section~\ref{section:solving-algebraic-equations}.
 Section~\ref{section:evaluation} contains experimental results. It is
 followed by conclusions.
 
-%%% Local Variables: 
+%%% Local Variables:
 %%% mode: latex
 %%% eval: (TeX-PDF-mode 1)
 %%% eval: (TeX-source-correlate-mode 1)
 %%% TeX-master: "certified_vcg"
-%%% End: 
+%%% End:

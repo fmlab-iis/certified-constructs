@@ -5,6 +5,7 @@ Low-level implementations of mathematical constructs have been formalized and ma
 A semi-automatic approach~\cite{C:14:VCS} has successfully verified a hand-optimized assembly implementation of the Montgomery Ladderstep with SMT solvers, manual program annotation, and a few \coq proofs.
 A C implementation of the Montgomery Ladderstep has been automatically verified with \gfverif~\cite{BS:16:GFEV}.
 Re-implementations of mathematical constructs in F*~\cite{project:everest} have been verified using a combination of SMT solving and manual proofs.
+Several cryptographic implementations in C and Java have been automatically verified by SAW to be equivalent to their reference implementations written in Cryptol~\cite{T:16:AVRWCI} but the correctness of reference implementations is not proven and the verification results are not certified.
 The \openssl implementations of SHA-256 and HMAC have been formalized and manually proved in \coq~\cite{A:15:VCPS,B:15:VCSOH}.
 Synthesis of assembly codes for mathematical constructs has been proposed in~\cite{fiat:crypto}.
 Although the synthesized codes are correct by construction, they are not as efficient as hand-optimized assembly implementations.

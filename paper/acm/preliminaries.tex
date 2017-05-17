@@ -1,8 +1,8 @@
 
 We write $\mathbb{B} = \{ \mathit{ff}, \mathit{tt} \}$ for the Boolean
-domain. Let $\bbfN$ and $\bbfZ$ denote positive and all integers
-respectively. We use $[n]$ to denote the set $\{ 1, 2, \ldots, n \}$
-for $n \in \bbfN$. 
+domain. Let $\bbfN$ and $\bbfZ$ denote all natural numbers and all integers
+respectively. We use $[n]$ to denote the set $\{ 0, 1, \ldots, n \}$
+for $n \in \bbfN$.
 
 A \emph{monoid} $\mathcal{M} = (M, \epsilon, \cdot)$ consists of a set
 $M$ and an associative binary operator $\cdot$ on $M$ with the
@@ -49,6 +49,29 @@ minimal ideal containing $G$; $G$ are the \emph{generators}
 of $\langle G \rangle$. The \emph{ideal membership}
 problem is to decide if $f \in I$ for a given ideal $I$ and $f
 \in \mathcal{R}[\vx]$.
+
+Let $\BV^w$ be the set of all bit-vectors with a bit-width $w$.
+The unsigned value of $b \in \BV^w$ is denoted by $\unsigned{b}$.
+For a natural number or an integer $n$, let $\bv^w(n)$ be the two's complementation representation of $n$ in a bit-width $w$.
+Assume the following common operators for fixed-width bit-vectors: $\BV^w +_\bvop \BV^w : \BV^w$ for addition, $\BV^w -_\bvop \BV^w : \BV^w$ for subtraction, $\BV^w *_\bvop \BV^w : \BV^w$ for multiplication, $\BV^{w_1} ._\bvop \BV^{w_2} : \BV^{w_1 + w_2}$ for concatenation, $\BV^w \#_\bvop n : \BV^{w+n}$ for zero extension, $\BV^w <<_\bvop n : \BV^w$ for left-shifting, $\BV^w >>_\bvop n : \BV^w$ for logical right-shifting, $\hi_\bvop(\BV^{2w}) : \BV^w$ for extraction of high bits, and $\lo_\bvop(\BV^{2w}) : \BV^w$ for extraction of low bits.
+Let $b_1$, $b_2$, and $b_3$ are bit-vectors in $\BV^{w}$, and $\cdot \in \{+_\bvop, -_\bvop, *_\bvop\}$.
+Define three more operations which perform addition, subtraction, or multiplication after zero extension.
+\[
+\begin{array}{rcl}
+b_1 \cdot^{\#} b_2 & \defn & (b_1 \#_\bvop w) \cdot (b_2 \#_\bvop w) \\
+\end{array}
+\]
+When $\cdot^{\#}$ is applied to more than two bit-vectors, bit-vectors with bit-width already in $2w$ will not be extended again.
+For example, $b_1 +_\bvop^{\#} b_2 +_\bvop^{\#} b_3 = (b_1 \#_\bvop w) +_\bvop (b_2 \#_\bvop w) +_\bvop (b_3 \#_\bvop w)$.
+Define six more operations which takes high bits or low bits after $\cdot^{\#}$ operation.
+\[
+\begin{array}{rcl}
+b_1 \cdot^{\hi} b_2 & \defn & \hi_\bvop(b_1 \cdot^{\#} b_2) \\
+b_1 \cdot^{\lo} b_2 & \defn & \lo_\bvop(b_1 \cdot^{\#} b_2) \\
+\end{array}
+\]
+We also assume comparison operators $<_\bvop$ and $\leq_\bvop$ between unsigned values of bit-vectors.
+
 
 %%% Local Variables:
 %%% mode: latex

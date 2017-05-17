@@ -8,11 +8,13 @@
 \newcommand{\uscore}[0]{{\char95}}
 \newcommand{\cond}[1]{{(\!|}{#1}{|\!)}}
 \newcommand{\valueof}[1]{[\![{#1}]\!]}
+\newcommand{\bbfB}{\mathbb{B}}
 \newcommand{\bbfN}{\mathbb{N}}
 \newcommand{\bbfZ}{\mathbb{Z}}
 \newcommand{\bbfF}{\mathbb{K}}
 \newcommand{\bbfGF}{\mathbb{GF}}
 \newcommand{\bbfG}{\mathbb{G}}
+\newcommand{\bbfV}{\mathbb{V}}
 \newcommand{\bff}{\mathit{ff}}
 \newcommand{\btt}{\mathit{tt}}
 \newcommand{\St}{\mathit{St}}
@@ -52,8 +54,30 @@
 \newcommand{\Funit}{1_{\bbfF}}
 \newcommand{\Feq}{=_{\bbfF}}
 \newcommand{\Fdiv}{\div_{\bbfF}}
-\newcommand{\mydsl}{\textsc{CryptoLine}\xspace}
+\newcommand{\bvdsl}{\textsc{bvCryptoLine}\xspace}
+\newcommand{\zdsl}{\textsc{zCryptoLine}\xspace}
 \renewcommand{\mod}{\mathbin{\textmd{mod}}}
+\newcommand{\bbAtomic}{\mathit{bAtomic}}
+\newcommand{\bvAtom}{\mathit{bAtom}}
+\newcommand{\BV}{\bbfV} % Set of bit-vectors
+\newcommand{\bv}{\mathit{bv}} % a function from Z to BV
+\newcommand{\bvStmt}{\mathit{bStmt}} % Set of BV statements
+\newcommand{\bvSt}{\mathit{bSt}} % Set of BV states
+\newcommand{\bvTr}{\mathit{bTr}}
+\newcommand{\bvProg}{\mathit{bProg}}
+\newcommand{\bvExpa}{\mathit{bExp_a}}
+\newcommand{\bvPreda}{\mathit{bPred_a}}
+\newcommand{\bvExpr}{\mathit{bExp_r}}
+\newcommand{\bvPredr}{\mathit{bPred_r}}
+\newcommand{\bvPred}{\mathit{bPred}}
+\newcommand{\bvSpec}{\mathit{bSpec}}
+\newcommand{\bvst}{\nu} % prefix of BV states
+\newcommand{\bvop}{\bbfV} % subscript of BV operators
+\newcommand{\hi}{\mathit{hi}}
+\newcommand{\lo}{\mathit{lo}}
+\newcommand{\unsigned}[1]{|#1|}
+\newcommand{\bvvalueof}[1]{[\![{#1}]\!]_\bbfV}
+\newcommand{\zvalueof}[1]{[\![{#1}]\!]_\bbfZ}
 
 \algnewcommand\algorithmicmatch{\textbf{match}}
 \algnewcommand\algorithmicwith{\textbf{with}}
