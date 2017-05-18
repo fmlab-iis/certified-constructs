@@ -22,7 +22,7 @@ left hand side (Algorithm~\ref{algorithm:polynomial-statements}).
         \Return $v = e$
       \EndCase
       \Case{$\concat{v_h}{v_l} \leftarrow \dslcode{Split}(e, n)$}
-        \Return $v_l + v_h \times \dslcode{Pow}(2, n) = e$
+        \Return $v_l + \dslcode{Pow}(2, n) \times v_h = e$
       \EndCase
     \EndMatch
     \EndFunction

@@ -1,72 +1,68 @@
 
-%By Theorem~\ref{theorem:program-to-q-soundness}, 
-It remains to show 
-\[
-\vspace{-.5em}
-\begin{array}{l}
-  \bbfZ \models \forall \vx. % \in \bbfZ^{|\vx|}.
+%By Theorem~\ref{theorem:program-to-q-soundness},
+It remains to show
+\begin{equation*}
+\begin{aligned}
+  \bbfZ \models & \forall \vx. % \in \bbfZ^{|\vx|}.
   \bigwedge\limits_{i \in [I]} e_i (\vx) = e'_i (\vx) \wedge
-  \bigwedge\limits_{j \in [J]} f_j (\vx) \equiv f'_j (\vx) \mod n_j
-  \implies
-  \\
-  \hspace{.3\textwidth}
+  \bigwedge\limits_{j \in [J]} f_j (\vx) \equiv f'_j (\vx) \mod n_j(\vx) \\
+  & \implies
   \bigwedge\limits_{k \in [K]} g_k (\vx) = g'_k (\vx) \wedge
-  \bigwedge\limits_{l \in [L]} h_l (\vx) \equiv h'_l (\vx) \mod m_l
-\end{array}
-\vspace{-.5em}
-\]
-where
-$e_i (\vx), e'_i (\vx), f_j (\vx), f'_j (\vx),
- g_k (\vx), g'_k (\vx), h_l (\vx), h'_l (\vx) \in
- \bbfZ[\vx]$, $n_j, m_l \in \bbfN$ for $i \in [I]$, $j \in [J]$, $k
- \in [K]$, and $l \in [L]$. Since the
-consequence is a conjunction of (modular) equations, it suffices to 
-prove one conjunct at a time. That is, we aim to show
-\vspace{-.5em}
-\begin{equation*}
-  \label{eq:polynomial-equation-implicant}
-  \bbfZ \models \forall \vx. % \in \bbfZ^{|\vx|}.
-  \bigwedge\limits_{i \in [I]} e_i (\vx) = e'_i (\vx) \wedge
-  \bigwedge\limits_{j \in [J]} f_j (\vx) \equiv f'_j (\vx) \mod n_j
-  \implies
-  g (\vx) = g' (\vx); \textmd{ or}
+  \bigwedge\limits_{l \in [L]} h_l (\vx) \equiv h'_l (\vx) \mod m_l(\vx)
+\end{aligned}
 \end{equation*}
-\vspace{-.5em}
+where
+$e_i (\vx),$ $e'_i (\vx),$ $f_j (\vx),$ $f'_j (\vx),$ $n_j(\vx),$
+$g_k (\vx),$ $g'_k (\vx),$ $h_l (\vx),$ $h'_l (\vx),$ $m_l(\vx)$ $\in$
+ $\bbfZ[\vx]$ for $i \in [I]$, $j \in [J]$, $k
+ \in [K]$, and $l \in [L]$. Since the
+consequence is a conjunction of (modular) equations, it suffices to
+prove one conjunct at a time. That is, we aim to show
 \begin{equation*}
+\begin{aligned}
+  \label{eq:polynomial-equation-implicant}
+  \bbfZ \models & \forall \vx. % \in \bbfZ^{|\vx|}.
+  \bigwedge\limits_{i \in [I]} e_i (\vx) = e'_i (\vx) \wedge
+  \bigwedge\limits_{j \in [J]} f_j (\vx) \equiv f'_j (\vx) \mod n_j (\vx) \\
+  & \implies
+  g (\vx) = g' (\vx); \textmd{ or}
+\end{aligned}
+\end{equation*}
+\begin{equation*}
+\begin{aligned}
    \label{eq:modular-polynomial-equation-implicant}
-   \bbfZ \models \forall \vx. % \in \bbfZ^{|\vx|}.
+   \bbfZ \models & \forall \vx. % \in \bbfZ^{|\vx|}.
    \bigwedge\limits_{i \in [I]} e_i (\vx) = e'_i (\vx) \wedge
-   \bigwedge\limits_{j \in [J]} f_j (\vx) \equiv f'_j (\vx) \mod n_j
-   \implies
-   h (\vx) \equiv h' (\vx) \mod m
-\vspace{-.5em}
- \end{equation*}
-where $e_i (\vx), e'_i (\vx), f_j (\vx), f'_j (\vx), g (\vx), g'
-(\vx), h (\vx), h' (\vx)
-\in \bbfZ[\vx]$ for $i \in [I], j \in [J]$, and $m \in \bbfN$. 
+   \bigwedge\limits_{j \in [J]} f_j (\vx) \equiv f'_j (\vx) \mod n_j (\vx) \\
+   & \implies
+   h (\vx) \equiv h' (\vx) \mod m (\vx)
+\end{aligned}
+\end{equation*}
+where $e_i (\vx),$ $e'_i (\vx),$ $f_j (\vx),$ $f'_j (\vx),$ $n_j (\vx),$ $g (\vx),$ $g' (\vx),$
+$h (\vx),$ $h' (\vx),$ $m(\vx)$ $\in$ $\bbfZ[\vx]$ for $i \in [I], j \in [J]$.
 
 It is not hard to rewrite modular polynomial equations in antecedents
 of the above implications. For instance, the first implication is
-equivalent to 
-\vspace{-.5em}
-\[
-\bbfZ \models \forall \vx. % \in \bbfZ^{|\vx|}.
+equivalent to
+\begin{equation*}
+\begin{aligned}
+\bbfZ \models & \forall \vx. % \in \bbfZ^{|\vx|}.
 \bigwedge\limits_{i \in [I]} e_i (\vx) = e'_i (\vx) \wedge
-\bigwedge\limits_{j \in [J]} [\exists d_j. f_j (\vx) = f'_j (\vx) + d_j \cdot n_j]
-\implies
+\bigwedge\limits_{j \in [J]} [\exists d_j. f_j (\vx) = f'_j (\vx) + d_j \cdot n_j (\vx)] \\
+& \implies
 g (\vx) = g' (\vx),
-\vspace{-.5em}
-\]
+\end{aligned}
+\end{equation*}
 which in turn is equivalent to
-\vspace{-.5em}
-\[
-\bbfZ \models \forall \vx \forall \vd. % \in \bbfZ^{|\vx|} \vd \in \bbfZ^{J}.
+\begin{equation*}
+\begin{aligned}
+\bbfZ \models & \forall \vx \forall \vd. % \in \bbfZ^{|\vx|} \vd \in \bbfZ^{J}.
 \bigwedge\limits_{i \in [I]} e_i (\vx) = e'_i (\vx) \wedge
-\bigwedge\limits_{j \in [J]} f_j (\vx) = f'_j (\vx) + d_j \cdot n_j
-\implies
+\bigwedge\limits_{j \in [J]} f_j (\vx) = f'_j (\vx) + d_j \cdot n_j (\vx) \\
+& \implies
 g (\vx) = g' (\vx).
-\vspace{-.5em}
-\]
+\end{aligned}
+\end{equation*}
 
 It hence suffices to consider the following
 \emph{polynomial equation entailment} problem:
@@ -84,44 +80,40 @@ It hence suffices to consider the following
    \bbfZ \models \forall \vx. % \in \bbfZ^{|\vx|}.
    \bigwedge\limits_{i \in [I]} e_i (\vx) = e'_i (\vx)
    \implies
-   h (\vx) \equiv h' (\vx) \mod m
+   h (\vx) \equiv h' (\vx) \mod m (\vx)
 \vspace{-.5em}
  \end{equation}
- where $e_i (\vx), e'_i (\vx), g (\vx), g' (\vx), h (\vx), h' (\vx)
- \in \bbfZ[\vx]$ for $i \in [I]$ and $m \in \bbfN$~\cite{H:07:AENTP}.
+ where $e_i (\vx), e'_i (\vx), g (\vx), g' (\vx), h (\vx), h' (\vx), m (\vx)
+ \in \bbfZ[\vx]$ for $i \in [I]$~\cite{H:07:AENTP}.
 
 We solve the polynomial equation entailment
-problems~(\ref{eq:reduced-polynomial-equation-implicant}) 
+problems~(\ref{eq:reduced-polynomial-equation-implicant})
 and~(\ref{eq:reduced-modular-polynomial-equation-implicant}) via
-the ideal membership problem~\cite{H:07:AENTP,BS:16:GFEV}. 
+the ideal membership problem~\cite{H:07:AENTP,BS:16:GFEV}.
 For~(\ref{eq:reduced-polynomial-equation-implicant}), consider the
 ideal $I = \langle e_i(\vx) - e'_i(\vx) \rangle_{i \in [I]}$. Suppose
 $g(\vx) - g'(\vx) \in I$. Then there are $u_i(\vx) \in \bbfZ[\vx]$
-(called \emph{coefficients}) such that 
-\vspace{-.5em}
+(called \emph{coefficients}) such that
 \begin{equation}
   \label{eq:reduced-polynomial-equation-witnesses}
   g(\vx) - g'(\vx) = \sum\limits_{i \in [I]} u_i (\vx) [e_i (\vx) - e'_i (\vx)].
-\vspace{-.5em}
 \end{equation}
 Hence $g(\vx) - g'(\vx) = 0$ follows from  the polynomial equations
 $e_i (\vx) = e'_i (\vx)$ for $i \in [I]$. Similarly, it
-suffices to check if $h(\vx) - h'(\vx) \in \langle m, e_i(\vx) -
+suffices to check if $h(\vx) - h'(\vx) \in \langle m(\vx), e_i(\vx) -
 e'_i(\vx) \rangle_{i \in [I]}$
 for~(\ref{eq:reduced-modular-polynomial-equation-implicant}).
 If so, there are $u, u_i(\vx) \in \bbfZ[\vx]$ such that
-\vspace{-.5em}
 \begin{equation}
   \label{eq:reduced-modular-polynomial-equation-witnesses}
-  h(\vx) - h'(\vx) = u(\vx) \cdot m + \sum\limits_{i \in [I]} u_i (\vx)
-  [e_i (\vx) - e'_i (\vx)]. 
-\vspace{-.5em}
+  h(\vx) - h'(\vx) = u(\vx) \cdot m(\vx) + \sum\limits_{i \in [I]} u_i (\vx)
+  [e_i (\vx) - e'_i (\vx)].
 \end{equation}
-Thus $h(\vx) \equiv h'(\vx) \mod m$ as required.
-The reduction to the ideal membership problem however is 
+Thus $h(\vx) \equiv h'(\vx) \mod m(\vx)$ as required.
+The reduction to the ideal membership problem however is
 incomplete. Consider $\bbfZ \models \forall x. x^2 + x
 \equiv 0 \mod 2$ but $x^2 + x \not\in \langle 2
-\rangle$~\cite{H:07:AENTP}. 
+\rangle$~\cite{H:07:AENTP}.
 
 Two \coq tactics are available to
 find formal proofs for the polynomial equation entailment
