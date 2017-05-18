@@ -228,7 +228,8 @@ Note that the inverse implication of Theorem~\ref{theorem:bv2z} does not hold be
 The function \textsc{BV2ZProg} preserves well-formedness and static single assignment form. This is showed by the following lemma.
 
 \begin{lemma}
-Given a well-formed program $p \in \bvProg$ in static single assignment form, $\textsc{BV2ZProg}(p) \in \zProg$ is well-formed and in static single assignment form.
+  \label{lemma:bv2z-prog}
+  Given a well-formed program $p \in \bvProg$ in static single assignment form, $\textsc{BV2ZProg}(p) \in \zProg$ is well-formed and in static single assignment form.
 \end{lemma}
 
 The example program \dslcode{subSSA} only contains statements involving addition and subtraction and thus \textsc{BV2ZProg}(\dslcode{subSSA}) looks exactly the same as \dslcode{subSSA}.

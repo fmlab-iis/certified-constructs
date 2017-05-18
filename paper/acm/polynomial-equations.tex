@@ -1,14 +1,12 @@
 
 The last step transforms any algebraic program specification in \zdsl to the
 modular polynomial equation entailment problem. For
-$q_a \in \bvPreda$, we write $q_a(\vx)$ to signify the free variables $\vx$
-occurred in $q_a$. Given $q_a(\vx), q_a'(\vx) \in \bvPreda$, the \emph{modular
+$q \in \zPred$, we write $q(\vx)$ to signify the free variables $\vx$
+occurred in $q$. Given $q(\vx), q'(\vx) \in \zPred$, the \emph{modular
   polynomial equation entailment} problem decides whether
-$q_a(\vx) \implies q_a'(\vx)$ holds when $\vx$ are substituted for
-arbitrary integers. That is, we want to check if $q_a(\vx) \implies
-q_a'(\vx)$ evaluates to $\btt$ after each variable $x$ is replaced by
-$\zst(x)$ for every valuation $\zst \in \zSt$. We write $\bbfZ \models
-\forall \vx. q_a(\vx) \implies q_a'(\vx)$ if it is indeed the case.
+$q(\vx) \implies q'(\vx)$ holds when $\vx$ are substituted for
+arbitrary integers. That is, we want to check if for every valuation $\zst \in \zSt$, $q(\vx)$ evaluates to $\btt$ implies $q'(\vx)$ evaluates to $\btt$ after each variable $x$ is replaced by $\zst(x)$.
+We write $\bbfZ \models \forall \vx. q(\vx) \implies q'(\vx)$ if it is indeed the case.
 
 Programs in static single assignment form can easily be transformed to
 conjunctions of polynomial equations. An assignment statement is
@@ -57,7 +55,7 @@ Algorithm~\ref{algorithm:polynomial-statements}
 and~\ref{algorithm:polynomial-programs} are specified straightforwardly
 in \gallina. We use the proof assistant \coq to prove properties
 about the algorithms. Note that $\textsc{ProgToPolyEQ}(p) \in
-\bvPreda$ for every $p \in \zProg$. The following theorem shows that any
+\zPred$ for every $p \in \zProg$. The following theorem shows that any
 behavior of the program $p$ is a solution to the system of polynomial
 equations $\textsc{ProgToPolyEQ}(p)$. In other words,
 $\textsc{ProgToPolyEQ}(p)$ gives an abstraction of the program $p$.
@@ -72,18 +70,18 @@ Definition~\ref{definition:program-entailment} gives the modular
 polynomial equation entailment problem corresponding to an algebraic
 program specification.
 \begin{definition}
-  For $q, q' \in \Pred$ and $p \in \Prog$ in static single assignment
+  For $q, q' \in \zPred$ and $p \in \zProg$ in static single assignment
   form, define
   \begin{eqnarray*}
     \Pi(\hoaretriple{q}{p}{q'}) & \defn &
     q(\vx) \wedge \varphi(\vx) \implies q'(\vx)
   \end{eqnarray*}
   where $\varphi(\vx) =
-  \textsc{ProgToPolyEQ}(p)$. 
+  \textsc{ProgToPolyEQ}(p)$.
   \label{definition:program-entailment}
 \end{definition}
 
-\begin{figure}
+\begin{figure*}
   \centering
   \[
   \begin{array}{l}
@@ -123,30 +121,29 @@ program specification.
     \mod \myprime
   \end{array}
   \]
-  \caption{Modular Polynomial Equation Entailment for \dslcode{subSSA}}
+  \caption{Modular Polynomial Equation Entailment for \textsc{BV2ZProg}(\dslcode{subSSA})}
   \label{figure:translation:subtraction-polynomial}
-\end{figure}
+\end{figure*}
 
 \noindent
 \emph{Example}.
 The modular polynomial equation entailment problem corresponding to the
 algebraic specification of subtraction is shown in
 Figure~\ref{figure:translation:subtraction-polynomial}. The problem
-has 15 polynomial equality constraints with 25 variables. We 
+has 15 polynomial equality constraints with 25 variables. We
 want to know if $\mathit{radix51}({r}^3_4, {r}^3_3, {r}^3_2,
 {r}^3_1, {r}^3_0)$ is the difference between $\mathit{radix51}({x}^0_4,
 {x}^0_3, {x}^0_2, {x}^0_1, {x}^0_0)$ and $\mathit{radix51}({y}^0_4,
 {y}^0_3, {y}^0_2, {y}^0_1, {y}^0_0)$ in $\bbfGF(\varrho)$ under the
-constraints. 
+constraints.
 
 The soundness of Algorithm~\ref{algorithm:polynomial-programs}
 is certified in \coq (Theorem~\ref{theorem:program-to-q-soundness}).
 % Its proof is again certified by \coq.
 \begin{theorem}
   \label{theorem:program-to-q-soundness}
-  Let $q, q' \in \Pred$ be predicates, and $p \in \Prog$ a well-formed
+  Let $q, q' \in \zPred$ be predicates, and $p \in \zProg$ a well-formed
   program in static single assignment form.
   If $\bbfZ \models \forall \vx.\Pi(\hoaretriple{q}{p}{q'})$, then
   $\models$ $\hoaretriple{q}{p}{q'}$.
 \end{theorem}
-

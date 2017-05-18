@@ -1,38 +1,48 @@
 
-Consider any predicates $q, q' \in \Pred$ and well-formed program $p \in
-\Prog$. Let $\theta_0 (v) = 0$ for every $v \in \Var$. By
-Theorem~\ref{theorem:program-slicing}, \ref{theorem:ssa}, and
-\ref{theorem:program-to-q-soundness}, we have
-\vspace{-.5em}
+Consider any predicates $q_a, q_a' \in \bvPreda$, $q_r, q_r' \in \bvPredr$, and well-formed program $p \in
+\bvProg$. Let $\theta_0 (v) = 0$ for every $v \in \Var$. By
+Theorem\ref{theorem:ssa}, \ref{theorem:bv2z}, and \ref{theorem:program-to-q-soundness}, we have
 \begin{equation*}
   \begin{array}{cll}
-    & \models \hoaretriple{q}{p}{q'}\\
-    \Leftrightarrow
-    & \models 
-      \hoaretriple{q}{\textsc{SliceProg}(\textsc{VarsInPred}(q'), p)}{q'}
-    & \textmd{ (Theorem~\ref{theorem:program-slicing})}\\
+    & \models \hoaretriple{q_a \wedge q_r}{p}{q_a' \wedge q_r'}\\
+%    \Leftrightarrow
+%    & \models
+%      \hoaretriple{q}{\textsc{SliceProg}(\textsc{VarsInPred}(q'), p)}{q'}
+%    & \textmd{ (Theorem~\ref{theorem:program-slicing})}\\
     \Leftrightarrow
     & \models
-      \hoaretriple{\textsc{SSAPred}(\theta_0, q)}
+      \hoaretriple{\hat{q_a} \wedge \hat{q_r}}
       {\hat{p}}
-      {\textsc{SSAPred}(\hat{\theta}, q')}
+      {\hat{q_a'} \wedge \hat{q_r'}}
     & \textmd{ (Theorem~\ref{theorem:ssa})}\\
     &
-      \textmd{where } \langle \hat{\theta}, \hat{p} \rangle = 
-      \textsc{SSAProg} (\theta_0, \textsc{SliceProg}
-      (\textsc{VarsInPred}(q'), p))\\
+      \textmd{where } \langle \hat{\theta}, \hat{p} \rangle =
+      \textsc{SSAProg} (\theta_0, p), \\
+    & \hat{q_a} = \textsc{SSAPred}(\theta_0, q_a), \\
+    & \hat{q_r} = \textsc{SSAPred}(\theta_0, a_r), \\
+    & \hat{q_a'} = \textsc{SSAPred}(\hat{\theta}, q_a'), \textmd{ and} \\
+    & \hat{q_r'} = \textsc{SSAPred}(\hat{\theta}, q_r') \\
     \Leftarrow
+    & \textmd{program $\hat{p}$ does not overflow/underflow}, \\
+    & \models \hoaretriple{\hat{q_r}}{\hat{p}}{\hat{q_r'}}, \textmd{ and } \\
+    & \models \hoaretriple{\tilde{q_a}}{\tilde{p}}{\tilde{q_a'}}
+    & \textmd{ (Theorem~\ref{theorem:bv2z})} \\
+    & \textmd{where } \tilde{p} = \textsc{BV2ZProg}(\hat{p}), \\
+    & \tilde{q_a} = \textsc{BV2ZExpa}(\hat{q_a}), \textmd{ and} \\
+    & \tilde{q_a'} = \textsc{BV2ZExpa}(\hat{q_a'}) \\
+    \Leftarrow
+    & \textmd{program $\hat{p}$ does not overflow/underflow}, \\
+    & \models \hoaretriple{\hat{q_r}}{\hat{p}}{\hat{q_r'}}, \textmd{ and } \\
     & \bbfZ \models \forall \vx.
-      \Pi (\hoaretriple{\textsc{SSAPred}(\theta_0, q)} {\hat{p}}
-      {\textsc{SSAPred}(\hat{\theta}, q')})
+      \Pi (\hoaretriple{\tilde{q_a}}{\tilde{p}}{\tilde{q_a'}})
     & \textmd{ (Theorem~\ref{theorem:program-to-q-soundness})}
   \end{array}
 \end{equation*}
-Observe that $\hat{p}$ is well-formed and in static single assignment
-form (Lemma~\ref{lemma:slicing-well-formed} and~\ref{lemma:ssa-programs}).
+Observe that $\tilde{p}$ is well-formed and in static single assignment
+form (Lemma~\ref{lemma:ssa-programs} and \ref{lemma:bv2z-prog}).
 Theorem~\ref{theorem:program-to-q-soundness} is applicable in the last
 deduction. After the translations, an instance of the modular
 polynomial equation entailment problem is obtained from the given
-algebraic specification of a well-formed program in \zdsl.
+algebraic specification of a well-formed program in \bvdsl.
 To verify mathematical constructs against their algebraic
 specifications, we will solve the entailment problem.
