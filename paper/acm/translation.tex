@@ -1,31 +1,29 @@
 
-Given $q, q' \in \Pred$ and $p \in \Prog$, we reduce the problem of checking
-$\models \hoaretriple{q}{p}{q'}$ to the entailment problem of modular
-polynomial equations over integer variables. The reduction is carried out by
-the following three transformations:
+Given $q_a, q_a' \in \bvPreda$, $q_r, q_r' \in \bvPredr$, and $p \in \bvProg$, we reduce the problem of checking $\models \hoaretriple{q_a \wedge q_r}{p}{q_a' \wedge q_r'}$ to (1) the entailment problem of modular
+polynomial equations over integer variables proving $\models \hoaretriple{q_a}{p}{q_a'}$ via \zdsl, (2) a range problem $\models \hoaretriple{q_r}{p}{q_r'}$, and (3) overflow checking of program $p$.
+The reduction is carried out by the following three transformations:
 \begin{enumerate}
-\item Program slicing. To improve efficiency, fragments of the program $p$
-  irrelevant to the post-condition $q'$ are removed by program
-  slicing (Section~\ref{subsection:translation:slicing})~\cite{W:81:PS}. 
-\item Static single assignments. The sliced program is transformed
+%\item Program slicing. To improve efficiency, fragments of the program $p$
+%  irrelevant to the post-condition $q'$ are removed by program
+%  slicing (Section~\ref{subsection:translation:slicing})~\cite{W:81:PS}.
+\item Static single assignments. The program is transformed
   into static single assignments. Variables in pre- and
   post-conditions are also renamed
   (Section~\ref{subsection:translation:static-single-assignment})~\cite{AWZ:88:DQVP}.
-\item Modular polynomial equations. Validity of algebraic specifications
+\item \zdsl. The algebraic specification $\hoaretriple{q_a}{p}{q_a'}$ in \bvdsl is transformed to a specification in \zdsl so that the validity of the specification in \zdsl implies the validity of $\hoaretriple{q_a}{p}{q_a'}$ in \bvdsl if the program $p$ does not overflow. (Section~\ref{subsection:domain-specific-language-zdsl}).
+\item Modular polynomial equations. Validity of algebraic specifications in \zdsl
   is reduced to the entailment of modular polynomial equations
-  (Section~\ref{subsection:translation:multivariant-polynomial-equations})~\cite{H:07:AENTP}. 
+  (Section~\ref{subsection:translation:multivariant-polynomial-equations})~\cite{H:07:AENTP}.
 \end{enumerate}
 
 For each transformation, we give an algorithm and establish the
-correctness of the algorithm in \coq~\cite{YC:2004:ITPPDC}. 
-Specifically, semantics
-for our domain specific language and validity of algebraic
-specifications are formalized. The correctness of
-transformations is then certified by the proof assistant \coq.
-For program slicing and static single assignments, we
+correctness of the algorithm in \coq~\cite{YC:2004:ITPPDC}.
+Specifically, semantics for \zdsl and validity of specifications in \zdsl are formalized.
+The correctness of transformations is then certified by the proof assistant \coq.
+For static single assignments, we
 construct machine-checkable proofs for the soundness and completeness
-of the two transformations. For modular polynomial equations, another
+of the transformation. For modular polynomial equations, another
 \coq-certified proof shows the soundness of the transformation
-from the validity of the algebraic specification to the entailment of 
+from the validity of the algebraic specification to the entailment of
 modular polynomial equations. In the following subsections,
-transformations and their correctness are elaborated in details.  
+transformations and their correctness are elaborated in details.

@@ -1,104 +1,173 @@
 
 A program is in \emph{static single assignment} form if every non-input variable
 is assigned at most once and no input variable is assigned~\cite{AWZ:88:DQVP}.
-Our next task is to transform any algebraic specification
-$\hoaretriple{q}{p}{q'}$ to an algebraic specification of $p$ in
-static single  assignment form for any $q, q' \in \Pred$ and $p \in
-\Prog$. Our transformation 
-maintains a finite mapping $\theta$ from variables to
+Our next task is to transform any specification
+$\hoaretriple{q}{p}{q'}$ to a specification of $p$ in
+static single  assignment form for any $q, q' \in \bvPred$ and $p \in
+\bvProg$.
+To avoid ambiguity, we consider \emph{well-formed} programs where
+\begin{itemize}
+\item for every statement in the program with two lvalues such as $c\ v \leftarrow a_1 + a_2 + y$ with lvalues $c$ and $v$, $h\ l \leftarrow a_1 \times a_2$ with lvalues $h$ and $l$, etc, the two l-vals are not equal; and
+\item every non-input program variable must be assigned to a value
+  before being used.
+\end{itemize}
+
+Our transformation maintains a finite mapping $\theta$ from variables to
 non-negative integers. For any variable $v$, $v^{\theta(v)}$ is
 the most recently assigned copy of $v$. Only the most recent copies of
 variables are referred in
-expressions. Algorithm~\ref{algorithm:ssa-expressions} 
-transforms expressions with the finite mapping $\theta$ by
+expressions. Algorithm~\ref{algorithm:ssa-expressions}
+transforms algebraic expressions with the finite mapping $\theta$ by
 structural induction. Integers are unchanged. For each variable, its
 most recent copy is returned by looking up the mapping $\theta$. Other
-expressions are transformed recursively. 
+algebraic expressions are transformed recursively.
 
 \begin{algorithm}
   \begin{algorithmic}[1]
-    \Function{SSAExpr}{$\theta$, $e$}
+    \Function{SSAExpra}{$\theta$, $e$}
     \Match{$e$}
       \Case{$i$} \Return $i$ \EndCase
       \Case{$v$} \Return $v^{\theta(v)}$ \EndCase
-      \Case{$-e'$} \Return $-$\Call{SSAExpr}{$\theta$, $e'$} \EndCase
-      \Case{$e' + e''$} 
-        \Return \Call{SSAExpr}{$\theta$, $e'$} $+$ 
-                \Call{SSAExpr}{$\theta$, $e''$}
+      \Case{$-e'$} \Return $-$\Call{SSAExpra}{$\theta$, $e'$} \EndCase
+      \Case{$e' + e''$}
+        \Return \Call{SSAExpra}{$\theta$, $e'$} $+$
+                \Call{SSAExpra}{$\theta$, $e''$}
       \EndCase
-      \Case{$e' - e''$} 
-        \Return \Call{SSAExpr}{$\theta$, $e'$} $-$ 
-                \Call{SSAExpr}{$\theta$, $e''$}
+      \Case{$e' - e''$}
+        \Return \Call{SSAExpra}{$\theta$, $e'$} $-$
+                \Call{SSAExpra}{$\theta$, $e''$}
       \EndCase
-      \Case{$e' \times e''$} 
-        \Return \Call{SSAExpr}{$\theta$, $e'$} $\times$ 
-                \Call{SSAExpr}{$\theta$, $e''$}
-      \EndCase
-      \Case{$\dslcode{Pow}$($e'$, $n$)}
-        \Return $\dslcode{Pow}$(\Call{SSAExpr}{$\theta$, $e'$}, $n$)
+      \Case{$e' \times e''$}
+        \Return \Call{SSAExpra}{$\theta$, $e'$} $\times$
+                \Call{SSAExpra}{$\theta$, $e''$}
       \EndCase
     \EndMatch
     \EndFunction
   \end{algorithmic}
-  \caption{Static Single Assignment Transformation for Expressions}
+  \caption{Static Single Assignment Transformation for Algebraic Expressions}
   \label{algorithm:ssa-expressions}
 \end{algorithm}
 
-Similarly, predicates must refer to most recent copies of 
+Similarly, algebraic and range predicates must refer to most recent copies of
 variables. They are transformed according to the finite mapping
-$\theta$. Thanks to the formalization of finite mappings in \coq. Both 
+$\theta$. Thanks to the formalization of finite mappings in \coq. Both
 algorithms are easily specified in \gallina.
+The function $\textsc{SSAPred}$ then transforms the algebraic part and the range part of a predicate $q \in \bvPred$ separatedly with the two algorithms.
 
 \hide{
 \begin{algorithm}
   \begin{algorithmic}[1]
-    \Function{SSAPred}{$\theta$, $q$}
+    \Function{SSAPreda}{$\theta$, $q$}
     \Match{$q$}
       \Case{$\top$} \Return $\top$ \EndCase
-      \Case{$e' = e''$} 
-        \Return \Call{SSAExpr}{$\theta$, $e$} = \Call{SSAExpr}{$\theta$, $e'$}
+      \Case{$e' = e''$}
+        \Return \Call{SSAExpra}{$\theta$, $e$} = \Call{SSAExpra}{$\theta$, $e'$}
       \EndCase
-      \Case{$e' \equiv e'' \mod n$} 
-        \Return \Call{SSAExpr}{$\theta$, $e$} $\equiv$ 
-                \Call{SSAExpr}{$\theta$, $e'$} $\mod n$
+      \Case{$e' \equiv e'' \mod n$}
+        \Return \Call{SSAExpra}{$\theta$, $e$} $\equiv$
+                \Call{SSAExpra}{$\theta$, $e'$} $\mod n$
       \EndCase
       \Case{$q' \wedge q''$}
-        \Return \Call{SSAPred}{$\theta$, $q'$} $\wedge$
-                \Call{SSAPred}{$\theta$, $q''$}
+        \Return \Call{SSAPreda}{$\theta$, $q'$} $\wedge$
+                \Call{SSAPreda}{$\theta$, $q''$}
       \EndCase
     \EndMatch
     \EndFunction
   \end{algorithmic}
-  \caption{Static Single Assignment Transformation for Predicates}
+  \caption{Static Single Assignment Transformation for Algebraic Predicates}
   \label{algorithm:ssa-predicates}
 \end{algorithm}
 }
 
+\begin{algorithm}
+  \begin{algorithmic}[1]
+    \Function{SSAAtom}{$\theta$, $a$}
+    \Match{$a$}
+      \Case{$b$}
+        \Return $b$
+      \EndCase
+      \Case{$v$}
+        \Return $v^{\theta(v)}$
+      \EndCase
+    \EndMatch
+    \EndFunction
+  \end{algorithmic}
+  \caption{Static Single Assignment Transformation for Atoms}
+  \label{algorithm:ssa-atoms}
+\end{algorithm}
+
 Statement transformation is slightly more complicated
-(Algorithm~\ref{algorithm:ssa-statements}). For 
-expressions on the right hand side, they are transformed by the given
-finite mapping $\theta$. The algorithm then updates $\theta$ and
-replaces assigned variables with their latest copies. 
+(Algorithm~\ref{algorithm:ssa-statements}). For
+atoms and variables on the right hand side, they are transformed by the given
+finite mapping $\theta$ (Algorithm~\ref{algorithm:ssa-atoms}).
+The algorithm of statement transformation then updates $\theta$ and
+replaces assigned variables with their latest copies.
 %In the algorithm, $\theta\mymapsto{v}{n}$ denotes updating the finite
-%mapping $\theta$ by abusing the notation. 
+%mapping $\theta$ by abusing the notation.
 
 \begin{algorithm}
   \begin{algorithmic}[1]
     \Function{SSAStmt}{$\theta$, $s$}
     \Match{$s$}
-      \Case{$v \leftarrow e$}
+      \Case{$v \leftarrow a$}
         \State{$\theta' \leftarrow \theta\mymapsto{v}{\theta(v) + 1}$}
-        \State{\Return $\langle \theta'$, 
-                $v^{\theta'(v)} \leftarrow$ \Call{SSAExpr}{$\theta$, $e$}$\rangle$}
+        \State{\Return $\langle \theta'$,
+                $v^{\theta'(v)} \leftarrow$ \Call{SSAAtom}{$\theta$, $a$}$\rangle$}
       \EndCase
-      \Case{$\concat{v_h}{v_l} \leftarrow \dslcode{Split}(e, n)$}
-        \State{$\theta_h \leftarrow \theta\mymapsto{v_h}{\theta(v_h) + 1}$}
-        \State{$\theta_l \leftarrow \theta_h\mymapsto{v_l}{\theta_h(v_l) + 1}$}
-        \State{\Return $\langle \theta_l$,
-                $\concat{v_h^{\theta_h(v_h)}}{v_l^{\theta_l(v_l)}} \leftarrow
-                \dslcode{Split}($\Call{SSAExpr}{$\theta$, $e$}$, n)
-                \rangle$
-              }
+      \Case{$v \leftarrow a_1 + a_2$}
+        \State{$\theta' \leftarrow \theta\mymapsto{v}{\theta(v) + 1}$}
+        \State{\Return $\langle \theta'$,
+                $v^{\theta'(v)} \leftarrow$ \Call{SSAAtom}{$\theta$, $a_1$} $+$ \Call{SSAAtom}{$\theta$, $a_2$}$\rangle$}
+      \EndCase
+      \Case{$c\ v \leftarrow a_1 + a_2$}
+        \State{$\theta' \leftarrow \theta\mymapsto{c}{\theta(c) + 1}$}
+        \State{$\theta'' \leftarrow \theta'\mymapsto{v}{\theta(v) + 1}$}
+        \State{\Return $\langle \theta''$,
+                $c^{\theta'(c)} \ v^{\theta''(v)} \leftarrow$ \Call{SSAAtom}{$\theta$, $a_1$} $+$ \Call{SSAAtom}{$\theta$, $a_2$}$\rangle$}
+      \EndCase
+      \Case{$v \leftarrow a_1 + a_2 + y$}
+        \State{$\theta' \leftarrow \theta\mymapsto{v}{\theta(v) + 1}$}
+        \State{\Return $\langle \theta'$,
+                $v^{\theta'(v)} \leftarrow$ \Call{SSAAtom}{$\theta$, $a_1$} $+$ \Call{SSAAtom}{$\theta$, $a_2$} $+$ $y^{\theta'(y)}$$\rangle$}
+      \EndCase
+      \Case{$c\ v \leftarrow a_1 + a_2 + y$}
+        \State{$\theta' \leftarrow \theta\mymapsto{c}{\theta(c) + 1}$}
+        \State{$\theta'' \leftarrow \theta'\mymapsto{v}{\theta(v) + 1}$}
+        \State{\Return $\langle \theta''$,
+                $c^{\theta'(c)} \ v^{\theta''(v)} \leftarrow$ \Call{SSAAtom}{$\theta$, $a_1$} $+$ \Call{SSAAtom}{$\theta$, $a_2$} $+$ $y^{\theta(y)}$$\rangle$}
+      \EndCase
+      \Case{$v \leftarrow a_1 - a_2$}
+        \State{$\theta' \leftarrow \theta\mymapsto{v}{\theta(v) + 1}$}
+        \State{\Return $\langle \theta'$,
+                $v^{\theta'(v)} \leftarrow$ \Call{SSAAtom}{$\theta$, $a_1$} $-$ \Call{SSAAtom}{$\theta$, $a_2$}$\rangle$}
+      \EndCase
+      \Case{$v \leftarrow a_1 \times a_2$}
+        \State{$\theta' \leftarrow \theta\mymapsto{v}{\theta(v) + 1}$}
+        \State{\Return $\langle \theta'$,
+                $v^{\theta'(v)} \leftarrow$ \Call{SSAAtom}{$\theta$, $a_1$} $\times$ \Call{SSAAtom}{$\theta$, $a_2$}$\rangle$}
+      \EndCase
+      \Case{$h\ l \leftarrow a_1 \times a_2$}
+        \State{$\theta' \leftarrow \theta\mymapsto{h}{\theta(h) + 1}$}
+        \State{$\theta'' \leftarrow \theta'\mymapsto{l}{\theta(l) + 1}$}
+        \State{\Return $\langle \theta''$,
+                $h^{\theta'(h)} \ l^{\theta''(l)} \leftarrow$ \Call{SSAAtom}{$\theta$, $a_1$} $\times$ \Call{SSAAtom}{$\theta$, $a_2$}$\rangle$}
+      \EndCase
+      \Case{$v \leftarrow a << n$}
+        \State{$\theta' \leftarrow \theta\mymapsto{v}{\theta(v) + 1}$}
+        \State{\Return $\langle \theta'$,
+                $v^{\theta'(v)} \leftarrow$ \Call{SSAAtom}{$\theta$, $a$} $<<$ $n$$\rangle$}
+      \EndCase
+      \Case{$h\ l \leftarrow a@n$}
+        \State{$\theta' \leftarrow \theta\mymapsto{h}{\theta(h) + 1}$}
+        \State{$\theta'' \leftarrow \theta'\mymapsto{l}{\theta(l) + 1}$}
+        \State{\Return $\langle \theta''$,
+                $h^{\theta'(h)} \ l^{\theta''(l)} \leftarrow$ \Call{SSAAtom}{$\theta$, $a$} $@$ $n$$\rangle$}
+      \EndCase
+      \Case{$h\ l \leftarrow (a_1.a_2)@n$}
+        \State{$\theta' \leftarrow \theta\mymapsto{h}{\theta(h) + 1}$}
+        \State{$\theta'' \leftarrow \theta'\mymapsto{l}{\theta(l) + 1}$}
+        \State{\Return $\langle \theta''$,
+                $h^{\theta'(h)} \ l^{\theta''(l)} \leftarrow$ (\Call{SSAAtom}{$\theta$, $a_1$} $.$ \Call{SSAAtom}{$\theta$, $a_2$}) $@$ $n$$\rangle$}
       \EndCase
     \EndMatch
     \EndFunction
@@ -109,10 +178,10 @@ replaces assigned variables with their latest copies.
 
 It is straightforward to transform programs to static single
 assignment form (Algorithm~\ref{algorithm:ssa-programs}). Using the
-initial mapping from variables to $0$, 
+initial mapping from variables to $0$,
 the algorithm starts from the first statement and obtains an
 updated mapping with the statement in static single assignment form. It
-continues to transform the next statement with the updated mapping. 
+continues to transform the next statement with the updated mapping.
 
 \begin{algorithm}
   \begin{algorithmic}[1]
@@ -122,9 +191,9 @@ continues to transform the next statement with the updated mapping.
         \Return $\langle \theta,$ $\epsilon \rangle$
       \EndCase
       \Case{$s; pp$}
-        \State{$\langle \theta'$, $s' \rangle$ $\leftarrow$ 
+        \State{$\langle \theta'$, $s' \rangle$ $\leftarrow$
                  \Call{SSAStmt}{$\theta$, $s$}}
-        \State{$\langle \theta''$, $pp'' \rangle$ $\leftarrow$ 
+        \State{$\langle \theta''$, $pp'' \rangle$ $\leftarrow$
                  \Call{SSAProg}{$\theta'$, $pp$}}
         \State{\Return $\langle \theta''$, $s'; pp'' \rangle$}
       \EndCase
@@ -141,7 +210,7 @@ algorithms are formally proven in \coq. We first show that
 Algorithm~\ref{algorithm:ssa-programs} preserves well-formedness and
 produces a program in static single assignment form.
 \begin{lemma}
-  Let $\theta_0(v) = 0$ for every $v \in \Var$ and $p \in \Prog$ a
+  Let $\theta_0(v) = 0$ for every $v \in \Var$ and $p \in \bvProg$ a
   well-formed program. If
   $\langle \hat{\theta}, \hat{p} \rangle$ $=
   \textsc{SSAProg}(\theta_0, p)$, then
@@ -150,11 +219,11 @@ produces a program in static single assignment form.
 \end{lemma}
 
 The next theorem shows that our transformation is both sound and
-complete. That is, an algebraic specification is valid if and only if its
+complete. That is, a specification is valid if and only if its
 corresponding specification in static single assignment form is valid.
 \begin{theorem}
-  Let $\theta_0(v) = 0$ for every $v \in \Var$. For every $q, q' \in \Pred$
-  and $p \in \Prog$,
+  Let $\theta_0(v) = 0$ for every $v \in \Var$. For every $q, q' \in \bvPred$
+  and $p \in \bvProg$,
   \begin{center}
     $\models \hoaretriple{q}{p}{q'}$ if and only if
     $\models \hoaretriple{\textsc{SSAPred}(\theta_0, q)}
@@ -166,7 +235,7 @@ corresponding specification in static single assignment form is valid.
   \label{theorem:ssa}
 \end{theorem}
 
-\begin{figure}
+\begin{figure*}
   \centering
   \[
   \begin{array}{lclcl}
@@ -179,16 +248,16 @@ corresponding specification in static single assignment form is valid.
     \end{array}
     &\hspace{.05\textwidth}&
     \begin{array}{rcl}
-    \textmd{6:} && 
-      {r}^2_0 \leftarrow {r}^1_0 + {4503599627370458}; \\
+    \textmd{6:} &&
+      {r}^2_0 \leftarrow {r}^1_0 + {0xFFFFFFFFFFFDA}; \\
     \textmd{7:} &&
-      {r}^2_1 \leftarrow {r}^1_1 + {4503599627370494}; \\
+      {r}^2_1 \leftarrow {r}^1_1 + {0xFFFFFFFFFFFFE}; \\
     \textmd{8:} &&
-      {r}^2_2 \leftarrow {r}^1_2 + {4503599627370494}; \\
+      {r}^2_2 \leftarrow {r}^1_2 + {0xFFFFFFFFFFFFE}; \\
     \textmd{9:} &&
-      {r}^2_3 \leftarrow {r}^1_3 + {4503599627370494}; \\
-    \textmd{10:} && 
-      {r}^2_4 \leftarrow {r}^1_4 + {4503599627370494};\\
+      {r}^2_3 \leftarrow {r}^1_3 + {0xFFFFFFFFFFFFE}; \\
+    \textmd{10:} &&
+      {r}^2_4 \leftarrow {r}^1_4 + {0xFFFFFFFFFFFFE};\\
     \end{array}
     &\hspace{.05\textwidth}&
     \begin{array}{rcl}
@@ -205,7 +274,7 @@ corresponding specification in static single assignment form is valid.
 % \dslcode{x}_4, \dslcode{y}_0, \dslcode{y}_1, \dslcode{y}_2,
 % \dslcode{y}_3, \dslcode{y}_4)$
   \label{figure:translation:subtraction-ssa}
-\end{figure}
+\end{figure*}
 
 \noindent
 \emph{Example.}
@@ -214,23 +283,18 @@ Figure~\ref{figure:translation:subtraction-ssa} gives the subtraction program
 index of a variable is incremented when the variable is assigned to an
 expression. After the static single assignment translation, the
 variables ${x}_i$'s, ${y}_i$'s are indexed by $0$ and
-${r}_i$'s are indexed by $3$ for $0 \leq i \leq 4$. 
+${r}_i$'s are indexed by $3$ for $0 \leq i \leq 4$.
 Subsequently, variables in pre- and post-conditions of the algebraic
-specification for subtraction needs to be indexed. The
-corresponding algebraic specification is as follows.
+specification for subtraction needs to be indexed.
+Let $\hat{q_a}$ $\defn$ $\top$, $\hat{q_r}$ $\defn$ $0$ $\leq$ ${x}^0_0,$ ${x}^0_1,$ ${x}^0_2,$ ${x}^0_3,$ ${x}^0_4,$ ${y}^0_0,$ ${y}^0_1,$ ${y}^0_2,$ ${y}^0_3,$ ${y}^0_4$ $\leq$ $\bv^{64}(2^{51} +_\bbfZ 2^{15})$, $\hat{q_a'}$ $\defn$ $\mathit{radix51}({x}^0_4, {x}^0_3, {x}^0_2, {x}^0_1, {x}^0_0)$ $-$ $\mathit{radix51}({y}^0_4, {y}^0_3, {y}^0_2, {y}^0_1, {y}^0_0)$ $\equiv$ $\mathit{radix51}({r}^3_4, {r}^3_3, {r}^3_2, {r}^3_1, {r}^3_0)$ $\mod$ $\myprime$, and $q_r'$ $\defn$ $0$ $\leq$ ${r}^3_0,$ ${r}^3_1,$ ${r}^3_2,$ ${r}^3_3,$ ${r}^3_4$ $<$ $\bv^{64}(2^{54})$.
+The corresponding specification in static single assignment form is then $\cond{\hat{q_a} \wedge \hat{q_r}} \dslcode{subSSA} \cond{\hat{q_a'} \wedge \hat{q_r'}}$.
+
+\hide{
 \[
 \begin{array}{rcl}
-\cond{\top} &
+\cond{\hat{q_a} \wedge \hat{q_r}} &
 \dslcode{subSSA} &
-\cond{
-   \begin{array}{c}
-     \mathit{radix51}({x}^0_4, {x}^0_3, {x}^0_2, {x}^0_1, {x}^0_0) -
-     \mathit{radix51}({y}^0_4, {y}^0_3, {y}^0_2, {y}^0_1, {y}^0_0) \\
-     \equiv
-     \mathit{radix51}({r}^3_4, {r}^3_3, {r}^3_2, {r}^3_1, {r}^3_0)
-     \mod \myprime
-   \end{array}
-}.
+\cond{\hat{q_a'} \wedge \hat{q_r'}}.
 \end{array}
 \]
-
+}
