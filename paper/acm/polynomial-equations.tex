@@ -1,21 +1,21 @@
 
-The last step transforms any algebraic program specification to the 
+The last step transforms any algebraic program specification in \zdsl to the
 modular polynomial equation entailment problem. For
-$q \in \Pred$, we write $q(\vx)$ to signify the free variables $\vx$
-occurred in $q$. Given $q(\vx), q'(\vx) \in \Pred$, the \emph{modular
-  polynomial equation entailment} problem decides whether 
-$q(\vx) \implies q'(\vx)$ holds when $\vx$ are substituted for
-arbitrary integers. That is, we want to check if $q(\vx) \implies
-q'(\vx)$ evaluates to $\btt$ after each variable $x$ is replaced by
-$\nu(x)$ for every valuation $\nu \in \St$. We write $\bbfZ \models
-\forall \vx. q(\vx) \implies q'(\vx)$ if it is indeed the case.
+$q_a \in \bvPreda$, we write $q_a(\vx)$ to signify the free variables $\vx$
+occurred in $q_a$. Given $q_a(\vx), q_a'(\vx) \in \bvPreda$, the \emph{modular
+  polynomial equation entailment} problem decides whether
+$q_a(\vx) \implies q_a'(\vx)$ holds when $\vx$ are substituted for
+arbitrary integers. That is, we want to check if $q_a(\vx) \implies
+q_a'(\vx)$ evaluates to $\btt$ after each variable $x$ is replaced by
+$\zst(x)$ for every valuation $\zst \in \zSt$. We write $\bbfZ \models
+\forall \vx. q_a(\vx) \implies q_a'(\vx)$ if it is indeed the case.
 
 Programs in static single assignment form can easily be transformed to
 conjunctions of polynomial equations. An assignment statement is
 translated to a polynomial equation with a variable on the left hand side.
 A $\dslcode{Split}$ statement is transformed to an
 equation with a linear expression of the assigned variables on the
-left hand side (Algorithm~\ref{algorithm:polynomial-statements}). 
+left hand side (Algorithm~\ref{algorithm:polynomial-statements}).
 \begin{algorithm}
   \begin{algorithmic}[1]
     \Function{StmtToPolyEQ}{$s$}
@@ -24,7 +24,7 @@ left hand side (Algorithm~\ref{algorithm:polynomial-statements}).
         \Return $v = e$
       \EndCase
       \Case{$\concat{v_h}{v_l} \leftarrow \dslcode{Split}(e, n)$}
-        \Return $v_l + 2^n v_h = e$
+        \Return $v_l + v_h \times \dslcode{Pow}(2, n) = e$
       \EndCase
     \EndMatch
     \EndFunction
@@ -35,7 +35,7 @@ left hand side (Algorithm~\ref{algorithm:polynomial-statements}).
 
 A program in static single assignment form is transformed to the
 conjunction of polynomial equations corresponding to its statements
-(Algorithm~\ref{algorithm:polynomial-programs}). 
+(Algorithm~\ref{algorithm:polynomial-programs}).
 
 \begin{algorithm}
   \begin{algorithmic}[1]
@@ -54,18 +54,18 @@ conjunction of polynomial equations corresponding to its statements
 \end{algorithm}
 
 Algorithm~\ref{algorithm:polynomial-statements}
-and~\ref{algorithm:polynomial-programs} are specified straightforwardly 
+and~\ref{algorithm:polynomial-programs} are specified straightforwardly
 in \gallina. We use the proof assistant \coq to prove properties
 about the algorithms. Note that $\textsc{ProgToPolyEQ}(p) \in
-\Pred$ for every $p \in \Prog$. The following theorem shows that any
+\bvPreda$ for every $p \in \zProg$. The following theorem shows that any
 behavior of the program $p$ is a solution to the system of polynomial
 equations $\textsc{ProgToPolyEQ}(p)$. In other words,
 $\textsc{ProgToPolyEQ}(p)$ gives an abstraction of the program $p$.
 
 \begin{theorem}
-  Let $p \in \Prog$ be a well-formed program in static single assignment
-  form. For every $\nu, \nu' \in \St$ with $\nu \goesto{p} \nu'$, 
-  we have $\bbfZ \models \textsc{ProgToPolyEQ}(p) [\nu']$.
+  Let $p \in \zProg$ be a well-formed program in static single assignment
+  form. For every $\zst, \zst' \in \zSt$ with $\zst \goesto{p} \zst'$,
+  we have $\bbfZ \models \textsc{ProgToPolyEQ}(p) [\zst']$.
 \end{theorem}
 
 Definition~\ref{definition:program-entailment} gives the modular

@@ -153,7 +153,7 @@ Given $q, q' \in \bvPred$ and $p \in \zProg$, $\hoaretriple{q}{p}{q'}$ is valid 
 }
 
 Now we are ready to describe the transformation from an algebraic specification in \bvdsl to a specification in \zdsl.
-Given a program $p$ in \bvdsl, with the help of the function \textsc{BV2ZStmt} (Algorithm~\ref{algorithm:bv2z-stmt}), the function \textsc{BV2ZProg} (Algorithm~\ref{algorithm:bv2z-prog}) transforms $p$ to a program in \zdsl such that the following soundness theorem holds.
+Given a program $p$ in \bvdsl and in static single assignment form, with the help of the function \textsc{BV2ZStmt} (Algorithm~\ref{algorithm:bv2z-stmt}), the function \textsc{BV2ZProg} (Algorithm~\ref{algorithm:bv2z-prog}) transforms $p$ to a program in \zdsl such that the following soundness theorem holds.
 \begin{theorem}
   For every $q_a, q_a' \in \bvPreda$, $q_r, q_r' \in \bvPredr$, and $p \in \bvProg$, $\models \hoaretriple{q_a \wedge q_r}{p}{q_a' \wedge q_r'}$ if all the following conditions hold.
   \begin{itemize}
@@ -224,6 +224,12 @@ Note that the inverse implication of Theorem~\ref{theorem:bv2z} does not hold be
   \caption{Transformation from $\bvProg$ to $\zProg$}
   \label{algorithm:bv2z-prog}
 \end{algorithm}
+
+The function \textsc{BV2ZProg} preserves well-formedness and static single assignment form. This is showed by the following lemma.
+
+\begin{lemma}
+Given a well-formed program $p \in \bvProg$ in static single assignment form, $\textsc{BV2ZProg}(p) \in \zProg$ is well-formed and in static single assignment form.
+\end{lemma}
 
 The example program \dslcode{subSSA} only contains statements involving addition and subtraction and thus \textsc{BV2ZProg}(\dslcode{subSSA}) looks exactly the same as \dslcode{subSSA}.
 
