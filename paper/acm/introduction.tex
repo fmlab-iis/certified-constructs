@@ -5,14 +5,14 @@ cryptosystems must be realized by cryptographic programs where mathematical
 constructs are required to compute on the underlying algebraic
 structures of cryptosystems.
 Such mathematical constructs are frequently invoked in cryptographic
-programs. They are often written in low-level assembly languages and
+programs; they are often written in low-level assembly languages and
 manually optimized for efficiency. 
 % Cryptographic primitives in cryptosystems are but sequences of
 % algebraic operations on mathematical structures. 
 Security of cryptosystems could be compromised should programming
 errors in mathematical constructs be exploited by adversaries.
-Security guarantees of cryptographic programs
-thus depend heavily on the correctness of mathematical constructs.
+Subsequently, security guarantees of cryptographic programs
+depend heavily on the correctness of mathematical constructs.
 %It is therefore of utmost importance to ensure the correctness of
 %mathematical constructs used in cryptographic programs. 
 In order to build secure cryptosystems, we develop a certified
@@ -85,7 +85,7 @@ verified to ensure security guarantees offered by Curve25519.
 
 In this paper, we focus on algebraic properties about low-level
 implementations of mathematical constructs in cryptographic programs
-plus range properties about program outputs.
+as well as range properties about program outputs.
 Mathematical constructs by their nature perform computation on
 underlying algebraic structures. We aim to verify whether they perform
 intended algebraic computation correctly. To this end, we propose the
@@ -101,7 +101,12 @@ algebra system \singular to solve the algebraic problem~\cite{GP:08:SICA}.
 The proof assistant \coq is used to certify the
 correctness of translations, as well as solutions to algebraic
 problems computed by \singular~\cite{YC:2004:ITPPDC}.
-As range problems are hard to be solved automatically with proof assistants, the range problem and the absence of program overflows are verified by SMT (Satisfiability Modulo Theories) solvers without certified proof.
+As range problems are hard to be solved automatically with proof assistants, the range problem and the absence of program overflows are verified by SMT (Satisfiability Modulo Theories) solvers. 
+Correctness of the translation to SMT formulas is again certified by
+\coq. The results of SMT solvers however are not certified in our
+implementation. A fully certified integration of SMT solvers in \coq
+can be used to establish the missing in the future~\cite{EMT+:17:SPISS}.
+
 
 \begin{figure}
 \begin{tikzpicture}[
