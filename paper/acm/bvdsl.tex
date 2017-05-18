@@ -51,8 +51,6 @@ The domain specific language \bvdsl is designed based on the same
 principles. Conditional branches and indirect memory accesses are not
 admitted in \bvdsl.
 
-Assume a fixed wordsize $w$ divisible by $4$.
-We use $0xn$ to denote a bit-vector $n$ encoded in hexadecimal format.
 A program is a straight line of instructions over bit-vectors with bit-width $w$.
 \[
 \begin{array}{rcl}
@@ -89,19 +87,20 @@ Define the semantic function $\bvvalueof{\cdot}(\bvst)$ for variables and atomic
 \begin{array}{rcl}
 %\valueof{i}_{\bvst} & \defn & i \textmd{  for ${i} \in \Int$} \\
 %\valueof{b}_{\bvst} & \defn & b \textmd{  for ${b} \in \BV^w$} \\
-\bvvalueof{v}(\bvst) & \defn & \bvst(v) \textmd{  for ${v} \in \Var$} \\
+%\bvvalueof{v}(\bvst) & \defn & \bvst(v) \textmd{  for ${v} \in \Var$} \\
 \bvvalueof{a}(\bvst) & \defn & \left\{
   \begin{array}{ll}
-  \bvvalueof{v}(\bvst) & \textmd{if $a$ is a variable $v$} \\
+  \bvst(v) & \textmd{if $a$ is a variable $v$} \\
   b & \textmd{if $a$ is a bit-vector $b$} \\
   \end{array}
   \right. \\
 \end{array}
 \]
-Consider the transition relation $\bvTr \subseteq \bvSt \times \bvStmt \times \bvSt$ defined in Figure~\ref{fig:semantic-function-bvdsl}.
-Basically, $r \leftarrow a_1 + a_2$ is addition, $c\ r \leftarrow a_1 + a_2$ is addition with carry bit placed in $c$, $r \leftarrow a_1 + a_2 + v$ is addition of atomics plus a variable $v$, $c\ r \leftarrow a_1 + a_2 + v$ is addition of atomics plus a variable $v$ with carry bit placed in $c$, $r \leftarrow a_1 - a_2$ is subtraction, $r \leftarrow a_1 * a_2$ is multiplication, $h\ l \leftarrow a_1 * a_2$ is full multiplication, $r \leftarrow a << n$ is left-shifting, $h\ l \leftarrow a @ n$ is splitting at position $n$, and $h\ l \leftarrow (a_1 . a_2) << n$ is left-shifting of $n$ high bits from $a_2$ to $a_1$.
+Consider the transition relation $\bvTr \subseteq \bvSt \times \bvStmt \times \bvSt$ defined in Figure~\ref{fig:semantic-function-bvdsl} where
+$\bvst \goesto{s} \bvst'$ denotes $(\bvst, s, \bvst') \in \bvTr$
+for $\bvst, \bvst' \in \bvSt$ and $s \in \bvStmt$.
+Basically, $r \leftarrow a_1 + a_2$ is addition, $c\ r \leftarrow a_1 + a_2$ is addition with carry bit placed in $c$, $r \leftarrow a_1 + a_2 + v$ is addition of atoms plus a variable $v$, $c\ r \leftarrow a_1 + a_2 + v$ is addition of atoms plus a variable $v$ with carry bit placed in $c$, $r \leftarrow a_1 - a_2$ is subtraction, $r \leftarrow a_1 * a_2$ is multiplication, $h\ l \leftarrow a_1 * a_2$ is full multiplication, $r \leftarrow a << n$ is left-shifting, $h\ l \leftarrow a @ n$ is splitting at position $n$, and $h\ l \leftarrow (a_1 . a_2) << n$ is left-shifting of $n$ high bits from $a_2$ to $a_1$.
 The variable $v$ in $r \leftarrow a_1 + a_2 + v$ and $c\ r \leftarrow a_1 + a_2 + v$ is intended but not restricted to be carry bits.
-For $\bvst, \bvst' \in \bvSt$ and $s \in \bvStmt$, we write $\bvst \goesto{s} \bvst'$ when $(\bvst, s, \bvst') \in \bvTr$.
 
 \begin{figure*}
 \[
@@ -169,7 +168,7 @@ For an algebraic predicate $q_a \in \bvPreda$, we write $\BV^w \models q_a[\bvst
 %  \item $q$ is $q_1 \wedge q_2$, $\BV^w \models q_1$, and $\BV^w \models q_2$.
 %\end{itemize}
 
-We admit comparison between atoms in range specifications as atomic range predicates\footnote{In our implementation, comparison between bit-vector expressions is allowed.}.
+We admit comparison between atoms in range specifications as atomic range predicates\footnote{In our implementation, comparison between bit-vector expressions is allowed, not only between atoms.}.
 A \emph{range predicate} $q_r \in \bvPredr$ is a conjunction of atomic range predicates.
 \[
 \begin{array}{rcl}
