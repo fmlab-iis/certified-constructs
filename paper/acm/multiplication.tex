@@ -69,12 +69,17 @@ $\bbfF$.
 
 In our experiment, we took real-world efficient and secure
 low-level implementations of arithmetic computation over
-$\bbfGF(\varrho)$ from~\cite{BDL+:11:HSHSS,BDL+:12:HSHSS}, 
+$\bbfGF(\varrho)$ from~\cite{BDL+:11:HSHSS,BDL+:12:HSHSS},
 manually translated source
-codes to our domain specific language, specified their algebraic
-properties, and performed certified verification with our technique. 
+codes to our domain specific language, specified their algebraic and range
+properties, and performed certified verification with our technique.
 Table~\ref{table:arithmetic-operations} summarizes the results
 without and with applying the two heuristics in Section~\ref{section:solving-algebraic-equations}.
+The column ``overflow'' shows the time used by \boolector to verify if the input program overflows.
+The column ``range'' shows the time used by \boolector to verify the range specification of the input program.
+The columns ``algebraic'' show the time used by \singular to verify the algebraic specification of the input program.
+The columns ``total'' show the total verification time including overflow check, verification of range and algebraic specifications, rewriting, proof certification, etc.
+The columns ``without heuristics'' and ``with heuristics'' respectively show the time information without and with the two heuristics.
 The results show that without the two heuristics, multiplication and square
 cannot be verified because the computation of Gr\"obner bases was killed by the OS
 after running for days.
@@ -82,43 +87,42 @@ With the heuristics, all the implementations can be verified in seconds.
 
 
 
-\begin{table}[ht]
+\begin{table*}[ht]
   \caption{Certified Verification of Arithmetic Operations over
     $\bbfGF(\varrho)$}
   \centering
-  \begin{tabular}{|c|c|c|c|c|c|}
+  \begin{tabular}{|c|c|c|c|c|c|c|c|c|}
     \hline
-    \multirow{2}{*}{} & \multirow{2}{*}{number of lines} & \multicolumn{3}{|c|}{time (seconds)} & \multirow{2}{*}{remark} \\ \cline{3-5}
-    & & without & with & range & \\
+    \multirow{3}{*}{} & \multirow{3}{*}{number of lines} & \multicolumn{6}{|c|}{time (seconds)} & \multirow{3}{*}{remark} \\ \cline{3-8}
+    & & \multirow{2}{*}{overflow} & \multirow{2}{*}{range} & \multicolumn{2}{|c|}{without heuristics} & \multicolumn{2}{|c|}{with heuristics} & \\ \cline{5-8}
+    & & & & algebraic & total & algebraic & total & \\
     \hline
-    addition                 & 10  & 45.40  & 3.24   & 0.49   & $a \Fplus b$ \\
+    addition                 & 10  & 0.162 & 0.249 & 30.545 & 41.55 & 0.401 & 4.14 & $a \Fplus b$ \\
     \hline
-    subtraction              & 15  & 52.18  & 3.65   & 0.83   & $a \Fminus b$ \\
+    subtraction              & 15  & 0.140 & 0.389 & 35.646 & 48.47 & 0.208 & 4.93 & $a \Fminus b$ \\
     \hline
-    multiplication           & 169 & -      & 24.98  & 19.82 & $a \Ftimes b$\\
+    multiplication           & 144 & 3.904 & 41.070 & - & - & 2.312 & 81.93 & $a \Ftimes b$\\
     \hline
-    multiplication by 121666 & 21  & 110.39 & 3.87   & 0.62   & $121666 \Ftimes a$\\
+    multiplication by 121666 & 26  & 0.266 & 0.852 & 1112.311 & 1125.41 & 0.315 & 7.70 & $121666 \Ftimes a$\\
     \hline
-    square                   & 124 & -      & 13.08  & 14.33 & $a \Ftimes a$\\
+    square                   & 109 & 3.722 & 19.905  & - & - & 1.087 & 47.44 & $a \Ftimes a$\\
     \hline
   \end{tabular}
   \label{table:arithmetic-operations}
-\end{table}
+\end{table*}
 
 % {range check}
 
-We also perform range checks with the SMT solver \boolector on the
-five mathematical constructs in 
-Table~\ref{table:arithmetic-operations}~\cite{boolector}. The most complicated case
-(multiplication) takes 19.82 seconds.
+We also perform range checks and program overflow checks with the SMT solver \boolector on the
+five mathematical constructs with results shown in Table~\ref{table:arithmetic-operations}~\cite{boolector}. The most complicated case (multiplication) takes 19.82 seconds.
 % Compared to algebraic specifications, verification time for range
 % check is insignificant.
-Although our range check is not yet certified, low-level
+Although our range check and program overflow check are not yet certified, low-level
 mathematical constructs in X25519 are formally verified automatically.
 
-%%% Local Variables: 
+%%% Local Variables:
 %%% mode: latex
 %%% eval: (TeX-PDF-mode 1)
 %%% eval: (TeX-source-correlate-mode 1)
 %%% TeX-master: "certified_vcg"
-%%% End: 
+%%% End:
