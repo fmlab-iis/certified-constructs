@@ -96,12 +96,12 @@ triples~\cite{H:69:ABCP}.
 Such a specification is converted to static single
 assignment form and then translated into (1) an algebraic problem (called
 the modular polynomial equation entailment
-problem)~\cite{AWZ:88:DQVP,H:07:AENTP} via \zdsl with operations on $\bbfZ$, (2) a range problem, and (3) the absence of program overflows. We use the computer
+problem)~\cite{AWZ:88:DQVP,H:07:AENTP} via \zdsl with operations on $\bbfZ$, (2) a range problem, and (3) the absence of program overflows (and underflows). We use the computer
 algebra system \singular to solve the algebraic problem~\cite{GP:08:SICA}.
 The proof assistant \coq is used to certify the
 correctness of translations, as well as solutions to algebraic
 problems computed by \singular~\cite{YC:2004:ITPPDC}.
-As range problems are hard to be solved automatically with proof assistants, the range problem and the absence of program overflows are verified by SMT (Satisfiability Modulo Theories) solvers. 
+As range problems are hard to be solved automatically with proof assistants, the range problem and the absence of program overflows are verified by SMT (Satisfiability Modulo Theories) solvers.
 Correctness of the translation to SMT formulas is again certified by
 \coq. The results of SMT solvers however are not certified in our
 implementation. A fully certified integration of SMT solvers in \coq
@@ -127,17 +127,17 @@ align=center
 \node (c1) [coord] [left=of bvssa] {};
 \node (c2) [coord] [right=of range] {};
 \node (c3) [coord] [right=of overflow] {};
-\draw[->] (bvdsl) -- node [xshift=1.4cm] {to SSA (Sec. \ref{subsection:translation:static-single-assignment})} (bvssa);
-\draw[-] (bvssa.west) -- node [yshift=-0.7cm,xshift=1.6cm] {to \zdsl (Sec. \ref{subsection:domain-specific-language-zdsl})} (c1);
+\draw[->] (bvdsl) -- node [xshift=1.4cm] {to SSA (Sec.~\ref{subsection:translation:static-single-assignment})} (bvssa);
+\draw[-] (bvssa.west) -- node [yshift=-0.7cm,xshift=1.6cm] {to \zdsl (Sec.~\ref{subsection:domain-specific-language-zdsl})} (c1);
 \draw[->] (c1) |- node {} (zssa.west);
 \draw[->] (c1) |- node {} (range.west);
 \draw[->] (c1) |- node {} (overflow.west);
 \draw[->] (zssa) -- node  [xshift=1.8cm] {to entailment (Sec. \ref{subsection:translation:multivariant-polynomial-equations})} (poly);
-\draw[->] (poly) -- node  [xshift=1.4cm] {solved by (Sec. \ref{section:solving-algebraic-equations})} (singular);
+\draw[->] (poly) -- node  [xshift=1.4cm] {solved by (Sec.~\ref{subsection:solving-algebraic-equations})} (singular);
 \draw[-] (range.east) -- node {} (c2);
 \draw[-] (overflow.east) -- node {} (c3);
 \draw[->] (c2) |- node {} (smt.east);
-\draw[->] (c3) |- node [xshift=-1cm,yshift=0.5cm] {solved by} (smt.east);
+\draw[->] (c3) |- node [xshift=-1.4cm,yshift=0.5cm] {solved by (Sec.~\ref{subsection:solving-range-overflow-checks})} (smt.east);
 \end{tikzpicture}
 \caption{The verification flow. Except the answers from SMT solvers, all the translations and the answers from \singular are certified by \coq.}
 \label{fig:overview}
@@ -179,8 +179,7 @@ This paper is organized as follows. After preliminaries
 language is described in Section~\ref{section:domain-specific-language-bvdsl}.
 Section~\ref{section:translation}
 presents the translation to the algebraic
-problem. A certified solver for the algebraic problem is discussed in
-Section~\ref{section:solving-algebraic-equations}.
+problem. A certified translation from range and overflow checks to SMT formulas plus a certified solver for the algebraic problem are discussed in Section~\ref{section:verification-of-specifications}.
 Section~\ref{section:evaluation} contains experimental results. It is
 followed by conclusions.
 
