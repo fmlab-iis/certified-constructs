@@ -7,15 +7,16 @@ static single  assignment form for any $q, q' \in \bvPred$ and $p \in
 \bvProg$.
 To avoid ambiguity, we consider \emph{well-formed} programs where
 \begin{itemize}
-\item for every statement in the program with two lvalues such as $c\ v \leftarrow a_1 + a_2 + y$ with lvalues $c$ and $v$, $h\ l \leftarrow a_1 \times a_2$ with lvalues $h$ and $l$, etc, the two l-vals are not equal; and
+\item for every statement in the program with two lvalues such as $c\ v \leftarrow a_1 + a_2 + y$ with lvalues $c$ and $v$, $v_h\ v_l \leftarrow a_1 \times a_2$ with lvalues $v_h$ and $v_l$, etc, the two lvalues are not equal; and
 \item every non-input program variable must be assigned to a value
   before being used.
 \end{itemize}
 
 Our transformation maintains a finite mapping $\theta$ from variables to
 non-negative integers. For any variable $v$, $v^{\theta(v)}$ is
-the most recently assigned copy of $v$. Only the most recent copies of
-variables are referred in
+the most recently assigned copy of $v$.
+For any atom $a$, $a^{\theta}$ is $v^{\theta(v)}$ if $a$ is a variable $v$, and otherwise is $b$ if $a$ is a constant bit-vector $b$.
+Only the most recent copies of variables are referred in
 expressions. Algorithm~\ref{algorithm:ssa-expressions}
 transforms algebraic expressions with the finite mapping $\theta$ by
 structural induction. Integers are unchanged. For each variable, its
@@ -29,17 +30,14 @@ algebraic expressions are transformed recursively.
       \Case{$i$} \Return $i$ \EndCase
       \Case{$v$} \Return $v^{\theta(v)}$ \EndCase
       \Case{$-e'$} \Return $-$\Call{SSAExpra}{$\theta$, $e'$} \EndCase
-      \Case{$e' + e''$}
-        \Return \Call{SSAExpra}{$\theta$, $e'$} $+$
-                \Call{SSAExpra}{$\theta$, $e''$}
+      \Case{$e_1 + e_2$}
+        \State{\Return \Call{SSAExpra}{$\theta$, $e_1$} $+$ \Call{SSAExpra}{$\theta$, $e_2$}}
       \EndCase
-      \Case{$e' - e''$}
-        \Return \Call{SSAExpra}{$\theta$, $e'$} $-$
-                \Call{SSAExpra}{$\theta$, $e''$}
+      \Case{$e_1 - e_2$}
+        \State{\Return \Call{SSAExpra}{$\theta$, $e_1$} $-$ \Call{SSAExpra}{$\theta$, $e_2$}}
       \EndCase
-      \Case{$e' \times e''$}
-        \Return \Call{SSAExpra}{$\theta$, $e'$} $\times$
-                \Call{SSAExpra}{$\theta$, $e''$}
+      \Case{$e_1 \times e_2$}
+        \State{\Return \Call{SSAExpra}{$\theta$, $e_1$} $\times$ \Call{SSAExpra}{$\theta$, $e_2$}}
       \EndCase
     \EndMatch
     \EndFunction
@@ -52,7 +50,8 @@ Similarly, algebraic and range predicates must refer to most recent copies of
 variables. They are transformed according to the finite mapping
 $\theta$. Thanks to the formalization of finite mappings in \coq. Both
 algorithms are easily specified in \gallina.
-The function $\textsc{SSAPred}$ then transforms the algebraic part and the range part of a predicate $q \in \bvPred$ separatedly with the two algorithms.
+Let $\textsc{SSAPreda}$ and $\textsc{SSAPredr}$ denote the transformations for $\bvPreda$ and $\bvPredr$ respectively.
+The function $\textsc{SSAPred}$ then transforms the algebraic part and the range part of a predicate separatedly with $\textsc{SSAPreda}$ and $\textsc{SSAPredr}$, that is, given $q_a \in \bvPreda$, $q_r \in \bvPredr$, and a mapping $\theta$, $\textsc{SSAPred}(\theta, q_a \andar q_r)$ $\defn$ $\textsc{SSAPreda}(\theta, q_a) \andar \textsc{SSAPredr}(\theta, q_r)$.
 
 \hide{
 \begin{algorithm}
@@ -79,6 +78,7 @@ The function $\textsc{SSAPred}$ then transforms the algebraic part and the range
 \end{algorithm}
 }
 
+\hide{
 \begin{algorithm}
   \begin{algorithmic}[1]
     \Function{SSAAtom}{$\theta$, $a$}
@@ -95,6 +95,78 @@ The function $\textsc{SSAPred}$ then transforms the algebraic part and the range
   \caption{Static Single Assignment Transformation for Atoms}
   \label{algorithm:ssa-atoms}
 \end{algorithm}
+}
+
+\begin{algorithm}
+  \begin{algorithmic}[1]
+    \Function{SSAStmt}{$\theta$, $s$}
+    \Match{$s$}
+      \Case{$v \leftarrow a$}
+        \State{$\theta' \leftarrow \theta\mymapsto{v}{\theta(v) + 1}$}
+        \State{\Return $\langle \theta'$,
+                $v^{\theta'(v)} \leftarrow$ $a^\theta$$\rangle$}
+      \EndCase
+      \Case{$v \leftarrow a_1 + a_2$}
+        \State{$\theta' \leftarrow \theta\mymapsto{v}{\theta(v) + 1}$}
+        \State{\Return $\langle \theta'$,
+                $v^{\theta'(v)} \leftarrow$ $a_1^\theta$ $+$ $a_2^\theta$$\rangle$}
+      \EndCase
+      \Case{$c\ v \leftarrow a_1 + a_2$}
+        \State{$\theta' \leftarrow \theta\mymapsto{c}{\theta(c) + 1}$}
+        \State{$\theta'' \leftarrow \theta'\mymapsto{v}{\theta(v) + 1}$}
+        \State{\Return $\langle \theta''$,
+                $c^{\theta'(c)} \ v^{\theta''(v)} \leftarrow$ $a_1^\theta$ $+$ $a_2^\theta$$\rangle$}
+      \EndCase
+      \Case{$v \leftarrow a_1 + a_2 + y$}
+        \State{$\theta' \leftarrow \theta\mymapsto{v}{\theta(v) + 1}$}
+        \State{\Return $\langle \theta'$,
+                $v^{\theta'(v)} \leftarrow$ $a_1^\theta$ $+$ $a_2^\theta$ $+$ $y^{\theta'(y)}$$\rangle$}
+      \EndCase
+      \Case{$c\ v \leftarrow a_1 + a_2 + y$}
+        \State{$\theta' \leftarrow \theta\mymapsto{c}{\theta(c) + 1}$}
+        \State{$\theta'' \leftarrow \theta'\mymapsto{v}{\theta(v) + 1}$}
+        \State{\Return $\langle \theta''$,
+                $c^{\theta'(c)} \ v^{\theta''(v)} \leftarrow$ $a_1^\theta$ $+$ $a_2^\theta$ $+$ $y^{\theta(y)}$$\rangle$}
+      \EndCase
+      \Case{$v \leftarrow a_1 - a_2$}
+        \State{$\theta' \leftarrow \theta\mymapsto{v}{\theta(v) + 1}$}
+        \State{\Return $\langle \theta'$,
+                $v^{\theta'(v)} \leftarrow$ $a_1^\theta$ $-$ $a_2^\theta$$\rangle$}
+      \EndCase
+      \Case{$v \leftarrow a_1 \times a_2$}
+        \State{$\theta' \leftarrow \theta\mymapsto{v}{\theta(v) + 1}$}
+        \State{\Return $\langle \theta'$,
+                $v^{\theta'(v)} \leftarrow$ $a_1^\theta$ $\times$ $a_2^\theta$$\rangle$}
+      \EndCase
+      \Case{$v_h\ v_l \leftarrow a_1 \times a_2$}
+        \State{$\theta' \leftarrow \theta\mymapsto{h}{\theta(v_h) + 1}$}
+        \State{$\theta'' \leftarrow \theta'\mymapsto{l}{\theta(v_l) + 1}$}
+        \State{\Return $\langle \theta''$,
+                $v_h^{\theta'(v_h)} \ v_l^{\theta''(v_l)} \leftarrow$ $a_1^\theta$ $\times$ $a_2^\theta$$\rangle$}
+      \EndCase
+      \Case{$v \leftarrow a \ll n$}
+        \State{$\theta' \leftarrow \theta\mymapsto{v}{\theta(v) + 1}$}
+        \State{\Return $\langle \theta'$,
+                $v^{\theta'(v)} \leftarrow$ $a^\theta$ $\ll$ $n$$\rangle$}
+      \EndCase
+      \Case{$v_h\ v_l \leftarrow a@n$}
+        \State{$\theta' \leftarrow \theta\mymapsto{v_h}{\theta(v_h) + 1}$}
+        \State{$\theta'' \leftarrow \theta'\mymapsto{v_l}{\theta(v_l) + 1}$}
+        \State{\Return $\langle \theta''$,
+                $v_h^{\theta'(v_h)} \ v_l^{\theta''(v_l)} \leftarrow$ $a^\theta$ $@$ $n$$\rangle$}
+      \EndCase
+      \Case{$v_h\ v_l \leftarrow (a_1.a_2)@n$}
+        \State{$\theta' \leftarrow \theta\mymapsto{v_h}{\theta(v_h) + 1}$}
+        \State{$\theta'' \leftarrow \theta'\mymapsto{v_l}{\theta(v_l) + 1}$}
+        \State{\Return $\langle \theta''$,
+                $v_h^{\theta'(v_h)} \ v_l^{\theta''(v_l)} \leftarrow$ ($a_1^\theta$ $.$ $a_2^\theta$) $@$ $n$$\rangle$}
+      \EndCase
+    \EndMatch
+    \EndFunction
+  \end{algorithmic}
+  \caption{Static Single Assignment Transformation for Statements}
+  \label{algorithm:ssa-statements}
+\end{algorithm}
 
 Statement transformation is slightly more complicated
 (Algorithm~\ref{algorithm:ssa-statements}). For
@@ -104,77 +176,6 @@ The algorithm of statement transformation then updates $\theta$ and
 replaces assigned variables with their latest copies.
 %In the algorithm, $\theta\mymapsto{v}{n}$ denotes updating the finite
 %mapping $\theta$ by abusing the notation.
-
-\begin{algorithm}
-  \begin{algorithmic}[1]
-    \Function{SSAStmt}{$\theta$, $s$}
-    \Match{$s$}
-      \Case{$v \leftarrow a$}
-        \State{$\theta' \leftarrow \theta\mymapsto{v}{\theta(v) + 1}$}
-        \State{\Return $\langle \theta'$,
-                $v^{\theta'(v)} \leftarrow$ \Call{SSAAtom}{$\theta$, $a$}$\rangle$}
-      \EndCase
-      \Case{$v \leftarrow a_1 + a_2$}
-        \State{$\theta' \leftarrow \theta\mymapsto{v}{\theta(v) + 1}$}
-        \State{\Return $\langle \theta'$,
-                $v^{\theta'(v)} \leftarrow$ \Call{SSAAtom}{$\theta$, $a_1$} $+$ \Call{SSAAtom}{$\theta$, $a_2$}$\rangle$}
-      \EndCase
-      \Case{$c\ v \leftarrow a_1 + a_2$}
-        \State{$\theta' \leftarrow \theta\mymapsto{c}{\theta(c) + 1}$}
-        \State{$\theta'' \leftarrow \theta'\mymapsto{v}{\theta(v) + 1}$}
-        \State{\Return $\langle \theta''$,
-                $c^{\theta'(c)} \ v^{\theta''(v)} \leftarrow$ \Call{SSAAtom}{$\theta$, $a_1$} $+$ \Call{SSAAtom}{$\theta$, $a_2$}$\rangle$}
-      \EndCase
-      \Case{$v \leftarrow a_1 + a_2 + y$}
-        \State{$\theta' \leftarrow \theta\mymapsto{v}{\theta(v) + 1}$}
-        \State{\Return $\langle \theta'$,
-                $v^{\theta'(v)} \leftarrow$ \Call{SSAAtom}{$\theta$, $a_1$} $+$ \Call{SSAAtom}{$\theta$, $a_2$} $+$ $y^{\theta'(y)}$$\rangle$}
-      \EndCase
-      \Case{$c\ v \leftarrow a_1 + a_2 + y$}
-        \State{$\theta' \leftarrow \theta\mymapsto{c}{\theta(c) + 1}$}
-        \State{$\theta'' \leftarrow \theta'\mymapsto{v}{\theta(v) + 1}$}
-        \State{\Return $\langle \theta''$,
-                $c^{\theta'(c)} \ v^{\theta''(v)} \leftarrow$ \Call{SSAAtom}{$\theta$, $a_1$} $+$ \Call{SSAAtom}{$\theta$, $a_2$} $+$ $y^{\theta(y)}$$\rangle$}
-      \EndCase
-      \Case{$v \leftarrow a_1 - a_2$}
-        \State{$\theta' \leftarrow \theta\mymapsto{v}{\theta(v) + 1}$}
-        \State{\Return $\langle \theta'$,
-                $v^{\theta'(v)} \leftarrow$ \Call{SSAAtom}{$\theta$, $a_1$} $-$ \Call{SSAAtom}{$\theta$, $a_2$}$\rangle$}
-      \EndCase
-      \Case{$v \leftarrow a_1 \times a_2$}
-        \State{$\theta' \leftarrow \theta\mymapsto{v}{\theta(v) + 1}$}
-        \State{\Return $\langle \theta'$,
-                $v^{\theta'(v)} \leftarrow$ \Call{SSAAtom}{$\theta$, $a_1$} $\times$ \Call{SSAAtom}{$\theta$, $a_2$}$\rangle$}
-      \EndCase
-      \Case{$h\ l \leftarrow a_1 \times a_2$}
-        \State{$\theta' \leftarrow \theta\mymapsto{h}{\theta(h) + 1}$}
-        \State{$\theta'' \leftarrow \theta'\mymapsto{l}{\theta(l) + 1}$}
-        \State{\Return $\langle \theta''$,
-                $h^{\theta'(h)} \ l^{\theta''(l)} \leftarrow$ \Call{SSAAtom}{$\theta$, $a_1$} $\times$ \Call{SSAAtom}{$\theta$, $a_2$}$\rangle$}
-      \EndCase
-      \Case{$v \leftarrow a << n$}
-        \State{$\theta' \leftarrow \theta\mymapsto{v}{\theta(v) + 1}$}
-        \State{\Return $\langle \theta'$,
-                $v^{\theta'(v)} \leftarrow$ \Call{SSAAtom}{$\theta$, $a$} $<<$ $n$$\rangle$}
-      \EndCase
-      \Case{$h\ l \leftarrow a@n$}
-        \State{$\theta' \leftarrow \theta\mymapsto{h}{\theta(h) + 1}$}
-        \State{$\theta'' \leftarrow \theta'\mymapsto{l}{\theta(l) + 1}$}
-        \State{\Return $\langle \theta''$,
-                $h^{\theta'(h)} \ l^{\theta''(l)} \leftarrow$ \Call{SSAAtom}{$\theta$, $a$} $@$ $n$$\rangle$}
-      \EndCase
-      \Case{$h\ l \leftarrow (a_1.a_2)@n$}
-        \State{$\theta' \leftarrow \theta\mymapsto{h}{\theta(h) + 1}$}
-        \State{$\theta'' \leftarrow \theta'\mymapsto{l}{\theta(l) + 1}$}
-        \State{\Return $\langle \theta''$,
-                $h^{\theta'(h)} \ l^{\theta''(l)} \leftarrow$ (\Call{SSAAtom}{$\theta$, $a_1$} $.$ \Call{SSAAtom}{$\theta$, $a_2$}) $@$ $n$$\rangle$}
-      \EndCase
-    \EndMatch
-    \EndFunction
-  \end{algorithmic}
-  \caption{Static Single Assignment Transformation for Statements}
-  \label{algorithm:ssa-statements}
-\end{algorithm}
 
 It is straightforward to transform programs to static single
 assignment form (Algorithm~\ref{algorithm:ssa-programs}). Using the
@@ -269,7 +270,7 @@ corresponding specification in static single assignment form is valid.
     \end{array}
   \end{array}
   \]
-  \caption{Subtraction \dslcode{subSSA} in Static Single Assignment Form}
+  \caption{Subtraction \dslcode{bSubSSA} in Static Single Assignment Form}
 % $(\dslcode{x}_0, \dslcode{x}_1, \dslcode{x}_2, \dslcode{x}_3,
 % \dslcode{x}_4, \dslcode{y}_0, \dslcode{y}_1, \dslcode{y}_2,
 % \dslcode{y}_3, \dslcode{y}_4)$
@@ -279,21 +280,24 @@ corresponding specification in static single assignment form is valid.
 \noindent
 \emph{Example.}
 Figure~\ref{figure:translation:subtraction-ssa} gives the subtraction program
-\dslcode{sub} in static single assignment form. Starting from $0$, the
+\dslcode{bSub} in static single assignment form. Starting from $0$, the
 index of a variable is incremented when the variable is assigned to an
 expression. After the static single assignment translation, the
 variables ${x}_i$'s, ${y}_i$'s are indexed by $0$ and
 ${r}_i$'s are indexed by $3$ for $0 \leq i \leq 4$.
-Subsequently, variables in pre- and post-conditions of the algebraic
+Subsequently, variables in pre- and post-conditions of the
 specification for subtraction needs to be indexed.
-Let $\hat{q_a}$ $\defn$ $\top$, $\hat{q_r}$ $\defn$ $0$ $\leq$ ${x}^0_0,$ ${x}^0_1,$ ${x}^0_2,$ ${x}^0_3,$ ${x}^0_4,$ ${y}^0_0,$ ${y}^0_1,$ ${y}^0_2,$ ${y}^0_3,$ ${y}^0_4$ $\leq$ $\bv^{64}(2^{51} +_\bbfZ 2^{15})$, $\hat{q_a'}$ $\defn$ $\mathit{radix51}({x}^0_4, {x}^0_3, {x}^0_2, {x}^0_1, {x}^0_0)$ $-$ $\mathit{radix51}({y}^0_4, {y}^0_3, {y}^0_2, {y}^0_1, {y}^0_0)$ $\equiv$ $\mathit{radix51}({r}^3_4, {r}^3_3, {r}^3_2, {r}^3_1, {r}^3_0)$ $\mod$ $\myprime$, and $q_r'$ $\defn$ $0$ $\leq$ ${r}^3_0,$ ${r}^3_1,$ ${r}^3_2,$ ${r}^3_3,$ ${r}^3_4$ $<$ $\bv^{64}(2^{54})$.
-The corresponding specification in static single assignment form is then $\cond{\hat{q_a} \wedge \hat{q_r}} \dslcode{subSSA} \cond{\hat{q_a'} \wedge \hat{q_r'}}$.
+Let $\hat{q_a}$ $\defn$ $\top$, $\hat{q_r}$ $\defn$ $0$ $\leq$ ${x}^0_0,$ ${x}^0_1,$ ${x}^0_2,$ ${x}^0_3,$ ${x}^0_4,$ ${y}^0_0,$ ${y}^0_1,$ ${y}^0_2,$ ${y}^0_3,$ ${y}^0_4$ $\leq$ $\bv^{64}(2^{51} +_\bbfZ 2^{15})$, $\hat{q_a'}$ $\defn$ $\mathit{radix51}_\BV({x}^0_4, {x}^0_3, {x}^0_2, {x}^0_1, {x}^0_0)$ $-$ $\mathit{radix51}_\BV({y}^0_4, {y}^0_3, {y}^0_2, {y}^0_1, {y}^0_0)$ $\equiv$ $\mathit{radix51}_\BV({r}^3_4, {r}^3_3, {r}^3_2, {r}^3_1, {r}^3_0)$ $\mod$ $\myprime$, and $q_r'$ $\defn$ $0$ $\leq$ ${r}^3_0,$ ${r}^3_1,$ ${r}^3_2,$ ${r}^3_3,$ ${r}^3_4$ $<$ $\bv^{64}(2^{54})$.
+The corresponding specification of in static single assignment form is then
+\[
+\cond{\hat{q_a} \wedge \hat{q_r}} \dslcode{bSubSSA} \cond{\hat{q_a'} \wedge \hat{q_r'}}.
+\]
 
 \hide{
 \[
 \begin{array}{rcl}
 \cond{\hat{q_a} \wedge \hat{q_r}} &
-\dslcode{subSSA} &
+\dslcode{bSubSSA} &
 \cond{\hat{q_a'} \wedge \hat{q_r'}}.
 \end{array}
 \]

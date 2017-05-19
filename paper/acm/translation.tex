@@ -1,6 +1,6 @@
 
-Given $q_a, q_a' \in \bvPreda$, $q_r, q_r' \in \bvPredr$, and $p \in \bvProg$, we reduce the problem of checking $\models \hoaretriple{q_a \wedge q_r}{p}{q_a' \wedge q_r'}$ to (1) the entailment problem of modular
-polynomial equations over integer variables proving $\models \hoaretriple{q_a}{p}{q_a'}$ via \zdsl, (2) a range problem $\models \hoaretriple{q_r}{p}{q_r'}$, and (3) overflow checking of program $p$.
+Given $q_a, q_a' \in \bvPreda$, $q_r, q_r' \in \bvPredr$, and $p \in \bvProg$, we reduce the problem of checking $\models \hoaretriple{q_a \andar q_r}{p}{q_a' \andar q_r'}$ to (1) the entailment problem of modular
+polynomial equations over integer variables proving $\models \hoaretriple{q_a}{p}{q_a'}$ via an intermediate language \zdsl, (2) a range problem $\models \hoaretriple{q_r}{p}{q_r'}$, and (3) overflow checking of program $p$.
 The reduction is carried out by the following three transformations:
 \begin{enumerate}
 %\item Program slicing. To improve efficiency, fragments of the program $p$
