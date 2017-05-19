@@ -158,7 +158,7 @@ Given $q, q' \in \zPred$ and $p \in \zProg$, $\hoaretriple{q}{p}{q'}$ is valid (
 }
 
 Now we are ready to describe the transformation from an algebraic specification in \bvdsl to a specification in \zdsl.
-For algebraic expressions, since $\bvExpa$ is a sub-class of $\zExpr$, we can easily define a function \textsc{BV2ZExpr} that converts an algebraic expression $e_a \in \bvExpa$ to $\zExpr$ such that for every $\bvst \in \bvSt$ and $\zst \in \zSt$ with $|\bvst(v)| = \zst(v)$ for all variables v (written as $\bvst \simeq \zst$), $\zvalueof{e_a}(\bvst) = \zvalueof{\textsc{BV2ZExpr}(e_a)}(\zst)$.
+For algebraic expressions, since $\zExpr$ subsumes $\bvExpa$, we can easily define a function \textsc{BV2ZExpr} that converts an algebraic expression $e_a \in \bvExpa$ to $\zExpr$ such that for every $\bvst \in \bvSt$ and $\zst \in \zSt$ with $|\bvst(v)| = \zst(v)$ for all variables v (written as $\bvst \simeq \zst$), $\zvalueof{e_a}(\bvst) = \zvalueof{\textsc{BV2ZExpr}(e_a)}(\zst)$.
 Similarly, we can define a function \textsc{BV2ZPred} such that for every $q_a \in \bvPreda$, $\bvst \in \bvSt$, and $\zst \in \zSt$ with $\bvst \simeq \zst$, $\BV^{\wordsize} \models q_a[\bvst]$ if and only if $\bbfZ \models \textsc{BV2ZPred}(q_a)[\zst]$.
 Atoms are translated by the function $\textsc{BV2ZAtom}$.
 \[

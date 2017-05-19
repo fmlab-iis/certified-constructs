@@ -22,7 +22,7 @@ left hand side (Algorithm~\ref{algorithm:polynomial-statements}).
         \Return $v = e$
       \EndCase
       \Case{$\concat{v_h}{v_l} \leftarrow \dslcode{Split}(e, n)$}
-        \Return $v_l + \dslcode{Pow}(2, n) \times v_h = e$
+        \State{\Return $v_l + \dslcode{Pow}(2, n) \times v_h = e$}
       \EndCase
     \EndMatch
     \EndFunction
@@ -41,8 +41,7 @@ conjunction of polynomial equations corresponding to its statements
     \Match{$p$}
       \Case{$\epsilon$} \Return $\top$ \EndCase
       \Case{$s; pp$}
-        \Return \Call{StmtToPolyEQ}{$s$} $\wedge$
-                \Call{ProgToPolyEQ}{$pp$}
+        \State{\Return \Call{StmtToPolyEQ}{$s$} $\wedge$ \Call{ProgToPolyEQ}{$pp$}}
       \EndCase
     \EndMatch
     \EndFunction
@@ -114,14 +113,14 @@ program specification.
   \end{array}
   \right) \implies \\
     %\hspace{.05\textwidth}
-    \mathit{radix51}({x}^0_4, {x}^0_3, {x}^0_2, {x}^0_1, {x}^0_0) -
-    \mathit{radix51}({y}^0_4, {y}^0_3, {y}^0_2, {y}^0_1, {y}^0_0)
+    \mathit{radix51}_\bbfZ({x}^0_4, {x}^0_3, {x}^0_2, {x}^0_1, {x}^0_0) -
+    \mathit{radix51}_\bbfZ({y}^0_4, {y}^0_3, {y}^0_2, {y}^0_1, {y}^0_0)
     \equiv
-    \mathit{radix51}({r}^3_4, {r}^3_3, {r}^3_2, {r}^3_1, {r}^3_0)
+    \mathit{radix51}_\bbfZ({r}^3_4, {r}^3_3, {r}^3_2, {r}^3_1, {r}^3_0)
     \mod \myprime
   \end{array}
   \]
-  \caption{Modular Polynomial Equation Entailment for \textsc{BV2ZProg}(\dslcode{subSSA})}
+  \caption{Modular Polynomial Equation Entailment for \textsc{BV2ZProg}(\dslcode{bSubSSA})}
   \label{figure:translation:subtraction-polynomial}
 \end{figure*}
 
@@ -130,10 +129,11 @@ program specification.
 The modular polynomial equation entailment problem corresponding to the
 algebraic specification of subtraction is shown in
 Figure~\ref{figure:translation:subtraction-polynomial}. The problem
-has 15 polynomial equality constraints with 25 variables. We
-want to know if $\mathit{radix51}({r}^3_4, {r}^3_3, {r}^3_2,
-{r}^3_1, {r}^3_0)$ is the difference between $\mathit{radix51}({x}^0_4,
-{x}^0_3, {x}^0_2, {x}^0_1, {x}^0_0)$ and $\mathit{radix51}({y}^0_4,
+has 15 polynomial equality constraints with 25 variables.
+Define $\mathit{radix51}_\bbfZ({x}_4, {x}_3, {x}_2, {x}_1, {x}_0) \defn \dslcode{Pow}(2, 51 \times_\bbfZ 4) \times {x}_4 + \dslcode{Pow}(2, 51 \times_\bbfZ 3) \times {x}_3 + \dslcode{Pow}(2, 51 \times_\bbfZ 2) \times {x}_2 + \dslcode{Pow}(2, 51 \times_\bbfZ 1) \times {x}_1 + \dslcode{Pow}(2, 51 \times_\bbfZ 0) \times {x}_0$ for ${x}_0, {x}_1, {x}_2, {x}_3, {x}_4 \in \Var$.
+We want to know if $\mathit{radix51}_\bbfZ({r}^3_4, {r}^3_3, {r}^3_2,
+{r}^3_1, {r}^3_0)$ is the difference between $\mathit{radix51}_\bbfZ({x}^0_4,
+{x}^0_3, {x}^0_2, {x}^0_1, {x}^0_0)$ and $\mathit{radix51}_\bbfZ({y}^0_4,
 {y}^0_3, {y}^0_2, {y}^0_1, {y}^0_0)$ in $\bbfGF(\varrho)$ under the
 constraints.
 
