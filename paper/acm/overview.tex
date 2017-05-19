@@ -22,16 +22,16 @@
     \Leftarrow
     & \multicolumn{2}{l}{\BV^\wordsize \models \hat{q}_r[\bvst] \textmd{ implies } \textsc{ProgSafe}(\hat{p}) = \btt \textmd{ for all } \bvst \in \bvSt,} \\
     & \models \hoaretriple{\hat{q}_r}{\hat{p}}{\hat{q}_r'}, \textmd{ and } \\
-    & \models \hoaretriple{\tilde{q_a}}{\tilde{p}}{\tilde{q_a'}}
+    & \models \hoaretriple{\tilde{q}_a}{\tilde{p}}{\tilde{q}_a'}
     & \textmd{ (Theorem~\ref{theorem:bv2z})} \\
     & \textmd{where } \tilde{p} = \textsc{BV2ZProg}(\hat{p}), \\
-    & \tilde{q_a} = \textsc{BV2ZPred}(\hat{q}_a), \textmd{ and} \\
-    & \tilde{q_a'} = \textsc{BV2ZPred}(\hat{q}_a') \\
+    & \tilde{q}_a = \textsc{BV2ZPred}(\hat{q}_a), \textmd{ and} \\
+    & \tilde{q}_a' = \textsc{BV2ZPred}(\hat{q}_a') \\
     \Leftarrow
     & \multicolumn{2}{l}{\BV^\wordsize \models \hat{q}_r[\bvst] \textmd{ implies } \textsc{ProgSafe}(\hat{p}) = \btt \textmd{ for all } \bvst \in \bvSt,} \\
     & \models \hoaretriple{\hat{q}_r}{\hat{p}}{\hat{q}_r'}, \textmd{ and } \\
     & \bbfZ \models \forall \vx.
-      \Pi (\hoaretriple{\tilde{q_a}}{\tilde{p}}{\tilde{q_a'}})
+      \Pi (\hoaretriple{\tilde{q}_a}{\tilde{p}}{\tilde{q}_a'})
     & \textmd{ (Theorem~\ref{theorem:program-to-q-soundness})}
   \end{array}
 \]
@@ -74,16 +74,16 @@ To verify mathematical constructs against their specifications, we will solve al
     \Leftarrow
     & \multicolumn{2}{l}{\BV^\wordsize \models \hat{q}_r[\bvst] \textmd{ implies } \textsc{ProgSafe}(\hat{p}) = \btt \textmd{ for all } \bvst \in \bvSt,} \\
     & \models \hoaretriple{\hat{q}_r}{\hat{p}}{\hat{q}_r'}, \textmd{ and } \\
-    & \models \hoaretriple{\tilde{q_a}}{\tilde{p}}{\tilde{q_a'}}
+    & \models \hoaretriple{\tilde{q}_a}{\tilde{p}}{\tilde{q}_a'}
     & \textmd{ (Theorem~\ref{theorem:bv2z})} \\
     & \textmd{where } \tilde{p} = \textsc{BV2ZProg}(\hat{p}), \\
-    & \tilde{q_a} = \textsc{BV2ZPred}(\hat{q}_a), \textmd{ and} \\
-    & \tilde{q_a'} = \textsc{BV2ZPred}(\hat{q}_a') \\
+    & \tilde{q}_a = \textsc{BV2ZPred}(\hat{q}_a), \textmd{ and} \\
+    & \tilde{q}_a' = \textsc{BV2ZPred}(\hat{q}_a') \\
     \Leftarrow
     & \multicolumn{2}{l}{\BV^\wordsize \models \hat{q}_r[\bvst] \textmd{ implies } \textsc{ProgSafe}(\hat{p}) = \btt \textmd{ for all } \bvst \in \bvSt,} \\
     & \models \hoaretriple{\hat{q}_r}{\hat{p}}{\hat{q}_r'}, \textmd{ and } \\
     & \bbfZ \models \forall \vx.
-      \Pi (\hoaretriple{\tilde{q_a}}{\tilde{p}}{\tilde{q_a'}})
+      \Pi (\hoaretriple{\tilde{q}_a}{\tilde{p}}{\tilde{q}_a'})
     & \textmd{ (Theorem~\ref{theorem:program-to-q-soundness})}
   \end{array}
 \end{equation*}

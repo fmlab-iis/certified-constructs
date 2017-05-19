@@ -208,25 +208,25 @@ Note that the inverse implication of Theorem~\ref{theorem:bv2z} does not hold be
         \Return $v \leftarrow \tilde{a}$
       \EndCase
       \Case{$v \leftarrow a_1 + a_2$}
-        \Return $v \leftarrow \tilde{a_1} + \tilde{a_2}$
+        \Return $v \leftarrow \tilde{a}_1 + \tilde{a}_2$
       \EndCase
       \Case{$c\ v \leftarrow a_1 + a_2$}
-        \State{\Return $\concat{c}{v} \leftarrow \dslcode{Split}(\tilde{a_1} + \tilde{a_2}, w)$}
+        \State{\Return $\concat{c}{v} \leftarrow \dslcode{Split}(\tilde{a}_1 + \tilde{a}_2, w)$}
       \EndCase
       \Case{$v \leftarrow a_1 + a_2 + y$}
-        \Return $v \leftarrow \tilde{a_1} + \tilde{a_2} + y$
+        \Return $v \leftarrow \tilde{a}_1 + \tilde{a}_2 + y$
       \EndCase
       \Case{$c\ v \leftarrow a_1 + a_2 + y$}
-        \State{\Return $\concat{c}{v} \leftarrow \dslcode{Split}(\tilde{a_1} + \tilde{a_2} + y, w)$}
+        \State{\Return $\concat{c}{v} \leftarrow \dslcode{Split}(\tilde{a}_1 + \tilde{a}_2 + y, w)$}
       \EndCase
       \Case{$v \leftarrow a_1 - a_2$}
-        \Return $v \leftarrow \tilde{a_1} - \tilde{a_2}$
+        \Return $v \leftarrow \tilde{a}_1 - \tilde{a}_2$
       \EndCase
       \Case{$v \leftarrow a_1 \times a_2$}
-        \Return $v \leftarrow \tilde{a_1} \times \tilde{a_2}$
+        \Return $v \leftarrow \tilde{a}_1 \times \tilde{a}_2$
       \EndCase
       \Case{$v_h\ v_l \leftarrow a_1 \times a_2$}
-        \State{\Return $\concat{v_h}{v_l} \leftarrow \dslcode{Split}(\tilde{a_1} \times \tilde{a_2}, w)$}
+        \State{\Return $\concat{v_h}{v_l} \leftarrow \dslcode{Split}(\tilde{a}_1 \times \tilde{a}_2, w)$}
       \EndCase
       \Case{$v \leftarrow a \ll n$}
         \Return $v \leftarrow \tilde{a} \times \dslcode{Pow}(2, |n|)$
@@ -235,7 +235,7 @@ Note that the inverse implication of Theorem~\ref{theorem:bv2z} does not hold be
         \Return $\concat{v_h}{v_l} \leftarrow \dslcode{Split}(\tilde{a}, |n|)$
       \EndCase
       \Case{$v_h\ v_l \leftarrow (a_1.a_2) \ll n$}
-        \State{\Return $\concat{v_h}{v_l} \leftarrow \dslcode{Split}(\tilde{a_1} \times \dslcode{Pow}(2, w) + \tilde{a_2}, w - |n|)$}
+        \State{\Return $\concat{v_h}{v_l} \leftarrow \dslcode{Split}(\tilde{a}_1 \times \dslcode{Pow}(2, w) + \tilde{a}_2, w - |n|)$}
       \EndCase
     \EndMatch
     \EndFunction
