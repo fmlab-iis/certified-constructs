@@ -27,6 +27,7 @@ A predicate $q \in \qPred$ is well-formed if all sub-expressions are well-formed
 
 Let $\bvst \in \bvSt$ be a state.
 Define the semantic function $\bvvalueof{e}(\bvst)$ for well-formed expressions $e$.
+For a predicate $q \in \qPred$, we write $\BV^{\wordsize} \models q[\bvst]$ if $q$ evaluates to $\btt$ using the evaluation function $\bvvalueof{e}(\bvst)$ for every subexpression $e$ in $q$, using $<_\BV$ for $\bvult$, and using $\leq_\BV$ for $\bvule$.
 \[
 \begin{array}{rcl}
 \bvvalueof{\bvconst(n, b)}(\bvst) & \defn & b \\
@@ -41,7 +42,6 @@ Define the semantic function $\bvvalueof{e}(\bvst)$ for well-formed expressions 
 \bvvalueof{\bvextract(e, i, j)}(\bvst) & \defn & \bvvalueof{e}(\bvst)[i, j] \\
 \end{array}
 \]
-For a predicate $q \in \qPred$, we write $\BV^{\wordsize} \models q[\bvst]$ if $q$ evaluates to $\btt$ using the evaluation function $\bvvalueof{e}(\bvst)$ for every subexpression $e$ in $q$, using $<_\BV$ for $\bvult$, and using $\leq_\BV$ for $\bvule$.
 
 Now we are ready to convert overflow/underflow checks and range problems to QF\_BV.
 Let $q_r, q_r' \in \bvPredr$ be two range predicates and $p \in \bvProg$ a well-formed program in static single assignment form.
@@ -49,7 +49,8 @@ Both an overflow/underflow check ($\BV^\wordsize \models q_r[\bvst]$ implies $\t
 To save space, we only show some examples.
 Define $\textsc{AtomToQFBV}(a)$ as $v$ if the atom $a$ is a variable $v$ and otherwise $\bvconst(w, b)$ if $a$ is a constant $b$.
 Let $\textsc{ProgToQFBV}(p)$ be the representing formula of $p$ in QF\_BV such that $\bvst \goesto{p} \bvst'$ implies $\BV^\wordsize \models \textsc{ProgToQFBV}(p)[\bvst']$.
-For example, $\textsc{ProgToQFBV}($ $v$ $\leftarrow$ $a_1$ $+$ $a_2)$ is $v$ $=$ $\textsc{AtomToQFBV}(a_1)$ $+_\BV$ $\textsc{AtomToQFBV}(a_2)$ and $\textsc{ProgToQFBV}($$v_h\ v_l \leftarrow a @ n)$ is $v_h$ $=$ $\textsc{AtomToQFBV}(a)$ $\gg_\BV$ $\bv^w(n)$ $\wedge$ $v_l$ $=$ $(\textsc{AtomToQFBV}(a)$ $\ll_\BV$ $\bv^w(w - n))$ $\gg_\BV$ $\bv^w(w - n)$.
+For example, $\textsc{ProgToQFBV}($ $v$ $\leftarrow$ $a_1$ $+$ $a_2)$ is $v$ $=$ $\textsc{AtomToQFBV}(a_1)$ $+_\BV$ $\textsc{AtomToQFBV}(a_2)$.
+%$\textsc{ProgToQFBV}($$v_h\ v_l \leftarrow a @ n)$ is $v_h$ $=$ $\textsc{AtomToQFBV}(a)$ $\gg_\BV$ $\bv^w(n)$ $\wedge$ $v_l$ $=$ $(\textsc{AtomToQFBV}(a)$ $\ll_\BV$ $\bv^w(w - n))$ $\gg_\BV$ $\bv^w(w - n)$
 Let $\textsc{SafeToQFBV}(p)$ be the representing formula for $\textsc{ProgSafe}$ such that $\textsc{ProgSafe}(p, \bvst) = \btt$ if and only if $\BV^\wordsize \models \textsc{SafeToQFBV}(p)$.
 Let $\textsc{PredrToQFBV}(q_r)$ be the representing formula for a $q_r \in \bvPredr$ such that $\BV^\wordsize \models q_r$ if and only if $\BV^\wordsize \models \textsc{PredrToQFBV}(q_r)$.
 The following theorem states the soundness of our translation from range problems and overflow/underflow checks to QF\_BV.

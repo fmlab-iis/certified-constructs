@@ -11,7 +11,7 @@ available in commodity computing devices as of the year
 2017; it has to be carried out by limbs where a
 \emph{limb} is a 32- or 64-bit number depending on the underlying
 computer architectures. Figure~\ref{figure:dsl:subtraction}
-(Section~\ref{section:domain-specific-language-bvdsl}) is such an
+is such an
 implementation of subtraction for the AMD64 architecture. 
 
 
@@ -66,28 +66,7 @@ of arithmetic operations over $\bbfF$. Real-world implementations
 are necessarily optimized with various algebraic properties in
 $\bbfF$. 
 }
-
-In our experiment, we took real-world efficient and secure
-low-level implementations of arithmetic computation over
-$\bbfGF(\varrho)$ from~\cite{BDL+:11:HSHSS,BDL+:12:HSHSS},
-manually translated source
-codes to our domain specific language, specified their algebraic and range
-properties, and performed certified verification with our technique.
-Table~\ref{table:arithmetic-operations} summarizes the results
-without and with applying the two heuristics in Section~\ref{subsection:solving-algebraic-equations}.
-The column ``overflow'' shows the time used by \boolector to verify if the input program overflows.
-The column ``range'' shows the time used by \boolector to verify the range specification of the input program.
-The columns ``algebraic'' show the time used by \singular to verify the algebraic specification of the input program.
-The columns ``total'' show the total verification time including overflow check, verification of range and algebraic specifications, rewriting, proof certification, etc.
-The columns ``without heuristics'' and ``with heuristics'' respectively show the time information without and with the two heuristics.
-The results show that without the two heuristics, multiplication and square
-cannot be verified because the computation of Gr\"obner bases was killed by the OS
-after running for days.
-With the heuristics, all the implementations can be verified in seconds.
-
-
-
-\begin{table*}[ht]
+\begin{table*}
   \caption{Certified Verification of Arithmetic Operations over
     $\bbfGF(\varrho)$}
   \centering
@@ -110,6 +89,27 @@ With the heuristics, all the implementations can be verified in seconds.
   \end{tabular}
   \label{table:arithmetic-operations}
 \end{table*}
+
+In our experiment, we took real-world efficient and secure
+low-level implementations of arithmetic computation over
+$\bbfGF(\varrho)$ from~\cite{BDL+:11:HSHSS,BDL+:12:HSHSS},
+manually translated source
+codes to our domain specific language, specified their algebraic and range
+properties, and performed certified verification with our technique.
+Table~\ref{table:arithmetic-operations} summarizes the results
+without and with applying the two heuristics in Section~\ref{subsection:solving-algebraic-equations}.
+The column ``overflow'' shows the time used by \boolector to verify if the input program overflows.
+The column ``range'' shows the time used by \boolector to verify the range specification of the input program.
+The columns ``algebraic'' show the time used by \singular to verify the algebraic specification of the input program.
+The columns ``total'' show the total verification time including overflow check, verification of range and algebraic specifications, rewriting, proof certification, etc.
+The columns ``without heuristics'' and ``with heuristics'' respectively show the time information without and with the two heuristics.
+The results show that without the two heuristics, multiplication and square
+cannot be verified because the computation of Gr\"obner bases was killed by the OS
+after running for days.
+With the heuristics, all the implementations can be verified in seconds.
+
+
+
 
 % {range check}
 \hide{
