@@ -7,7 +7,7 @@ instance, Curve25519 defined by $y^2 = x^3 + 486662 x^2 + x$
 is over the Galois field $\bbfF = \bbfGF(\varrho)$ with
 $\varrho = 2^{255} - 19$. To
 make the field explicit, we rewrite its definition as:
-\vspace{-.5em}
+%\vspace{-.5em}
 \begin{equation}
   \label{eq:curve25519}
   y \Ftimes y \Feq x \Ftimes x \Ftimes x \Fplus
@@ -23,7 +23,7 @@ infinity as the unit (denoted $\Gzero$) form a commutative group $\bbfG = (G, \G
 with $G = \{ (x, y) : x, y \textmd{ satisfying } (\ref{eq:curve25519})
 \}$. Let $P_0 = (x_0, y_0), P_1 = (x_1, y_1) \in G$. We have $-P_0 =
 (x_0, -y_0)$ and $P_0 \Gplus P_1 = (x, y)$  where
-\vspace{-.5em}
+%\vspace{-.5em}
 \begin{eqnarray}
   m & = & (y_1 \Fminus y_0) \Fdiv (x_1 \Fminus x_0)\\\nonumber
   x & = & m \Ftimes m \Fminus 486662 \Fminus x_0 \Fminus x_1\\ \nonumber
