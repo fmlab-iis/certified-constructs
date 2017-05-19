@@ -14,14 +14,14 @@ the point $[n]P$ for given $n$ and $P$. The standard iterative
 squaring method computes $[n]P$ by examining each bit of $n$ iteratively.
 For each iteration, $[2m]P$ is computed from $[m]P$ and
 added with another $P$ when the current bit is $1$. Although the
-method is reasonably efficient, it is not constant-time and hence insecure. 
+method is reasonably efficient, it is not constant-time and hence insecure.
 
 \hide{
 The operation we want is a ``point multiplication'' which is given $n$
 and $P$ compute $[n]P$.  The na\"ive way to do this is ``double
-and add''.  
+and add''.
 \begin{algorithm}[h]
-  \begin{algorithmic}[1]  
+  \begin{algorithmic}[1]
     \Function{point.multiple}{$m,P$}
     \begin{multicols}{2}
       \State $t\leftarrow P$
@@ -49,7 +49,7 @@ inefficient.  We need something equivalent to steps 4--7 but better.
 \begin{algorithm}[h]
 \begin{algorithmic}[1]
 \Function{Ladderstep}{$x_1, x_m, z_m, x_{m+1}, z_{m+1}$}
-\begin{multicols}{2}
+%\begin{multicols}{2}
 \State $t_1 \leftarrow x_m \Fplus z_m$
 \State $t_2 \leftarrow x_m \Fminus z_m$
 \State $t_7 \leftarrow t_2 \Ftimes t_2$
@@ -70,7 +70,7 @@ inefficient.  We need something equivalent to steps 4--7 but better.
 \State $z_m \leftarrow z_m \Ftimes t_5$
 \State \Return $(x_m, z_m, x_{m+1}, z_{m+1})$
 \EndFunction
-\end{multicols}
+%\end{multicols}
 \end{algorithmic}
 \caption{Montgomery Ladderstep}
 \label{algorithm:ladderstep}
@@ -92,7 +92,7 @@ simultaneously and efficiently knowing $P_1-P_0$.  The Ladderstep can
 be achieved only using $x$ coordinates on a set of curves today known as
 Montgomery curves, which include Curve25519.  Furthermore, we can
 avoid expensive divisions by using projective representations (i.e,
-instead of $x$ write $x/z$ and work  with fractions).  
+instead of $x$ write $x/z$ and work  with fractions).
 
 The Ladderstep starts from points $[n]P $ and
 $[n+1]P $, to get either $ [2n]P $ and
@@ -110,14 +110,23 @@ differential addition chain.
 
 Let unprimed and primed variables denote their values before and after
 computation respectively.
-The Montgomery Ladderstep has the following
+Write $x y$ to denote $x \Ftimes y$ for short.
+The Montgomery Ladderstep has the following algebraic
 specification~\cite{M:87:SPEC}:\footnote{Amusingly, we find for
   ourselves the factor of $4$ in both the numerator and denominator of
   the addition formulas during verification, noted on
   \cite[p.~261]{M:87:SPEC}.}
-%\vspace{-.5em}
 \[
-\begin{array}{rcl}
+  \begin{array}{rcl}
+  x'_{m} & \Feq & 4 (x_m x_{m+1} \Fminus z_m z_{m+1}) (x_m x_{m+1} \Fminus z_m z_{m+1}) \\
+  z'_{m} & \Feq & 4 x_1 (x_m z_{m+1} \Fminus z_m x_{m+1}) (x_m z_{m+1} \Fminus z_m x_{m+1}) \\
+  x'_{m+1} & \Feq & (x_m x_m \Fminus z_m z_m) (x_m x_m \Fminus z_m z_m) \\
+  z'_{m+1} & \Feq & 4 x_m z_m (x_m x_m \Fplus 121666 x_m z_m \Fplus z_m z_m)
+\end{array}
+\]
+\hide{
+\[
+  \begin{array}{rcl}
   x'_{m} & \Feq & 4 \Ftimes (x_m \Ftimes x_{m+1} \Fminus z_m \Ftimes z_{m+1})
                \Ftimes (x_m \Ftimes x_{m+1} \Fminus z_m \Ftimes z_{m+1}) \\
   z'_{m} & \Feq & 4 \Ftimes x_1 \Ftimes (x_m \Ftimes z_{m+1} \Fminus
@@ -129,15 +138,16 @@ specification~\cite{M:87:SPEC}:\footnote{Amusingly, we find for
                  (x_m \Ftimes x_m \Fplus 121666 \Ftimes x_m \Ftimes z_m \Fplus
                  z_m \Ftimes z_m)
 \end{array}
-%\vspace{-.5em}
 \]
+}
+For the range specification, the unsigned value of each limb used to represent an output $x_m$, $z_m$, $x_{m+1}$, or $z_{m+1}$ must be in the range from $0$ to $2^{51}+2^{15}$.
 In our experiment, we replace all arithmetic computation over $\bbfF$
 with corresponding mathematical constructs (4 additions, 4 subtractions, 4 squares, 5
 multiplications, and 1 multiplication by 121666) written in \bvdsl,
-translate the above specification into an algebraic specification, and
-apply our technique to verify the Ladderstep (containing 1462 statements).
-The verification takes 82 hours. The SMT solver finishes range checks
-on the Ladderstep in 19 minutes. For production releases of low-level
+translate the above specification into an algebraic specification, a range specification, and an overflow check, and then apply our technique to verify the Ladderstep (containing 1282 statements).
+The verification takes 131 hours, including 77 hours in checking program overflow~\footnote{We verify the four equations in the algebraic specification separately and our \coq tactic checks program overflow four times. The time needed to check program overflow once is roughly 19 hours.}, 33 hours in checking range specification, 16 hours in checking algebraic specification, and the remaining hours in term rewriting, proof validation, etc.
+%The SMT solver finishes range checks on the Ladderstep in 19 minutes.
+For production releases of low-level
 mathematical constructs, we believe 3.5 days in verification time are
 well invested.
 
