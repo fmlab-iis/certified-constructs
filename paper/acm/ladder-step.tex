@@ -115,15 +115,16 @@ specification~\cite{M:87:SPEC}:\footnote{Amusingly, we find for
   ourselves the factor of $4$ in both the numerator and denominator of
   the addition formulas during verification, noted on
   \cite[p.~261]{M:87:SPEC}.}
-%\vspace{-.5em}
-\[
+%\vspace{-.5em} 
+{\footnotesize
+\[ 
 \begin{array}{rcl}
   x'_{m} & \Feq & 4 \Ftimes (x_m \Ftimes x_{m+1} \Fminus z_m \Ftimes z_{m+1})
                \Ftimes (x_m \Ftimes x_{m+1} \Fminus z_m \Ftimes z_{m+1}) \\
   z'_{m} & \Feq & 4 \Ftimes x_1 \Ftimes (x_m \Ftimes z_{m+1} \Fminus
                z_m \Ftimes x_{m+1})
                \Ftimes (x_m \Ftimes z_{m+1} \Fminus z_m \Ftimes x_{m+1}) \\
-  x'_{m+1} & \Feq & (x_m \Ftimes x_m \Fminus z_m \Ftimes z_m) \Ftimes
+  x'_{m+1} & \Feq & 4 \Ftimes x_1 (x_m \Ftimes x_m \Fminus z_m \Ftimes z_m) \Ftimes
                  (x_m \Ftimes x_m \Fminus z_m \Ftimes z_m) \\
   z'_{m+1} & \Feq & 4 \Ftimes x_m \Ftimes z_m \Ftimes
                  (x_m \Ftimes x_m \Fplus 121666 \Ftimes x_m \Ftimes z_m \Fplus
@@ -131,6 +132,7 @@ specification~\cite{M:87:SPEC}:\footnote{Amusingly, we find for
 \end{array}
 %\vspace{-.5em}
 \]
+}
 In our experiment, we replace all arithmetic computation over $\bbfF$
 with corresponding mathematical constructs (4 additions, 4 subtractions, 4 squares, 5
 multiplications, and 1 multiplication by 121666) written in \bvdsl,
@@ -170,5 +172,5 @@ a computation equivalent to his formulas\footnote{An amusing fact is
 %%% mode: latex
 %%% eval: (TeX-PDF-mode 1)
 %%% eval: (TeX-source-correlate-mode 1)
-%%% TeX-master: "certified_vcg"
+%%% TeX-master: "main"
 %%% End: 
