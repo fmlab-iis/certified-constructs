@@ -287,18 +287,18 @@ variables ${x}_i$'s, ${y}_i$'s are indexed by $0$ and
 ${r}_i$'s are indexed by $3$ for $0 \leq i \leq 4$.
 Subsequently, variables in pre- and post-conditions of the
 specification for subtraction needs to be indexed.
-Let $\hat{q_a}$ $\defn$ $\top$, $\hat{q_r}$ $\defn$ $0$ $\leq$ ${x}^0_0,$ ${x}^0_1,$ ${x}^0_2,$ ${x}^0_3,$ ${x}^0_4,$ ${y}^0_0,$ ${y}^0_1,$ ${y}^0_2,$ ${y}^0_3,$ ${y}^0_4$ $\leq$ $\bv^{64}(2^{51} +_\bbfZ 2^{15})$, $\hat{q_a'}$ $\defn$ $\mathit{radix51}_\BV({x}^0_4, {x}^0_3, {x}^0_2, {x}^0_1, {x}^0_0)$ $-$ $\mathit{radix51}_\BV({y}^0_4, {y}^0_3, {y}^0_2, {y}^0_1, {y}^0_0)$ $\equiv$ $\mathit{radix51}_\BV({r}^3_4, {r}^3_3, {r}^3_2, {r}^3_1, {r}^3_0)$ $\mod$ $\myprime$, and $q_r'$ $\defn$ $0$ $\leq$ ${r}^3_0,$ ${r}^3_1,$ ${r}^3_2,$ ${r}^3_3,$ ${r}^3_4$ $<$ $\bv^{64}(2^{54})$.
+Let $\hat{q}_a$ $\defn$ $\top$, $\hat{q}_r$ $\defn$ $0$ $\leq$ ${x}^0_0,$ ${x}^0_1,$ ${x}^0_2,$ ${x}^0_3,$ ${x}^0_4,$ ${y}^0_0,$ ${y}^0_1,$ ${y}^0_2,$ ${y}^0_3,$ ${y}^0_4$ $\leq$ $\bv^{64}(2^{51} +_\bbfZ 2^{15})$, $\hat{q}_a'$ $\defn$ $\mathit{radix51}_\BV({x}^0_4, {x}^0_3, {x}^0_2, {x}^0_1, {x}^0_0)$ $-$ $\mathit{radix51}_\BV({y}^0_4, {y}^0_3, {y}^0_2, {y}^0_1, {y}^0_0)$ $\equiv$ $\mathit{radix51}_\BV({r}^3_4, {r}^3_3, {r}^3_2, {r}^3_1, {r}^3_0)$ $\mod$ $\myprime$, and $q_r'$ $\defn$ $0$ $\leq$ ${r}^3_0,$ ${r}^3_1,$ ${r}^3_2,$ ${r}^3_3,$ ${r}^3_4$ $<$ $\bv^{64}(2^{54})$.
 The corresponding specification of in static single assignment form is then
 \[
-\cond{\hat{q_a} \wedge \hat{q_r}} \dslcode{bSubSSA} \cond{\hat{q_a'} \wedge \hat{q_r'}}.
+\cond{\hat{q}_a \wedge \hat{q}_r} \dslcode{bSubSSA} \cond{\hat{q}_a' \wedge \hat{q}_r'}.
 \]
 
 \hide{
 \[
 \begin{array}{rcl}
-\cond{\hat{q_a} \wedge \hat{q_r}} &
+\cond{\hat{q}_a \wedge \hat{q}_r} &
 \dslcode{bSubSSA} &
-\cond{\hat{q_a'} \wedge \hat{q_r'}}.
+\cond{\hat{q}_a' \wedge \hat{q}_r'}.
 \end{array}
 \]
 }
