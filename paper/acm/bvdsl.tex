@@ -115,7 +115,7 @@ The variable $y$ in $v \leftarrow a_1 + a_2 + y$ and $c\ v \leftarrow a_1 + a_2 
 \bvst & \goesto{v_h\ v_l \leftarrow a_1 \times a_2} & \bvst[v_h \leftarrow \hi_\bvop(\bvvalueof{a_1}(\bvst) \times_\bvop^\# \bvvalueof{a_2}(\bvst))][v_l \leftarrow \lo_\bvop(\bvvalueof{a_1}(\bvst) \times_\bvop^\# \bvvalueof{a_2}(\bvst))] \\
 \bvst & \goesto{v \leftarrow a \ll n} & \bvst[v \leftarrow \bvvalueof{a}(\bvst) \ll_\bvop \unsigned{n}] \\
 \bvst & \goesto{v_h\ v_l \leftarrow a @ n} & \bvst[v_h \leftarrow \bvvalueof{a}(\bvst) \gg_\bvop \unsigned{n}][v_l \leftarrow (\bvvalueof{a}(\bvst) \ll_\bvop (\wordsize -_{\bbfN} \unsigned{n})) \gg_\bvop (\wordsize -_{\bbfN} \unsigned{n})] \\
-\bvst & \goesto{v_h\ v_l \leftarrow (a_1 . a_2) @ n} & \bvst[v_h \leftarrow \hi_\bvop((\bvvalueof{a_1}(\bvst) ._\bvop \bvvalueof{a_2}(\bvst)) \ll_\bvop \unsigned{n})][v_l \leftarrow (\lo_\bvop((\bvvalueof{a_1}(\bvst) ._\bvop \bvvalueof{a_2}(\bvst)) \ll_\bvop \unsigned{n})) \gg_\bvop \unsigned{n}] \\
+\bvst & \goesto{v_h\ v_l \leftarrow (a_1 . a_2) \ll n} & \bvst[v_h \leftarrow \hi_\bvop((\bvvalueof{a_1}(\bvst) ._\bvop \bvvalueof{a_2}(\bvst)) \ll_\bvop \unsigned{n})][v_l \leftarrow (\lo_\bvop((\bvvalueof{a_1}(\bvst) ._\bvop \bvvalueof{a_2}(\bvst)) \ll_\bvop \unsigned{n})) \gg_\bvop \unsigned{n}] \\
 \end{array}
 \]
 \caption{Transition relation $\bvTr$ for \bvdsl. \label{fig:semantic-function-bvdsl}}
