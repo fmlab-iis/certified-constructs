@@ -96,12 +96,12 @@ triples~\cite{H:69:ABCP}.
 Such a specification is converted to static single
 assignment form and then translated into (1) an algebraic problem (called
 the modular polynomial equation entailment
-problem)~\cite{AWZ:88:DQVP,H:07:AENTP} via \zdsl with operations on $\bbfZ$, (2) a range problem, and (3) the absence of program overflows (and underflows). We use the computer
+problem)~\cite{AWZ:88:DQVP,H:07:AENTP} via \zdsl with operations on $\bbfZ$, (2) a range problem, and (3) the absence of program overflows/underflows. We use the computer
 algebra system \singular to solve the algebraic problem~\cite{GP:08:SICA}.
 The proof assistant \coq is used to certify the
 correctness of translations, as well as solutions to algebraic
 problems computed by \singular~\cite{YC:2004:ITPPDC}.
-As range problems are hard to be solved automatically with proof assistants, the range problem and the absence of program overflows are verified by SMT (Satisfiability Modulo Theories) solvers.
+As range problems are hard to be solved automatically with proof assistants, the range problem and the absence of program overflows/underflows are verified by SMT (Satisfiability Modulo Theories) solvers.
 Correctness of the translation to SMT formulas is again certified by
 \coq. The results of SMT solvers however are not certified in our
 implementation. A fully certified integration of SMT solvers in \coq
@@ -122,7 +122,7 @@ align=center
 \node (poly) [box] [below=of zssa] {polynomial equation entailment};
 \node (singular) [box] [below=of poly] {\singular};
 \node (range) [box] [below=of singular] {range specification};
-\node (overflow) [box] [below=of range] {overflow check};
+\node (overflow) [box] [below=of range] {overflow/underflow check};
 \node (smt) [dot] [below=of overflow] {SMT solvers};
 \node (c1) [coord] [left=of bvssa] {};
 \node (c2) [coord] [right=of range] {};
@@ -162,7 +162,7 @@ We have the following contributions:
 \item We give a certified verification condition generator from
   algebraic specifications of programs to the modular polynomial
   equation entailment problem.
-\item We give a certified translation from range problems and overflow checks to SMT formulas.
+\item We give a certified translation from range problems and overflow/underflow checks to SMT formulas.
 \item We verify arithmetic computation over a finite field of order
   $2^{255} - 19$ and a
   critical program (the Montgomery Ladderstep) automatically.
@@ -179,7 +179,7 @@ This paper is organized as follows. After preliminaries
 language is described in Section~\ref{section:domain-specific-language-bvdsl}.
 Section~\ref{section:translation}
 presents the translation to the algebraic
-problem. A certified translation from range and overflow checks to SMT formulas plus a certified solver for the algebraic problem are discussed in Section~\ref{section:verification-of-specifications}.
+problem. A certified translation from range and overflow/underflow checks to SMT formulas plus a certified solver for the algebraic problem are discussed in Section~\ref{section:verification-of-specifications}.
 Section~\ref{section:evaluation} contains experimental results. It is
 followed by conclusions.
 

@@ -23,7 +23,7 @@ Theorem~\ref{theorem:ssa}, \ref{theorem:bv2z}, and \ref{theorem:program-to-q-sou
     & \hat{q_a'} = \textsc{SSAPred}(\hat{\theta}, q_a'), \textmd{ and} \\
     & \hat{q_r'} = \textsc{SSAPred}(\hat{\theta}, q_r') \\
     \Leftarrow
-    & \textmd{program $\hat{p}$ does not overflow/underflow}, \\
+    & \multicolumn{2}{l}{\BV^\wordsize \models \hat{q_r}[\bvst] \textmd{ implies } \textsc{ProgSafe}(\hat{p}) = \btt \textmd{ for all } \bvst \in \bvSt,} \\
     & \models \hoaretriple{\hat{q_r}}{\hat{p}}{\hat{q_r'}}, \textmd{ and } \\
     & \models \hoaretriple{\tilde{q_a}}{\tilde{p}}{\tilde{q_a'}}
     & \textmd{ (Theorem~\ref{theorem:bv2z})} \\
@@ -31,7 +31,7 @@ Theorem~\ref{theorem:ssa}, \ref{theorem:bv2z}, and \ref{theorem:program-to-q-sou
     & \tilde{q_a} = \textsc{BV2ZPred}(\hat{q_a}), \textmd{ and} \\
     & \tilde{q_a'} = \textsc{BV2ZPred}(\hat{q_a'}) \\
     \Leftarrow
-    & \textmd{program $\hat{p}$ does not overflow/underflow}, \\
+    & \multicolumn{2}{l}{\BV^\wordsize \models \hat{q_r}[\bvst] \textmd{ implies } \textsc{ProgSafe}(\hat{p}) = \btt \textmd{ for all } \bvst \in \bvSt,} \\
     & \models \hoaretriple{\hat{q_r}}{\hat{p}}{\hat{q_r'}}, \textmd{ and } \\
     & \bbfZ \models \forall \vx.
       \Pi (\hoaretriple{\tilde{q_a}}{\tilde{p}}{\tilde{q_a'}})

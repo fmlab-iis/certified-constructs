@@ -88,7 +88,7 @@ Define the semantic function $\bvvalueof{\cdot}(\bvst)$ for variables and atomic
 \begin{array}{rcl}
 %\valueof{i}_{\bvst} & \defn & i \textmd{  for ${i} \in \Int$} \\
 %\valueof{b}_{\bvst} & \defn & b \textmd{  for ${b} \in \BV^{\wordsize}$} \\
-%\bvvalueof{v}(\bvst) & \defn & \bvst(v) \textmd{  for ${v} \in \Var$} \\
+\bvvalueof{v}(\bvst) & \defn & \bvst(v) \textmd{  for ${v} \in \Var$} \\
 \bvvalueof{a}(\bvst) & \defn & \left\{
   \begin{array}{ll}
   \bvst(v) & \textmd{if $a$ is a variable $v$} \\
@@ -192,6 +192,58 @@ In $\hoaretriple{q}{p}{q'}$, $q$ and $q'$ are the \emph{pre}- and \emph{post-con
 Given $q, q' \in \bvPred$ ($q,q' \in \bvPreda$, or $q,q' \in \bvPredr$) and $p \in \bvProg$, $\hoaretriple{q}{p}{q'}$ is \emph{valid} (written $\models \hoaretriple{q}{p}{q'}$) if for every $\bvst, \bvst' \in \bvSt$, $\BV^{\wordsize} \models q[\bvst]$ and $\bvst \goesto{p} \bvst'$ imply $\BV^{\wordsize} \models q'[\bvst']$.
 Less formally, $\models \hoaretriple{q}{p}{q'}$ if executing $p$ from a $q$-state always results in a $q'$-state.
 
+Given a statement $s \in \bvStmt$ and a state $\bvst \in \bvSt$, the function \textsc{StmtSafe} (Algorithm~\ref{algorithm:stmt-safe}) checks if executing $s$ from $\bvst$ neither overflows nor underflows.
+We call a statement $s \in \bvStmt$ \emph{safe} at a state $\bvst \in \bvSt$, denoted by $\safe(s)$, if for every state $\bvst \in \bvSt$, \textsc{StmtSafe}($s$, $\bvst$) evaluates to $\btt$.
+Similarly, the function \textsc{ProgSafe} (Algorithm~\ref{algorithm:prog-safe}) checks if executing a program $p \in \bvProg$ from a state $\bvst \in \bvSt$ is safe.
+A program $p \in \bvProg$ is safe, denoted by $\safe(p)$, if for every state $\bvst \in \bvSt$, \textsc{ProgSafe}($p$, $\bvst$) evaluates to $\btt$.
+
+\begin{algorithm}
+  \begin{algorithmic}[1]
+    \Function{StmtSafe}{$s$, $\bvst$}
+    \Match{$s$}
+      \Case{$v \leftarrow a$} \Return $\btt$ \EndCase
+      \Case{$v \leftarrow a_1 + a_2$}
+        \State{\Return $\hi_\BV(\bvvalueof{a_1}(\bvst) +_\BV^\# \bvvalueof{a_2}(\bvst)) = \bv^\wordsize(0)$}
+      \EndCase
+      \Case{$c\ v \leftarrow a_1 + a_2$} \Return $\btt$ \EndCase
+      \Case{$v \leftarrow a_1 + a_2 + y$}
+        \State{\Return $\hi_\BV(\bvvalueof{a_1}(\bvst) +_\BV^\# \bvvalueof{a_2}(\bvst) +_\BV^\# \bvvalueof{y}(\bvst))$}
+        \StatexIndent [2] $= \bv^\wordsize(0)$
+      \EndCase
+      \Case{$c\ v \leftarrow a_1 + a_2 + y$} \Return $\btt$ \EndCase
+      \Case{$v \leftarrow a_1 - a_2$}
+        \State{\Return $\bvvalueof{a_2}(\bvst) \ll_\BV \bvvalueof{a_1}(\bvst)$}
+      \EndCase
+      \Case{$v \leftarrow a_1 \times a_2$}
+        \State{\Return $\hi_\BV(\bvvalueof{a_1}(\bvst) \times_\BV^\# \bvvalueof{a_2}(\bvst)) = \bv^\wordsize(0)$}
+      \EndCase
+      \Case{$v_h\ v_l \leftarrow a_1 \times a_2$} \Return $\btt$ \EndCase
+      \Case{$v \leftarrow a \ll n$}
+        \State{\Return $\bvvalueof{a}(\bvst) <_\BV (\bv^\wordsize(1) \ll_\BV (\wordsize - n))$}
+      \EndCase
+      \Case{$v_h\ v_l \leftarrow a @ n$} \Return $\btt$ \EndCase
+      \Case{$v_h\ v_l \leftarrow (a_1.a_2)@n$}
+        \State{\Return $\bvvalueof{a_1}(\bvst) <_\BV (\bv^\wordsize(1) \ll_\BV (\wordsize - n))$}
+      \EndCase
+    \EndMatch
+    \EndFunction
+  \end{algorithmic}
+  \caption{Safety Test for Statements}
+  \label{algorithm:stmt-safe}
+\end{algorithm}
+
+\begin{algorithm}
+  \begin{algorithmic}[1]
+    \Function{ProgSafe}{$p$, $\bvst$}
+    \Match{$p$}
+      \Case{$\epsilon$} \Return $\btt$ \EndCase
+      \Case{$s; pp$} \Return \Call{StmtSafe}{s} $\wedge$ \Call{ProgSafe}{pp} \EndCase
+    \EndMatch
+    \EndFunction
+  \end{algorithmic}
+  \caption{Safety Test for Programs}
+  \label{algorithm:prog-safe}
+\end{algorithm}
 
 \begin{figure*}[ht]
   \centering
@@ -249,7 +301,7 @@ The specification of the mathematical construct is therefore
 % 4503599627370494 = 0xFFFFFFFFFFFFE
 
 Note that the variables ${r}_i$'s are added with constants after they are initialized with ${x}_i$'s but before ${y}_i$'s are subtracted from them.
-Assume the program \dslcode{bSub} neither overflows nor underflows.
+Assume $\safe(\dslcode{bSub})$ holds.
 It is not hard to see that
 \[
 \begin{aligned}
@@ -272,7 +324,7 @@ Characteristics of large Galois fields are regularly exploited in mathematical c
 Our domain specific language can easily model such specialized programming techniques.
 Indeed, the reason for adding constants is to prevent underflow.
 If the constants were not added, the subtraction in lines~11 to 15 could give negative and hence incorrect results.
-We will show how to prove that the program does not overflow or underflow later.
+We will show how to prove that the program does not overflow/underflow later.
 
 %{Please note that ranges are a complicated
 %  issue. The subtraction in Figure~\ref{figure:dsl:subtraction} gives results that are correct
