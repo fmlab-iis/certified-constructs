@@ -5,13 +5,13 @@ The following \bvdsl code implements multiplications over $\bbfGF(2^{255}-19)$ f
 {\footnotesize
 \begin{align*}
 1 &: \mathit{mulrax} \leftarrow & \mathit{x3}; \\
-2 &: \mathit{mulrax} \leftarrow & \mathit{mulrax} \times \bv^{64}{19}; \\
+2 &: \mathit{mulrax} \leftarrow & \mathit{mulrax} \times \bv^{64}(19); \\
 3 &: \mathit{mulx319} \leftarrow & \mathit{mulrax}; \\
 4 &: \mathit{mulrdx}\ \mathit{mulrax} \leftarrow & \mathit{mulrax} \times \mathit{y2}; \\
 5 &: \mathit{r0} \leftarrow & \mathit{mulrax}; \\
 6 &: \mathit{mulr01} \leftarrow & \mathit{mulrdx}; \\
 7 &: \mathit{mulrax} \leftarrow & \mathit{x4}; \\
-8 &: \mathit{mulrax} \leftarrow & \mathit{mulrax} \times \bv^{64}{19}; \\
+8 &: \mathit{mulrax} \leftarrow & \mathit{mulrax} \times \bv^{64}(19); \\
 9 &: \mathit{mulx419} \leftarrow & \mathit{mulrax}; \\
 10 &: \mathit{mulrdx}\ \mathit{mulrax} \leftarrow & \mathit{mulrax} \times \mathit{y1}; \\
 11 &: \mathit{carry}\ \mathit{r0} \leftarrow & \mathit{r0} + \mathit{mulrax}; \\
@@ -48,12 +48,12 @@ The following \bvdsl code implements multiplications over $\bbfGF(2^{255}-19)$ f
 42 &: \mathit{mulrdx}\ \mathit{mulrax} \leftarrow & \mathit{mulrax} \times \mathit{y2}; \\
 43 &: \mathit{carry}\ \mathit{r3} \leftarrow & \mathit{r3} + \mathit{mulrax}; \\
 44 &: \mathit{mulr31} \leftarrow & \mathit{mulr31} + \mathit{mulrdx} + \mathit{carry}; \\
-45 &: \mathit{mulrax} \leftarrow & bvVar \mathit{x1}; \\
+45 &: \mathit{mulrax} \leftarrow & \mathit{x1}; \\
 46 &: \mathit{mulrdx}\ \mathit{mulrax} \leftarrow & \mathit{mulrax} * \mathit{y3}; \\
 47 &: \mathit{carry}\ \mathit{r4} \leftarrow & \mathit{r4} + \mathit{mulrax}; \\
 48 &: \mathit{mulr41} \leftarrow & \mathit{mulr41} + \mathit{mulrdx} + \mathit{carry}; \\
 49 &: \mathit{mulrax} \leftarrow & \mathit{x1}; \\
-50 &: \mathit{mulrax} \leftarrow & \mathit{mulrax} \times \bv^{64}{19}; \\
+50 &: \mathit{mulrax} \leftarrow & \mathit{mulrax} \times \bv^{64}(19); \\
 51 &: \mathit{mulrdx}\ \mathit{mulrax} \leftarrow & \mathit{mulrax} \times \mathit{y4}; \\
 52 &: \mathit{carry}\ \mathit{r0} \leftarrow & \mathit{r0} + \mathit{mulrax}; \\
 53 &: \mathit{mulr01} \leftarrow & \mathit{mulr01} + \mathit{mulrdx} + \mathit{carry}; \\
