@@ -104,7 +104,7 @@ Basically, $v \leftarrow a_1 + a_2$ is addition, $c\ v \leftarrow a_1 + a_2$ is 
 The variable $y$ in $v \leftarrow a_1 + a_2 + y$ and $c\ v \leftarrow a_1 + a_2 + y$ is intended but not restricted to be carry bits.
 
 \begin{figure*}
-\[
+$
 \begin{array}{rcl}
 \bvst & \goesto{v \leftarrow a_1 + a_2} & \bvst[v \leftarrow \bvvalueof{a_1}(\bvst) +_\bvop \bvvalueof{a_2}(\bvst)] \\
 \bvst & \goesto{c\ v \leftarrow a_1 + a_2} & \bvst[v \leftarrow \lo_\bvop(\bvvalueof{a_1}(\bvst) +_\bvop^\# \bvvalueof{a_2}(\bvst))][c \leftarrow \hi_\bvop(\bvvalueof{a_1}(\bvst) +_\bvop^\# \bvvalueof{a_2}(\bvst))] \\
@@ -117,7 +117,7 @@ The variable $y$ in $v \leftarrow a_1 + a_2 + y$ and $c\ v \leftarrow a_1 + a_2 
 \bvst & \goesto{v_h\ v_l \leftarrow a @ n} & \bvst[v_h \leftarrow \bvvalueof{a}(\bvst) \gg_\bvop \unsigned{n}][v_l \leftarrow (\bvvalueof{a}(\bvst) \ll_\bvop (\wordsize -_{\bbfN} \unsigned{n})) \gg_\bvop (\wordsize -_{\bbfN} \unsigned{n})] \\
 \bvst & \goesto{v_h\ v_l \leftarrow (a_1 . a_2) @ n} & \bvst[v_h \leftarrow \hi_\bvop((\bvvalueof{a_1}(\bvst) ._\bvop \bvvalueof{a_2}(\bvst)) \ll_\bvop \unsigned{n})][v_l \leftarrow (\lo_\bvop((\bvvalueof{a_1}(\bvst) ._\bvop \bvvalueof{a_2}(\bvst)) \ll_\bvop \unsigned{n})) \gg_\bvop \unsigned{n}] \\
 \end{array}
-\]
+$
 \caption{Transition relation $\bvTr$ for \bvdsl. \label{fig:semantic-function-bvdsl}}
 \end{figure*}
 
@@ -247,7 +247,7 @@ A program $p \in \bvProg$ is safe, denoted by $\safe(p)$, if for every state $\b
 
 \begin{figure*}[ht]
   \centering
-  \[
+  $
   \begin{array}{lclcl}
     \begin{array}{rcl}
     \textmd{1:} && {r}_0 \leftarrow {x}_0; \\
@@ -267,7 +267,7 @@ A program $p \in \bvProg$ is safe, denoted by $\safe(p)$, if for every state $\b
     \textmd{9:} &&
       {r}_3 \leftarrow {r}_3 + {0xFFFFFFFFFFFFE}; \\
     \textmd{10:} &&
-      {r}_4 \leftarrow {r}_4 + {0xFFFFFFFFFFFFE};\\
+      {r}_4 \leftarrow {r}_4 + {0xFFFFFFFFFFFFE}; \\
     \end{array}
     &\hspace{.05\textwidth}&
     \begin{array}{rcl}
@@ -278,7 +278,7 @@ A program $p \in \bvProg$ is safe, denoted by $\safe(p)$, if for every state $\b
     \textmd{15:} && {r}_4 \leftarrow {r}_4 - {y}_4;
     \end{array}
   \end{array}
-  \]
+  $
   \caption{Subtraction \dslcode{bSub}}
   \label{figure:dsl:subtraction}
 \end{figure*}
