@@ -193,7 +193,7 @@ Given $q, q' \in \bvPred$ ($q,q' \in \bvPreda$, or $q,q' \in \bvPredr$) and $p \
 Less formally, $\models \hoaretriple{q}{p}{q'}$ if executing $p$ from a $q$-state always results in a $q'$-state.
 
 Given a statement $s \in \bvStmt$ and a state $\bvst \in \bvSt$, the function \textsc{StmtSafe} (Algorithm~\ref{algorithm:stmt-safe}) checks if executing $s$ from $\bvst$ neither overflows nor underflows.
-We call a statement $s \in \bvStmt$ \emph{safe} at a state $\bvst \in \bvSt$, denoted by $\safe(s)$, if for every state $\bvst \in \bvSt$, \textsc{StmtSafe}($s$, $\bvst$) evaluates to $\btt$.
+We call a statement $s \in \bvStmt$ \emph{safe}, denoted by $\safe(s)$, if for every state $\bvst \in \bvSt$, \textsc{StmtSafe}($s$, $\bvst$) evaluates to $\btt$.
 Similarly, the function \textsc{ProgSafe} (Algorithm~\ref{algorithm:prog-safe}) checks if executing a program $p \in \bvProg$ from a state $\bvst \in \bvSt$ is safe.
 A program $p \in \bvProg$ is safe, denoted by $\safe(p)$, if for every state $\bvst \in \bvSt$, \textsc{ProgSafe}($p$, $\bvst$) evaluates to $\btt$.
 
@@ -212,7 +212,7 @@ A program $p \in \bvProg$ is safe, denoted by $\safe(p)$, if for every state $\b
       \EndCase
       \Case{$c\ v \leftarrow a_1 + a_2 + y$} \Return $\btt$ \EndCase
       \Case{$v \leftarrow a_1 - a_2$}
-        \State{\Return $\bvvalueof{a_2}(\bvst) \ll_\BV \bvvalueof{a_1}(\bvst)$}
+        \State{\Return $\bvvalueof{a_2}(\bvst) \leq_\BV \bvvalueof{a_1}(\bvst)$}
       \EndCase
       \Case{$v \leftarrow a_1 \times a_2$}
         \State{\Return $\hi_\BV(\bvvalueof{a_1}(\bvst) \times_\BV^\# \bvvalueof{a_2}(\bvst)) = \bv^\wordsize(0)$}
@@ -285,9 +285,10 @@ A program $p \in \bvProg$ is safe, denoted by $\safe(p)$, if for every state $\b
 
 Figure~\ref{figure:dsl:subtraction} gives a simple yet real implementation of subtraction over $\bbfGF(\myprime)$ with a bit-width $64$.
 In the figure, a constant bit-vector is written in hexadecimal format starting with the prefix $0x$ and a number in $\bbfGF(\varrho)$ is represented by five bit-vectors each with value less than or equal to $2^{51} +_\bbfZ 2^{15}$.
-The variables ${x}_0, {x}_1, {x}_2, {x}_3, {x}_4$ for instance represent $\mathit{radix51}_\BV({x}_4, {x}_3, {x}_2, {x}_1, {x}_0) \defn \bv^{64}(2^{51 \times_\bbfZ 4}) \times {x}_4 + \bv^{64}(2^{51 \times_\bbfZ 3}) \times {x}_3 + \bv^{64}(2^{51 \times_\bbfZ 2}) \times {x}_2 + \bv^{64}(2^{51 \times_\bbfZ 1}) \times {x}_1 + \bv^{64}(2^{51 \times_\bbfZ 0}) \times {x}_0$.
+The variables ${x}_0, {x}_1, {x}_2, {x}_3, {x}_4$ for instance represent $\mathit{radix51}({x}_4, {x}_3, {x}_2, {x}_1, {x}_0) \defn (2^{51 \times 4}) {x}_4 + (2^{51 \times 3}) {x}_3 + (2^{51 \times 2}) {x}_2 + (2^{51 \times 1}) {x}_1 + (2^{51 \times 0}) {x}_0$.
 The result of subtraction is stored in the variables ${r}_0, {r}_1, {r}_2, {r}_3, {r}_4$, which are all required to be in the range from $0$ to $2^{54}$.
-Let $q_a$ $\defn$ $\top$, $q_r$ $\defn$ $0$ $\leq$ ${x}_0,$ ${x}_1,$ ${x}_2,$ ${x}_3,$ ${x}_4,$ ${y}_0,$ ${y}_1,$ ${y}_2,$ ${y}_3,$ ${y}_4$ $\leq$ $\bv^{64}(2^{51} +_\bbfZ 2^{15})$, $q_a'$ $\defn$ $\mathit{radix51}_\BV({x}_4, {x}_3, {x}_2, {x}_1, {x}_0)$ $-$ $\mathit{radix51}_\BV({y}_4, {y}_3, {y}_2, {y}_1, {y}_0)$ $\equiv$ $\mathit{radix51}_\BV({r}_4, {r}_3, {r}_2, {r}_1, {r}_0)$ $\mod$ $\myprime$, and $q_r'$ $\defn$ $0$ $\leq$ ${r}_0,$ ${r}_1,$ ${r}_2,$ ${r}_3,$ ${r}_4$ $<$ $\bv^{64}(2^{54})$.
+Let $\mathit{radix51}_\BV({x}_4, {x}_3, {x}_2, {x}_1, {x}_0)$ denote the representation of $\mathit{radix51}({x}_4, {x}_3, {x}_2, {x}_1, {x}_0)$ in $\bvExpa$.
+Let $q_a$ $\defn$ $\top$, $q_r$ $\defn$ $0$ $\leq$ ${x}_0,$ ${x}_1,$ ${x}_2,$ ${x}_3,$ ${x}_4,$ ${y}_0,$ ${y}_1,$ ${y}_2,$ ${y}_3,$ ${y}_4$ $\leq$ $\bv^{64}(2^{51} +_\bbfZ 2^{15})$, $q_a'$ $\defn$ $\mathit{radix51}_\BV({x}_4, {x}_3, {x}_2, {x}_1, {x}_0)$ $-$ $\mathit{radix51}_\BV($${y}_4,$ ${y}_3,$ ${y}_2,$ ${y}_1,$ ${y}_0)$ $\equiv$ $\mathit{radix51}_\BV($${r}_4,$ ${r}_3,$ ${r}_2,$ ${r}_1,$ ${r}_0)$ $\mod$ $\myprime$, and $q_r'$ $\defn$ $0$ $\leq$ ${r}_0,$ ${r}_1,$ ${r}_2,$ ${r}_3,$ ${r}_4$ $<$ $\bv^{64}(2^{54})$.
 The specification of the mathematical construct is therefore
 \[
 \begin{array}{rcl}
@@ -301,11 +302,10 @@ The specification of the mathematical construct is therefore
 % 4503599627370494 = 0xFFFFFFFFFFFFE
 
 Note that the variables ${r}_i$'s are added with constants after they are initialized with ${x}_i$'s but before ${y}_i$'s are subtracted from them.
-Assume $\safe(\dslcode{bSub})$ holds.
 It is not hard to see that
 \[
 \begin{aligned}
-2\myprime = \mathit{radix51}_\BV (&\unsigned{0xFFFFFFFFFFFFE}, \unsigned{0xFFFFFFFFFFFFE}, \\
+2\myprime = \mathit{radix51} (&\unsigned{0xFFFFFFFFFFFFE}, \unsigned{0xFFFFFFFFFFFFE}, \\
           & \unsigned{0xFFFFFFFFFFFFE}, \unsigned{0xFFFFFFFFFFFFE}, \\
           & \unsigned{0xFFFFFFFFFFFDA})
 \end{aligned}
@@ -314,12 +314,12 @@ after tedious computation.
 Hence
 \[
 \begin{aligned}
-  & \mathit{radix51}_\BV({r}_4, {r}_3, {r}_2, {r}_1, {r}_0) \\
-= & \mathit{radix51}_\BV({x}_4, {x}_3, {x}_2, {x}_1, {x}_0) + 2 \myprime - \mathit{radix51}_\BV({y}_4, {y}_3, {y}_2, {y}_1, {y}_0) \\
-\equiv & \mathit{radix51}_\BV({x}_4, {x}_3, {x}_2, {x}_1, {x}_0) - \mathit{radix51}_\BV({y}_4, {y}_3, {y}_2, {y}_1, {y}_0) \mod\ \myprime.
+  & \mathit{radix51}({r}_4, {r}_3, {r}_2, {r}_1, {r}_0) \\
+= & \mathit{radix51}({x}_4, {x}_3, {x}_2, {x}_1, {x}_0) + 2 \myprime - \mathit{radix51}({y}_4, {y}_3, {y}_2, {y}_1, {y}_0) \\
+\equiv & \mathit{radix51}({x}_4, {x}_3, {x}_2, {x}_1, {x}_0) - \mathit{radix51}({y}_4, {y}_3, {y}_2, {y}_1, {y}_0) \mod\ \myprime.
 \end{aligned}
 \]
-The program in Figure~\ref{figure:dsl:subtraction} is correct.
+The program in Figure~\ref{figure:dsl:subtraction} is correct assuming that it is safe.
 Characteristics of large Galois fields are regularly exploited in mathematical constructs for correctness and efficiency.
 Our domain specific language can easily model such specialized programming techniques.
 Indeed, the reason for adding constants is to prevent underflow.
