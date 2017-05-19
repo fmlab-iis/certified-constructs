@@ -222,7 +222,7 @@ A program $p \in \bvProg$ is safe, denoted by $\safe(p)$, if for every state $\b
         \State{\Return $\bvvalueof{a}(\bvst) <_\BV (\bv^\wordsize(1) \ll_\BV (\wordsize - n))$}
       \EndCase
       \Case{$v_h\ v_l \leftarrow a @ n$} \Return $\btt$ \EndCase
-      \Case{$v_h\ v_l \leftarrow (a_1.a_2)@n$}
+      \Case{$v_h\ v_l \leftarrow (a_1.a_2) \ll n$}
         \State{\Return $\bvvalueof{a_1}(\bvst) <_\BV (\bv^\wordsize(1) \ll_\BV (\wordsize - n))$}
       \EndCase
     \EndMatch

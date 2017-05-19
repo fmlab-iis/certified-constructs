@@ -155,7 +155,7 @@ The function $\textsc{SSAPred}$ then transforms the algebraic part and the range
         \State{\Return $\langle \theta''$,
                 $v_h^{\theta'(v_h)} \ v_l^{\theta''(v_l)} \leftarrow$ $a^\theta$ $@$ $n$$\rangle$}
       \EndCase
-      \Case{$v_h\ v_l \leftarrow (a_1.a_2)@n$}
+      \Case{$v_h\ v_l \leftarrow (a_1.a_2) \ll n$}
         \State{$\theta' \leftarrow \theta\mymapsto{v_h}{\theta(v_h) + 1}$}
         \State{$\theta'' \leftarrow \theta'\mymapsto{v_l}{\theta(v_l) + 1}$}
         \State{\Return $\langle \theta''$,
