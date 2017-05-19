@@ -1,13 +1,11 @@
-Algebraic specifications in \bvdsl are transformed to polynomial polynomial equation entailment problems via \zdsl.
+Algebraic specifications in \bvdsl are transformed to polynomial polynomial equation entailment problems via an intermediate language \zdsl.
 A program in \zdsl is but a straight line of variable assignments on expressions.
 Consider the following syntactic classes:
 \[
 \begin{array}{rcl}
-  \Nat & ::= & {0}\ |\ {1}\ |\ {2}\ |\ \cdots \\
-  \Int & ::= & \cdots \ |\ {-2}\ |\ {-1} \ |\ 0\ |\ {1}\ |\ {2}\ |\ \cdots \\
-  \zExpr & ::= & \Int \ |\ \Var \ |\  {-}\zExpr \ |\
+  \zExpr & ::= & \bbfZ \ |\ \Var \ |\  {-}\zExpr \ |\
                  \zExpr {+} \zExpr \ |\ \zExpr {-} \zExpr \\
-  & & |\ \zExpr {\times} \zExpr  \ |\ \dslcode{Pow} (\zExpr, \Nat)
+  & & |\ \zExpr {\times} \zExpr  \ |\ \dslcode{Pow} (\zExpr, \bbfN)
 \end{array}
 \]
 
@@ -18,17 +16,17 @@ and multiplications of expressions are available.
 The expression $\dslcode{Pow}(e, n)$ denotes $e^n$ for any expression $e$ and natural number $n$.
 More formally, let $\zSt \defn \Var \rightarrow
 \bbfZ$ and $\zst \in \zSt$ be a state. That is,
-a {state} $\zst$ is a mapping from variables to integers. Define the
-semantic function $\valueof{e}(\zst)$ as follows.
+a {state} $\zst$ in \zdsl is a mapping from variables to integers. Define the
+semantic function $\zvalueof{e}(\zst)$ as follows.
 \[
 \begin{array}{rcl}
-  \valueof{{i}}(\zst) & \defn & i \textmd{  for ${i} \in \Int$} \\
-  \valueof{{v}}(\zst) & \defn & \zst({v}) \textmd{  for ${v} \in \Var$} \\
-  \valueof{-e}(\zst) & \defn & -_{\bbfZ}\valueof{e}(\zst) \\
-  \valueof{e_0 + e_1}(\zst) & \defn & \valueof{e_0}(\zst) +_{\bbfZ} \valueof{e_1}(\zst) \\
-  \valueof{e_0 - e_1}(\zst) & \defn & \valueof{e_0}(\zst) -_{\bbfZ} \valueof{e_1}(\zst) \\
-  \valueof{e_0 \times e_1}(\zst) & \defn & \valueof{e_0}(\zst) \times_{\bbfZ} \valueof{e_1}(\zst) \\
-  \valueof{\dslcode{Pow}(e, n)}(\zst) & \defn & (\valueof{e}(\zst))^{\valueof{n}(\zst)}
+  \zvalueof{{i}}(\zst) & \defn & i \textmd{  for ${i} \in \bbfZ$} \\
+  \zvalueof{{v}}(\zst) & \defn & \zst({v}) \textmd{  for ${v} \in \Var$} \\
+  \zvalueof{-e}(\zst) & \defn & -_{\bbfZ}\zvalueof{e}(\zst) \\
+  \zvalueof{e_0 + e_1}(\zst) & \defn & \zvalueof{e_0}(\zst) +_{\bbfZ} \zvalueof{e_1}(\zst) \\
+  \zvalueof{e_0 - e_1}(\zst) & \defn & \zvalueof{e_0}(\zst) -_{\bbfZ} \zvalueof{e_1}(\zst) \\
+  \zvalueof{e_0 \times e_1}(\zst) & \defn & \zvalueof{e_0}(\zst) \times_{\bbfZ} \zvalueof{e_1}(\zst) \\
+  \zvalueof{\dslcode{Pow}(e, n)}(\zst) & \defn & (\zvalueof{e}(\zst))^n
 \end{array}
 \]
 
@@ -49,17 +47,17 @@ The statement $\concat{v_h}{v_l} \leftarrow
 the lowest $n$ bits are stored in $v_l$ and the remaining higher bits
 are stored in $v_h$.
 Consider the relation $\zTr \subseteq \zSt \times \zStmt \times \zSt$ defined
-by $(\zst, v \leftarrow e, \zst\mymapsto{v}{\valueof{e}(\zst)}) \in \zTr$, and
+by $(\zst, v \leftarrow e, \zst\mymapsto{v}{\zvalueof{e}(\zst)}) \in \zTr$, and
   $(\zst, \concat{v_h}{v_l} \leftarrow \dslcode{Split} (e, n),
   \zst\mymapsto{v_h}{\mathit{hi}}\mymapsto{v_l}{\mathit{lo}}) \in \zTr$
 where
-$\mathit{hi} = (\valueof{e}(\zst) - lo) \div 2^{\valueof{n}(\zst)}$ and
-$\mathit{lo} = \valueof{e}(\zst) \mod 2^{\valueof{n}(\zst)}$.
+$\mathit{hi} = (\zvalueof{e}(\zst) - lo) \div 2^{n}$ and
+$\mathit{lo} = \zvalueof{e}(\zst) \mod 2^{n}$.
 Intuitively, $(\zst, s, \zst') \in \zTr$ denotes that the state $\zst$ transits to
 the state $\zst'$ after executing the statement $s$.
 \begin{eqnarray*}
   \zStmt & ::= & \Var \leftarrow \zExpr
-            \ |\  \concat{\Var}{\Var} \leftarrow \dslcode{Split} (\zExpr, \Nat) \\
+            \ |\  \concat{\Var}{\Var} \leftarrow \dslcode{Split} (\zExpr, \bbfN) \\
   \zProg & ::= & \epsilon \ |\ \zStmt; \zProg
 \end{eqnarray*}
 A program is a sequence of statements. Again, we denote the empty program by
@@ -105,9 +103,16 @@ $\bbfZ \models q'[\zst']$. Less formally, $\models
 results in a $q'$-state.
 }
 
-The predicates in \zdsl share the same syntax as the algebraic predicates in \bvdsl but are evaluated on $\zSt$ rather than on $\bvSt$.
-For $\zst \in \zSt$ and $q \in \bvPreda$, write $\bbfZ \models q[\zst]$ if $q$ evaluates to $\btt$ after replacing each variable $v$ with $\zst(v)$.
-Given $q, q' \in \bvPred$ and $p \in \zProg$, $\hoaretriple{q}{p}{q'}$ is valid (written $\models \hoaretriple{q}{p}{q'}$) if for every $\zst, \zst' \in \zSt$, $\bbfZ \models q[\zst]$ and $\zst \goesto{p} \zst'$ imply $\bbfZ \models q'[\zst']$.
+The predicates $\zPred$ in \zdsl share the same syntax as the algebraic predicates in \bvdsl but are evaluated on $\zSt$ rather than on $\bvSt$.
+\[
+\begin{array}{rcl}
+  \zPred & ::= & \top \ |\ \zExpr = \zExpr\ |\ \zExpr \equiv \zExpr \mod \zExpr \\
+         &     & |\ \zPred \wedge \zPred \\
+\end{array}
+\]
+For $\zst \in \zSt$ and $q \in \bvPreda$, write $\bbfZ \models q[\zst]$ if $q$ evaluates to $\btt$ using the evaluation function $\zvalueof{e}(\zst)$ for every subexpression $e$ in $q$.
+%after replacing each variable $v$ with $\zst(v)$.
+Given $q, q' \in \zPred$ and $p \in \zProg$, $\hoaretriple{q}{p}{q'}$ is valid (written $\models \hoaretriple{q}{p}{q'}$) if for every $\zst, \zst' \in \zSt$, $\bbfZ \models q[\zst]$ and $\zst \goesto{p} \zst'$ imply $\bbfZ \models q'[\zst']$.
 
 \hide{
 \begin{figure*}[ht]
@@ -153,62 +158,88 @@ Given $q, q' \in \bvPred$ and $p \in \zProg$, $\hoaretriple{q}{p}{q'}$ is valid 
 }
 
 Now we are ready to describe the transformation from an algebraic specification in \bvdsl to a specification in \zdsl.
-Given a program $p$ in \bvdsl and in static single assignment form, with the help of the function \textsc{BV2ZStmt} (Algorithm~\ref{algorithm:bv2z-stmt}), the function \textsc{BV2ZProg} (Algorithm~\ref{algorithm:bv2z-prog}) transforms $p$ to a program in \zdsl such that the following soundness theorem holds.
+For algebraic expressions, since $\zExpr$ subsumes $\bvExpa$, we can easily define a function \textsc{BV2ZExpr} that converts an algebraic expression $e_a \in \bvExpa$ to $\zExpr$ such that for every $\bvst \in \bvSt$ and $\zst \in \zSt$ with $|\bvst(v)| = \zst(v)$ for all variables v (written as $\bvst \simeq \zst$), $\zvalueof{e_a}(\bvst) = \zvalueof{\textsc{BV2ZExpr}(e_a)}(\zst)$.
+Similarly, we can define a function \textsc{BV2ZPred} such that for every $q_a \in \bvPreda$, $\bvst \in \bvSt$, and $\zst \in \zSt$ with $\bvst \simeq \zst$, $\BV^{\wordsize} \models q_a[\bvst]$ if and only if $\bbfZ \models \textsc{BV2ZPred}(q_a)[\zst]$.
+Atoms are translated by the function $\textsc{BV2ZAtom}$.
+\[
+\textsc{BV2ZAtom}(a) = \left\{
+  \begin{array}{ll}
+  |b| & \textmd{ if $a$ is a bit-vector $b$} \\
+  v   & \textmd{ if $a$ is a variable $v$}
+  \end{array} \right.
+\]
+Let $\tilde{a}$ denote $\textsc{BV2ZAtom}(a)$ for $a \in bvAtom$.
+Functions \textsc{BV2ZStmt} (Algorithm~\ref{algorithm:bv2z-stmt}) and \textsc{BV2ZProg} (Algorithm~\ref{algorithm:bv2z-prog}) are defined to respectively transform a statement in \bvdsl to a statement in \zdsl and a program in \bvdsl to a program in \zdsl.
+With these translation functions, the following soundness theorem holds.
 \begin{theorem}
-  For every $q_a, q_a' \in \bvPreda$, $q_r, q_r' \in \bvPredr$, and $p \in \bvProg$, $\models \hoaretriple{q_a \wedge q_r}{p}{q_a' \wedge q_r'}$ if all the following conditions hold.
+  For every $q_a, q_a' \in \bvPreda$, $q_r, q_r' \in \bvPredr$, and $p \in \bvProg$, $\models \hoaretriple{q_a \andar q_r}{p}{q_a' \andar q_r'}$ if all the following conditions hold.
   \begin{itemize}
-  \item[C1] The program $p$ neither overflows nor underflows under the assumption that the range precondition $q_r$ holds.
+  \item[C1] $\BV^\wordsize \models q_r[\bvst]$ implies $\textsc{ProgSafe}(p, \bvst) = \btt$ for all $\bvst \in \bvSt$.
   \item[C2] $\models \hoaretriple{q_r}{p}{q_r'}$.
-  \item[C3] $\models \hoaretriple{q_a}{\textsc{BV2ZProg}(p)}{q_a'}$.
+  \item[C3] $\models \hoaretriple{\textsc{BV2ZPred}(q_a)}{\textsc{BV2ZProg}(p)}{\textsc{BV2ZPred}(q_a')}$.
   \end{itemize}
   \label{theorem:bv2z}
 \end{theorem}
-As conditions C1 and C2 involve only bit-vector operations, both conditions can be verified by translations to the QF\_BV fragment (quantifier-free formulas over the theory of fixed-size bit-vectors) of SMT similar to the approach in~\cite{C:14:VCS}.
-Additionally, correctness of our translations from conditions C1 and C2 to QF\_BV formulas is proved and certified by \coq.
-Condition C3 is verified by a transformation to polynomial equation entailment to be introduced in the next section.
+As conditions C1 and C2 involve only bit-vector operations, both conditions can be verified by translations to the QF\_BV fragment (quantifier-free formulas over the theory of fixed-size bit-vectors) of SMT (Section~\ref{subsection:solving-range-overflow-checks}).
+Condition C3 is verified by a transformation to polynomial equation entailment (Section~\ref{subsection:solving-algebraic-equations}).
 Note that the inverse implication of Theorem~\ref{theorem:bv2z} does not hold because for example, $\models \hoaretriple{q_r}{p}{q_r'}$ may require that $q_a$ holds initally but we do not consider any algebraic predicates in verifying range specifications.
+
+\hide{
+\begin{algorithm}
+  \begin{algorithmic}[1]
+    \Function{BV2ZAtom}{$a$}
+    \Match{$a$}
+      \Case{$b$} \Return{$|b|$} \EndCase
+      \Case{$v$} \Return{v} \EndCase
+    \EndMatch
+    \EndFunction
+  \end{algorithmic}
+  \caption{Transformation from $\bvAtom$ to $\zExpr$}
+  \label{algorithm:bv2z-atom}
+\end{algorithm}
+}
 
 \begin{algorithm}
   \begin{algorithmic}[1]
     \Function{BV2ZStmt}{$s$}
     \Match{$s$}
       \Case{$v \leftarrow a$}
-        \Return $v \leftarrow a$
+        \Return $v \leftarrow \tilde{a}$
       \EndCase
       \Case{$v \leftarrow a_1 + a_2$}
-        \Return $v \leftarrow a_1 + a_2$
+        \Return $v \leftarrow \tilde{a_1} + \tilde{a_2}$
       \EndCase
       \Case{$c\ v \leftarrow a_1 + a_2$}
-        \Return $\concat{c}{v} \leftarrow \dslcode{Split}(a_1 + a_2, w)$
+        \State{\Return $\concat{c}{v} \leftarrow \dslcode{Split}(\tilde{a_1} + \tilde{a_2}, w)$}
       \EndCase
       \Case{$v \leftarrow a_1 + a_2 + y$}
-        \Return $v \leftarrow a_1 + a_2 + y$
+        \Return $v \leftarrow \tilde{a_1} + \tilde{a_2} + y$
       \EndCase
       \Case{$c\ v \leftarrow a_1 + a_2 + y$}
-        \Return $\concat{c}{v} \leftarrow \dslcode{Split}(a_1 + a_2 + y, w)$
+        \State{\Return $\concat{c}{v} \leftarrow \dslcode{Split}(\tilde{a_1} + \tilde{a_2} + y, w)$}
       \EndCase
       \Case{$v \leftarrow a_1 - a_2$}
-        \Return $v \leftarrow a_1 - a_2$
+        \Return $v \leftarrow \tilde{a_1} - \tilde{a_2}$
       \EndCase
       \Case{$v \leftarrow a_1 \times a_2$}
-        \Return $v \leftarrow a_1 \times a_2$
+        \Return $v \leftarrow \tilde{a_1} \times \tilde{a_2}$
       \EndCase
-      \Case{$h\ l \leftarrow a_1 \times a_2$}
-        \Return $\concat{h}{l} \leftarrow \dslcode{Split}(a_1 \times a_2, w)$
+      \Case{$v_h\ v_l \leftarrow a_1 \times a_2$}
+        \State{\Return $\concat{v_h}{v_l} \leftarrow \dslcode{Split}(\tilde{a_1} \times \tilde{a_2}, w)$}
       \EndCase
-      \Case{$v \leftarrow a << n$}
-        \Return $v \leftarrow a \times \dslcode{Pow}(2, |n|)$
+      \Case{$v \leftarrow a \ll n$}
+        \Return $v \leftarrow \tilde{a} \times \dslcode{Pow}(2, |n|)$
       \EndCase
-      \Case{$h\ l \leftarrow a@n$}
-        \Return $\concat{h}{l} \leftarrow \dslcode{Split}(a, |n|)$
+      \Case{$v_h\ v_l \leftarrow a@n$}
+        \Return $\concat{v_h}{v_l} \leftarrow \dslcode{Split}(\tilde{a}, |n|)$
       \EndCase
-      \Case{$h\ l \leftarrow (a_1.a_2)@n$}
-        \Return $\concat{h}{l} \leftarrow \dslcode{Split}(a_1 \times \dslcode{Pow}(2, w) + a_2, w - |n|)$
+      \Case{$v_h\ v_l \leftarrow (a_1.a_2)@n$}
+        \State{\Return $\concat{v_h}{v_l} \leftarrow \dslcode{Split}(\tilde{a_1} \times \dslcode{Pow}(2, w) + \tilde{a_2}, w - |n|)$}
       \EndCase
     \EndMatch
     \EndFunction
   \end{algorithmic}
-  \caption{Transformation from $\bvStmt$ to $\zStmt$ ($w$ is the fixed wordsize)}
+  \caption{Transformation from $\bvStmt$ to $\zStmt$ ($w$ is the assumed wordsize)}
   \label{algorithm:bv2z-stmt}
 \end{algorithm}
 
@@ -232,7 +263,46 @@ The function \textsc{BV2ZProg} preserves well-formedness and static single assig
   Given a well-formed program $p \in \bvProg$ in static single assignment form, $\textsc{BV2ZProg}(p) \in \zProg$ is well-formed and in static single assignment form.
 \end{lemma}
 
-The example program \dslcode{subSSA} only contains statements involving addition and subtraction and thus \textsc{BV2ZProg}(\dslcode{subSSA}) looks exactly the same as \dslcode{subSSA}.
+Figure~\ref{figure:translation:subtraction-zdsl} shows the result of transforming the subtraction program \dslcode{bSubSSA} to \zdsl.
+
+\begin{figure*}
+  \centering
+  \[
+  \begin{array}{lclcl}
+    \begin{array}{rcl}
+    \textmd{1:} && {r}^1_0 \leftarrow {x}^0_0; \\
+    \textmd{2:} && {r}^1_1 \leftarrow {x}^0_1; \\
+    \textmd{3:} && {r}^1_2 \leftarrow {x}^0_2; \\
+    \textmd{4:} && {r}^1_3 \leftarrow {x}^0_3; \\
+    \textmd{5:} && {r}^1_4 \leftarrow {x}^0_4; \\
+    \end{array}
+    &\hspace{.05\textwidth}&
+    \begin{array}{rcl}
+    \textmd{6:} &&
+      {r}^2_0 \leftarrow {r}^1_0 + {4503599627370458}; \\
+    \textmd{7:} &&
+      {r}^2_1 \leftarrow {r}^1_1 + {4503599627370494}; \\
+    \textmd{8:} &&
+      {r}^2_2 \leftarrow {r}^1_2 + {4503599627370494}; \\
+    \textmd{9:} &&
+      {r}^2_3 \leftarrow {r}^1_3 + {4503599627370494}; \\
+    \textmd{10:} &&
+      {r}^2_4 \leftarrow {r}^1_4 + {4503599627370494};\\
+    \end{array}
+    &\hspace{.05\textwidth}&
+    \begin{array}{rcl}
+    \textmd{11:} && {r}^3_0 \leftarrow {r}^2_0 - {y}^0_0; \\
+    \textmd{12:} && {r}^3_1 \leftarrow {r}^2_1 - {y}^0_1; \\
+    \textmd{13:} && {r}^3_2 \leftarrow {r}^2_2 - {y}^0_2; \\
+    \textmd{14:} && {r}^3_3 \leftarrow {r}^2_3 - {y}^0_3; \\
+    \textmd{15:} && {r}^3_4 \leftarrow {r}^2_4 - {y}^0_4;
+    \end{array}
+  \end{array}
+  \]
+  \caption{Subtraction \textsc{BV2ZProg}(\dslcode{bSubSSA})}
+  \label{figure:translation:subtraction-zdsl}
+\end{figure*}
+
 
 \hide{
 Figure~\ref{figure:dsl:subtraction} gives a simple yet real

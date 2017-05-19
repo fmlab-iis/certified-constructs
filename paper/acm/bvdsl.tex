@@ -51,27 +51,28 @@ The domain specific language \bvdsl is designed based on the same
 principles. Conditional branches and indirect memory accesses are not
 admitted in \bvdsl.
 
-A program is a straight line of instructions over bit-vectors with bit-width $w$.
+Assume some machine architecture with a positive wordsize $\wordsize$.
+A program is a straight line of instructions over bit-vectors with bit-width $\wordsize$.
 \[
 \begin{array}{rcl}
   \Var & ::= & {x} \ |\ {y} \ |\ {z} \ |\ \cdots \\
-  \bvAtom & ::= & \Var \ |\ \BV^w \\
+  \bvAtom & ::= & \Var \ |\ \BV^{\wordsize} \\
   \bvStmt & ::= & \Var \leftarrow \bvAtom \\
-          &     & |\ \Var \leftarrow \bvAtom {+} \bvAtom \\
-          &     & |\ \Var\ \Var \leftarrow \bvAtom {+} \bvAtom \\
-          &     & |\ \Var \leftarrow \bvAtom {+} \bvAtom {+} \Var \\
-          &     & |\ \Var\ \Var \leftarrow \bvAtom {+} \bvAtom {+} \Var  \\
-          &     & |\ \Var \leftarrow \bvAtom {-} \bvAtom \\
-          &     & |\ \Var \leftarrow \bvAtom {*} \bvAtom \\
-          &     & |\ \Var\ \Var \leftarrow \bvAtom {*} \bvAtom \\
-          &     & |\ \Var \leftarrow \bvAtom {<<} \BV^w \\
-          &     & |\ \Var\ \Var \leftarrow \bvAtom {@} \BV^w \\
-          &     & |\ \Var\ \Var \leftarrow (\bvAtom {.} \bvAtom) {<<} \BV^w
+          &     & |\ \Var \leftarrow \bvAtom\ {+}\ \bvAtom \\
+          &     & |\ \Var\ \Var \leftarrow \bvAtom\ {+}\ \bvAtom \\
+          &     & |\ \Var \leftarrow \bvAtom\ {+}\ \bvAtom\ {+}\ \Var \\
+          &     & |\ \Var\ \Var \leftarrow \bvAtom\ {+}\ \bvAtom\ {+}\ \Var  \\
+          &     & |\ \Var \leftarrow \bvAtom\ {-}\ \bvAtom \\
+          &     & |\ \Var \leftarrow \bvAtom\ {\times}\ \bvAtom \\
+          &     & |\ \Var\ \Var \leftarrow \bvAtom\ {\times}\ \bvAtom \\
+          &     & |\ \Var \leftarrow \bvAtom\ {\ll}\ \BV^{\wordsize} \\
+          &     & |\ \Var\ \Var \leftarrow \bvAtom {@} \BV^{\wordsize} \\
+          &     & |\ \Var\ \Var \leftarrow (\bvAtom {.} \bvAtom)\ {\ll}\ \BV^{\wordsize}
 \end{array}
 \]
 
-Let $\bvSt \defn \Var \rightarrow \BV^w$ and $\bvst \in \bvSt$ be a \emph{state} (or \emph{valuation}).
-That is, a {state} $\bvst$ is a mapping from variables to bit-vectors in $\BV^w$.
+Let $\bvSt \defn \Var \rightarrow \BV^{\wordsize}$ and $\bvst \in \bvSt$ be a \emph{state} (or \emph{valuation}).
+That is, a {state} $\bvst$ is a mapping from variables to bit-vectors in $\BV^{\wordsize}$.
 Define
 $
 \bvst\mymapsto{v}{d}(u) \defn
@@ -86,8 +87,8 @@ Define the semantic function $\bvvalueof{\cdot}(\bvst)$ for variables and atomic
 \[
 \begin{array}{rcl}
 %\valueof{i}_{\bvst} & \defn & i \textmd{  for ${i} \in \Int$} \\
-%\valueof{b}_{\bvst} & \defn & b \textmd{  for ${b} \in \BV^w$} \\
-%\bvvalueof{v}(\bvst) & \defn & \bvst(v) \textmd{  for ${v} \in \Var$} \\
+%\valueof{b}_{\bvst} & \defn & b \textmd{  for ${b} \in \BV^{\wordsize}$} \\
+\bvvalueof{v}(\bvst) & \defn & \bvst(v) \textmd{  for ${v} \in \Var$} \\
 \bvvalueof{a}(\bvst) & \defn & \left\{
   \begin{array}{ll}
   \bvst(v) & \textmd{if $a$ is a variable $v$} \\
@@ -99,22 +100,22 @@ Define the semantic function $\bvvalueof{\cdot}(\bvst)$ for variables and atomic
 Consider the transition relation $\bvTr \subseteq \bvSt \times \bvStmt \times \bvSt$ defined in Figure~\ref{fig:semantic-function-bvdsl} where
 $\bvst \goesto{s} \bvst'$ denotes $(\bvst, s, \bvst') \in \bvTr$
 for $\bvst, \bvst' \in \bvSt$ and $s \in \bvStmt$.
-Basically, $r \leftarrow a_1 + a_2$ is addition, $c\ r \leftarrow a_1 + a_2$ is addition with carry bit placed in $c$, $r \leftarrow a_1 + a_2 + v$ is addition of atoms plus a variable $v$, $c\ r \leftarrow a_1 + a_2 + v$ is addition of atoms plus a variable $v$ with carry bit placed in $c$, $r \leftarrow a_1 - a_2$ is subtraction, $r \leftarrow a_1 * a_2$ is multiplication, $h\ l \leftarrow a_1 * a_2$ is full multiplication, $r \leftarrow a << n$ is left-shifting, $h\ l \leftarrow a @ n$ is splitting at position $n$, and $h\ l \leftarrow (a_1 . a_2) << n$ is left-shifting of $n$ high bits from $a_2$ to $a_1$.
-The variable $v$ in $r \leftarrow a_1 + a_2 + v$ and $c\ r \leftarrow a_1 + a_2 + v$ is intended but not restricted to be carry bits.
+Basically, $v \leftarrow a_1 + a_2$ is addition, $c\ v \leftarrow a_1 + a_2$ is addition with carry bit placed in $c$, $v \leftarrow a_1 + a_2 + y$ is addition of atoms plus a variable $y$, $c\ v \leftarrow a_1 + a_2 + y$ is addition of atoms plus a variable $y$ with carry bit placed in $c$, $v \leftarrow a_1 - a_2$ is subtraction, $v \leftarrow a_1 \times a_2$ is multiplication, $v_h\ v_l \leftarrow a_1 \times a_2$ is full multiplication, $v \leftarrow a \ll n$ is left-shifting, $v_h\ v_l \leftarrow a @ n$ is splitting at position $n$, and $v_h\ v_l \leftarrow (a_1 . a_2) \ll n$ is left-shifting of $n$ higher bits from $a_2$ to $a_1$.
+The variable $y$ in $v \leftarrow a_1 + a_2 + y$ and $c\ v \leftarrow a_1 + a_2 + y$ is intended but not restricted to be carry bits.
 
 \begin{figure*}
 \[
 \begin{array}{rcl}
-\bvst & \goesto{r \leftarrow a_1 + a_2} & \bvst[r \leftarrow \bvvalueof{a_1}(\bvst) +_\bvop \bvvalueof{a_2}(\bvst)] \\
-\bvst & \goesto{c\ r \leftarrow a_1 + a_2} & \bvst[r \leftarrow \bvvalueof{a_1}(\bvst) +_\bvop^\lo \bvvalueof{a_2}(\bvst)][c \leftarrow \bvvalueof{a_1}(\bvst) +_\bvop^\hi \bvvalueof{a_2}(\bvst)] \\
-\bvst & \goesto{r \leftarrow a_1 + a_2 + v} & \bvst[r \leftarrow \lo_\bvop(\bvvalueof{a_1}(\bvst) +_\bvop^\# \bvvalueof{a_2}(\bvst) +_\bvop^\# \bvvalueof{v}(\bvst))] \\
-\bvst & \goesto{c\ r \leftarrow a_1 + a_2 + v} & \bvst[r \leftarrow \lo_\bvop(\bvvalueof{a_1}(\bvst) +_\bvop^\# \bvvalueof{a_2}(\bvst) +_\bvop^\# \bvvalueof{v}(\bvst))][c \leftarrow \hi_\bvop(\bvvalueof{a_1}(\bvst) +_\bvop^\# \bvvalueof{a_2}(\bvst) +_\bvop^\# \bvvalueof{v}(\bvst))] \\
-\bvst & \goesto{r \leftarrow a_1 - a_2} & \bvst[r \leftarrow \bvvalueof{a_1}(\bvst) -_\bvop \bvvalueof{a_2}(\bvst)] \\
-\bvst & \goesto{r \leftarrow a_1 * a_2} & \bvst[r \leftarrow \bvvalueof{a_1}(\bvst) *_\bvop \bvvalueof{a_2}(\bvst)] \\
-\bvst & \goesto{h\ l \leftarrow a_1 * a_2} & \bvst[h \leftarrow \bvvalueof{a_1}(\bvst) *_\bvop^\hi \bvvalueof{a_2}(\bvst)][l \leftarrow \bvvalueof{a_1}(\bvst) *_\bvop^\lo \bvvalueof{a_2}(\bvst)] \\
-\bvst & \goesto{r \leftarrow a << n} & \bvst[r \leftarrow \bvvalueof{a}(\bvst) <<_\bvop \unsigned{n}] \\
-\bvst & \goesto{h\ l \leftarrow a @ n} & \bvst[h \leftarrow \bvvalueof{a}(\bvst) >>_\bvop \unsigned{n}][l \leftarrow (\bvvalueof{a}(\bvst) <<_\bvop (w -_{\bbfN} \unsigned{n}))  >>_\bvop (w -_{\bbfN} \unsigned{n})] \\
-\bvst & \goesto{h\ l \leftarrow (a_1 . a_2) << n} & \bvst[h \leftarrow \hi_\bvop((\bvvalueof{a_1}(\bvst) ._\bvop \bvvalueof{a_2}(\bvst)) <<_\bvop \unsigned{n})][l \leftarrow (\lo_\bvop((\bvvalueof{a_1}(\bvst) ._\bvop \bvvalueof{a_2}(\bvst)) <<_\bvop \unsigned{n})) >>_\bvop \unsigned{n}] \\
+\bvst & \goesto{v \leftarrow a_1 + a_2} & \bvst[v \leftarrow \bvvalueof{a_1}(\bvst) +_\bvop \bvvalueof{a_2}(\bvst)] \\
+\bvst & \goesto{c\ v \leftarrow a_1 + a_2} & \bvst[v \leftarrow \lo_\bvop(\bvvalueof{a_1}(\bvst) +_\bvop^\# \bvvalueof{a_2}(\bvst))][c \leftarrow \hi_\bvop(\bvvalueof{a_1}(\bvst) +_\bvop^\# \bvvalueof{a_2}(\bvst))] \\
+\bvst & \goesto{v \leftarrow a_1 + a_2 + y} & \bvst[v \leftarrow \lo_\bvop(\bvvalueof{a_1}(\bvst) +_\bvop^\# \bvvalueof{a_2}(\bvst) +_\bvop^\# \bvvalueof{y}(\bvst))] \\
+\bvst & \goesto{c\ v \leftarrow a_1 + a_2 + y} & \bvst[v \leftarrow \lo_\bvop(\bvvalueof{a_1}(\bvst) +_\bvop^\# \bvvalueof{a_2}(\bvst) +_\bvop^\# \bvvalueof{y}(\bvst))][c \leftarrow \hi_\bvop(\bvvalueof{a_1}(\bvst) +_\bvop^\# \bvvalueof{a_2}(\bvst) +_\bvop^\# \bvvalueof{y}(\bvst))] \\
+\bvst & \goesto{v \leftarrow a_1 - a_2} & \bvst[v \leftarrow \bvvalueof{a_1}(\bvst) -_\bvop \bvvalueof{a_2}(\bvst)] \\
+\bvst & \goesto{v \leftarrow a_1 \times a_2} & \bvst[v \leftarrow \bvvalueof{a_1}(\bvst) \times_\bvop \bvvalueof{a_2}(\bvst)] \\
+\bvst & \goesto{v_h\ v_l \leftarrow a_1 \times a_2} & \bvst[v_h \leftarrow \hi_\bvop(\bvvalueof{a_1}(\bvst) \times_\bvop^\# \bvvalueof{a_2}(\bvst))][v_l \leftarrow \lo_\bvop(\bvvalueof{a_1}(\bvst) \times_\bvop^\# \bvvalueof{a_2}(\bvst))] \\
+\bvst & \goesto{v \leftarrow a \ll n} & \bvst[v \leftarrow \bvvalueof{a}(\bvst) \ll_\bvop \unsigned{n}] \\
+\bvst & \goesto{v_h\ v_l \leftarrow a @ n} & \bvst[v_h \leftarrow \bvvalueof{a}(\bvst) \gg_\bvop \unsigned{n}][v_l \leftarrow (\bvvalueof{a}(\bvst) \ll_\bvop (\wordsize -_{\bbfN} \unsigned{n})) \gg_\bvop (\wordsize -_{\bbfN} \unsigned{n})] \\
+\bvst & \goesto{v_h\ v_l \leftarrow (a_1 . a_2) \ll n} & \bvst[v_h \leftarrow \hi_\bvop((\bvvalueof{a_1}(\bvst) ._\bvop \bvvalueof{a_2}(\bvst)) \ll_\bvop \unsigned{n})][v_l \leftarrow (\lo_\bvop((\bvvalueof{a_1}(\bvst) ._\bvop \bvvalueof{a_2}(\bvst)) \ll_\bvop \unsigned{n})) \gg_\bvop \unsigned{n}] \\
 \end{array}
 \]
 \caption{Transition relation $\bvTr$ for \bvdsl. \label{fig:semantic-function-bvdsl}}
@@ -126,46 +127,39 @@ We denote the empty program by $\epsilon$.
   \bvProg & ::= & \epsilon \ |\ \bvStmt; \bvProg
 \end{eqnarray*}
 Observe that conditional branches are not allowed in our domain specific language to prevent timing attacks.
-The semantics of a program is defined by the relation
-$\bvTr^* \subseteq \bvSt \times \bvProg \times \bvSt$ where
-$(\bvst, \epsilon, \bvst) \in \bvTr^*$ and
-$(\bvst, s; p, \bvst'') \in \bvTr^* \textmd{ if }
-    \textmd{there is a } \bvst' \textmd{ with }
-    (\bvst, s, \bvst') \in \bvTr$ and
-    $(\bvst, p, \bvst'') \in \bvTr^*$.
+The semantics of a program is defined by the relation $\bvTr^* \subseteq \bvSt \times \bvProg \times \bvSt$ where $(\bvst, \epsilon, \bvst) \in \bvTr^*$ and $(\bvst, s; p, \bvst'') \in \bvTr^*$ if there is a $\bvst'$ with $(\bvst, s, \bvst') \in \bvTr$ and $(\bvst, p, \bvst'') \in \bvTr^*$.
 We write $\bvst \goesto{p} \bvst'$ when $(\bvst, p, \bvst') \in \bvTr^*$.
 
 For specifications, $\top$ denotes the Boolean value $\mathit{tt}$.
-We allow two kinds of specifications, namely algebraic specifications evaluated on domain $\bbfZ$ and range specifications evaluated on domain $\BV^w$.
+We allow two kinds of specifications, namely algebraic specifications evaluated on domain $\bbfZ$ and range specifications evaluated on domain $\BV^{\wordsize}$.
 Atomic predicates in an algebraic specification include polynomial equations $e_1 = e_2$ and modular polynomial equations $e_1 \equiv e_2 \mod e_3$ where $e_i \in \bvExpa$ is a polynomial expression for $i \in \{1, 2, 3\}$.
 An \emph{algebraic predicate} $q_a \in \bvPreda$ is then a conjunction of atomic algebraic predicates.
 \[
 \begin{array}{rcl}
-  \bvExpa & ::= & \Var \ |\ \bbfZ \ |\ - \bvExpa \ |\ \bvExpa + \bvExpa \\
-          &     & |\ \bvExpa - \bvExpa \ |\ \bvExpa * \bvExpa \\
-  \bvPreda & ::= & \top \ |\ \bvExpa = \bvExpa \\
-           &     & |\ \bvExpa \equiv \bvExpa \mod \bvExpa \\
+  \bvExpa & ::= & \bbfZ \ |\ \Var \ |\ - \bvExpa \ |\ \bvExpa + \bvExpa \\
+          &     & |\ \bvExpa - \bvExpa \ |\ \bvExpa \times \bvExpa \\
+  \bvPreda & ::= & \top \ |\ \bvExpa = \bvExpa\ |\ \bvExpa \equiv \bvExpa \mod \bvExpa \\
            &     & |\ \bvPreda \wedge \bvPreda \\
 \end{array}
 \]
 Given a state $\bvst \in \bvSt$ and an expression $e \in \bvExpa$, $\zvalueof{e}(\bvst)$ denotes the value of $e$ on $\bvst$.
 \[
 \begin{array}{rcl}
-  \zvalueof{v} & \defn & \unsigned{\bvst(v)} \textmd{ for $v \in \Var$} \\
-  \zvalueof{n} & \defn & n \textmd{ for $n \in \bbfZ$} \\
-  \zvalueof{- e} & \defn & -_\bbfZ \zvalueof{e}(\bvst) \\
-  \zvalueof{e_1 + e_2} & \defn & \zvalueof{e_1}(\bvst) +_\bbfZ \zvalueof{e_2}(\bvst) \\
-  \zvalueof{e_1 - e_2} & \defn & \zvalueof{e_1}(\bvst) -_\bbfZ \zvalueof{e_2}(\bvst) \\
-  \zvalueof{e_1 * e_2} & \defn & \zvalueof{e_1}(\bvst) *_\bbfZ \zvalueof{e_2}(\bvst) \\
+  \zvalueof{n}(\bvst) & \defn & n \textmd{ for $n \in \bbfZ$} \\
+  \zvalueof{v}(\bvst) & \defn & \unsigned{\bvst(v)} \textmd{ for $v \in \Var$} \\
+  \zvalueof{- e}(\bvst) & \defn & -_\bbfZ \zvalueof{e}(\bvst) \\
+  \zvalueof{e_1 + e_2}(\bvst) & \defn & \zvalueof{e_1}(\bvst) +_\bbfZ \zvalueof{e_2}(\bvst) \\
+  \zvalueof{e_1 - e_2}(\bvst) & \defn & \zvalueof{e_1}(\bvst) -_\bbfZ \zvalueof{e_2}(\bvst) \\
+  \zvalueof{e_1 \times e_2}(\bvst) & \defn & \zvalueof{e_1}(\bvst) \times_\bbfZ \zvalueof{e_2}(\bvst) \\
 \end{array}
 \]
-For an algebraic predicate $q_a \in \bvPreda$, we write $\BV^w \models q_a[\bvst]$ if $q_a$ evaluates to $\btt$ using the evaluation function $\zvalueof{e}(\bvst)$ for every subexpression $e$ in $q$.
-%For an algebraic predicate $q_a \in \bvPreda$, we write $\BV^w \models q_a[\bvst]$ if one of the following %holds.
+For an algebraic predicate $q_a \in \bvPreda$, we write $\BV^{\wordsize} \models q_a[\bvst]$ if $q_a$ evaluates to $\btt$ using the evaluation function $\zvalueof{e}(\bvst)$ for every subexpression $e$ in $q$.
+%For an algebraic predicate $q_a \in \bvPreda$, we write $\BV^{\wordsize} \models q_a[\bvst]$ if one of the following %holds.
 %\begin{itemize}
 %  \item $q$ is $\top$.
 %  \item $q$ is $e_1 = e_2$ and $\zvalueof{e_1}(\bvst)$ equals $\zvalueof{e_2}(\bvst)$.
 %  \item $q$ is $e_1 \equiv e_2 \mod e_3$ and $\zvalueof{e_1}(\bvst) \equiv_\bbfZ \zvalueof{e_2}(\bvst) %\mod_\bbfZ \zvalueof{e_3}(\bvst)$.
-%  \item $q$ is $q_1 \wedge q_2$, $\BV^w \models q_1$, and $\BV^w \models q_2$.
+%  \item $q$ is $q_1 \wedge q_2$, $\BV^{\wordsize} \models q_1$, and $\BV^{\wordsize} \models q_2$.
 %\end{itemize}
 
 We admit comparison between atoms in range specifications as atomic range predicates\footnote{In our implementation, comparison between bit-vector expressions is allowed, not only between atoms.}.
@@ -177,26 +171,79 @@ A \emph{range predicate} $q_r \in \bvPredr$ is a conjunction of atomic range pre
 \end{array}
 \]
 We use $a_l \circ a_1, a_2, \ldots, a_n \bullet a_r$ as a shorthand of the conjunction of $a_l \circ a_1 \wedge a_l \circ a_2 \wedge \cdots \wedge a_l \circ a_n$ and $a_1 \bullet a_r \wedge a_2 \bullet a_r \wedge \cdots \wedge a_n \bullet a_r$ where $\circ, \bullet \in \{<, \leq\}$.
-We write $\BV^w \models q_r[\bvst]$ if one of the following holds.
+We write $\BV^{\wordsize} \models q_r[\bvst]$ if one of the following holds.
 \begin{itemize}
   \item $q$ is $\top$.
   \item $q$ is $a_1 < a_2$ and $\bvvalueof{a_1}(\bvst) <_\bvop \bvvalueof{a_2}(\bvst)$.
   \item $q$ is $a_1 \leq a_2$ and $\bvvalueof{a_1}(\bvst) \leq_\bvop \bvvalueof{a_2}(\bvst)$.
-  \item $q$ is $q_1 \wedge q_2$, $\BV^w \models q_1$, and $\BV^w \models q_2$.
+  \item $q$ is $q_1 \wedge q_2$, $\BV^{\wordsize} \models q_1$, and $\BV^{\wordsize} \models q_2$.
 \end{itemize}
 
-A \emph{predicate} $q \in \bvPred$ is a conjunction of an algebraic predicate and a range predicate.
+A \emph{predicate} $q \in \bvPred$ consists of an algebraic predicate and a range predicate.
 \[
 \begin{array}{rcl}
-  \bvPred & ::= & \bvPreda \wedge \bvPredr \\
+  \bvPred & ::= & \bvPreda \andar \bvPredr \\
   \bvSpec & ::= & \cond{\bvPred} \bvProg \cond{\bvPred}
 \end{array}
 \]
-For $\bvst \in \bvSt$ and $q \in \bvPred$, we write $\BV^w \models q[\bvst]$ if $q$ evaluates to $\btt$; $\bvst$ is called a \emph{$q$-state}.
-We follow Hoare's formalism in specifications of mathematical constructs~\cite{H:69:ABCP}.
-In a specification $\hoaretriple{q}{p}{q'}$, $q$ and $q'$ are the \emph{pre}- and \emph{post-conditions} of $p$ respectively.
-Given $q, q' \in \bvPred$ and $p \in \bvProg$, $\hoaretriple{q}{p}{q'}$ is \emph{valid} (written $\models \hoaretriple{q}{p}{q'}$) if for every $\bvst, \bvst' \in \bvSt$, $\BV^w \models q[\bvst]$ and $\bvst \goesto{p} \bvst'$ imply $\BV^w \models q'[\bvst']$.
+For $\bvst \in \bvSt$ and $q \in \bvPred$, we write $\BV^{\wordsize} \models q[\bvst]$ if $q$ evaluates to $\btt$; $\bvst$ is called a \emph{$q$-state}.
+We follow Hoare's formalism in specifications of mathematical constructs~\cite{H:69:ABCP} and call $\hoaretriple{q}{p}{q'}$ a \emph{specification} if $q,q' \in \bvPred$, an \emph{algebraic specification} if $q,q' \in \bvPreda$, and a \emph{range specification} if $q,q' \in \bvPredr$.
+In $\hoaretriple{q}{p}{q'}$, $q$ and $q'$ are the \emph{pre}- and \emph{post-conditions} of $p$ respectively.
+Given $q, q' \in \bvPred$ ($q,q' \in \bvPreda$, or $q,q' \in \bvPredr$) and $p \in \bvProg$, $\hoaretriple{q}{p}{q'}$ is \emph{valid} (written $\models \hoaretriple{q}{p}{q'}$) if for every $\bvst, \bvst' \in \bvSt$, $\BV^{\wordsize} \models q[\bvst]$ and $\bvst \goesto{p} \bvst'$ imply $\BV^{\wordsize} \models q'[\bvst']$.
 Less formally, $\models \hoaretriple{q}{p}{q'}$ if executing $p$ from a $q$-state always results in a $q'$-state.
+
+Given a statement $s \in \bvStmt$ and a state $\bvst \in \bvSt$, the function \textsc{StmtSafe} (Algorithm~\ref{algorithm:stmt-safe}) checks if executing $s$ from $\bvst$ neither overflows nor underflows.
+We call a statement $s \in \bvStmt$ \emph{safe} at a state $\bvst \in \bvSt$, denoted by $\safe(s)$, if for every state $\bvst \in \bvSt$, \textsc{StmtSafe}($s$, $\bvst$) evaluates to $\btt$.
+Similarly, the function \textsc{ProgSafe} (Algorithm~\ref{algorithm:prog-safe}) checks if executing a program $p \in \bvProg$ from a state $\bvst \in \bvSt$ is safe.
+A program $p \in \bvProg$ is safe, denoted by $\safe(p)$, if for every state $\bvst \in \bvSt$, \textsc{ProgSafe}($p$, $\bvst$) evaluates to $\btt$.
+
+\begin{algorithm}
+  \begin{algorithmic}[1]
+    \Function{StmtSafe}{$s$, $\bvst$}
+    \Match{$s$}
+      \Case{$v \leftarrow a$} \Return $\btt$ \EndCase
+      \Case{$v \leftarrow a_1 + a_2$}
+        \State{\Return $\hi_\BV(\bvvalueof{a_1}(\bvst) +_\BV^\# \bvvalueof{a_2}(\bvst)) = \bv^\wordsize(0)$}
+      \EndCase
+      \Case{$c\ v \leftarrow a_1 + a_2$} \Return $\btt$ \EndCase
+      \Case{$v \leftarrow a_1 + a_2 + y$}
+        \State{\Return $\hi_\BV(\bvvalueof{a_1}(\bvst) +_\BV^\# \bvvalueof{a_2}(\bvst) +_\BV^\# \bvvalueof{y}(\bvst))$}
+        \StatexIndent [2] $= \bv^\wordsize(0)$
+      \EndCase
+      \Case{$c\ v \leftarrow a_1 + a_2 + y$} \Return $\btt$ \EndCase
+      \Case{$v \leftarrow a_1 - a_2$}
+        \State{\Return $\bvvalueof{a_2}(\bvst) \ll_\BV \bvvalueof{a_1}(\bvst)$}
+      \EndCase
+      \Case{$v \leftarrow a_1 \times a_2$}
+        \State{\Return $\hi_\BV(\bvvalueof{a_1}(\bvst) \times_\BV^\# \bvvalueof{a_2}(\bvst)) = \bv^\wordsize(0)$}
+      \EndCase
+      \Case{$v_h\ v_l \leftarrow a_1 \times a_2$} \Return $\btt$ \EndCase
+      \Case{$v \leftarrow a \ll n$}
+        \State{\Return $\bvvalueof{a}(\bvst) <_\BV (\bv^\wordsize(1) \ll_\BV (\wordsize - n))$}
+      \EndCase
+      \Case{$v_h\ v_l \leftarrow a @ n$} \Return $\btt$ \EndCase
+      \Case{$v_h\ v_l \leftarrow (a_1.a_2)@n$}
+        \State{\Return $\bvvalueof{a_1}(\bvst) <_\BV (\bv^\wordsize(1) \ll_\BV (\wordsize - n))$}
+      \EndCase
+    \EndMatch
+    \EndFunction
+  \end{algorithmic}
+  \caption{Safety Test for Statements}
+  \label{algorithm:stmt-safe}
+\end{algorithm}
+
+\begin{algorithm}
+  \begin{algorithmic}[1]
+    \Function{ProgSafe}{$p$, $\bvst$}
+    \Match{$p$}
+      \Case{$\epsilon$} \Return $\btt$ \EndCase
+      \Case{$s; pp$} \Return \Call{StmtSafe}{s} $\wedge$ \Call{ProgSafe}{pp} \EndCase
+    \EndMatch
+    \EndFunction
+  \end{algorithmic}
+  \caption{Safety Test for Programs}
+  \label{algorithm:prog-safe}
+\end{algorithm}
 
 \begin{figure*}[ht]
   \centering
@@ -232,20 +279,20 @@ Less formally, $\models \hoaretriple{q}{p}{q'}$ if executing $p$ from a $q$-stat
     \end{array}
   \end{array}
   \]
-  \caption{Subtraction \dslcode{sub}}
+  \caption{Subtraction \dslcode{bSub}}
   \label{figure:dsl:subtraction}
 \end{figure*}
 
 Figure~\ref{figure:dsl:subtraction} gives a simple yet real implementation of subtraction over $\bbfGF(\myprime)$ with a bit-width $64$.
-In the figure, a number in $\bbfGF(\varrho)$ is represented by five bit-vectors each with value less than or equal to $2^{51} +_\bbfZ 2^{15}$.
-The variables ${x}_0, {x}_1, {x}_2, {x}_3, {x}_4$ for instance represent $\mathit{radix51}({x}_4, {x}_3, {x}_2, {x}_1, {x}_0) \defn 2^{51 \times 4} {x}_4 + 2^{51 \times 3} {x}_3 + 2^{51 \times 2} {x}_2 + 2^{51 \times 1} {x}_1 + 2^{51 \times 0} {x}_0$.
+In the figure, a constant bit-vector is written in hexadecimal format starting with the prefix $0x$ and a number in $\bbfGF(\varrho)$ is represented by five bit-vectors each with value less than or equal to $2^{51} +_\bbfZ 2^{15}$.
+The variables ${x}_0, {x}_1, {x}_2, {x}_3, {x}_4$ for instance represent $\mathit{radix51}_\BV({x}_4, {x}_3, {x}_2, {x}_1, {x}_0) \defn \bv^{64}(2^{51 \times_\bbfZ 4}) \times {x}_4 + \bv^{64}(2^{51 \times_\bbfZ 3}) \times {x}_3 + \bv^{64}(2^{51 \times_\bbfZ 2}) \times {x}_2 + \bv^{64}(2^{51 \times_\bbfZ 1}) \times {x}_1 + \bv^{64}(2^{51 \times_\bbfZ 0}) \times {x}_0$.
 The result of subtraction is stored in the variables ${r}_0, {r}_1, {r}_2, {r}_3, {r}_4$, which are all required to be in the range from $0$ to $2^{54}$.
-Let $q_a$ $\defn$ $\top$, $q_r$ $\defn$ $0$ $\leq$ ${x}_0,$ ${x}_1,$ ${x}_2,$ ${x}_3,$ ${x}_4,$ ${y}_0,$ ${y}_1,$ ${y}_2,$ ${y}_3,$ ${y}_4$ $\leq$ $\bv^{64}(2^{51} +_\bbfZ 2^{15})$, $q_a'$ $\defn$ $\mathit{radix51}({x}_4, {x}_3, {x}_2, {x}_1, {x}_0)$ $-$ $\mathit{radix51}({y}_4, {y}_3, {y}_2, {y}_1, {y}_0)$ $\equiv$ $\mathit{radix51}({r}_4, {r}_3, {r}_2, {r}_1, {r}_0)$ $\mod$ $\myprime$, and $q_r'$ $\defn$ $0$ $\leq$ ${r}_0,$ ${r}_1,$ ${r}_2,$ ${r}_3,$ ${r}_4$ $<$ $\bv^{64}(2^{54})$.
+Let $q_a$ $\defn$ $\top$, $q_r$ $\defn$ $0$ $\leq$ ${x}_0,$ ${x}_1,$ ${x}_2,$ ${x}_3,$ ${x}_4,$ ${y}_0,$ ${y}_1,$ ${y}_2,$ ${y}_3,$ ${y}_4$ $\leq$ $\bv^{64}(2^{51} +_\bbfZ 2^{15})$, $q_a'$ $\defn$ $\mathit{radix51}_\BV({x}_4, {x}_3, {x}_2, {x}_1, {x}_0)$ $-$ $\mathit{radix51}_\BV({y}_4, {y}_3, {y}_2, {y}_1, {y}_0)$ $\equiv$ $\mathit{radix51}_\BV({r}_4, {r}_3, {r}_2, {r}_1, {r}_0)$ $\mod$ $\myprime$, and $q_r'$ $\defn$ $0$ $\leq$ ${r}_0,$ ${r}_1,$ ${r}_2,$ ${r}_3,$ ${r}_4$ $<$ $\bv^{64}(2^{54})$.
 The specification of the mathematical construct is therefore
 \[
 \begin{array}{rcl}
 \cond{q_a \wedge q_r} &
-\dslcode{sub} &
+\dslcode{bSub} &
 \cond{q_a' \wedge q_r'}.
 \end{array}
 \]
@@ -254,16 +301,30 @@ The specification of the mathematical construct is therefore
 % 4503599627370494 = 0xFFFFFFFFFFFFE
 
 Note that the variables ${r}_i$'s are added with constants after they are initialized with ${x}_i$'s but before ${y}_i$'s are subtracted from them.
-Assume the program \dslcode{sub} does not overflow or underflow.
-It is not hard to see that $2\myprime = \mathit{radix51}$ $(\unsigned{0xFFFFFFFFFFFFE},$ $\unsigned{0xFFFFFFFFFFFFE},$ $\unsigned{0xFFFFFFFFFFFFE},$ $\unsigned{0xFFFFFFFFFFFFE},$ $\unsigned{0xFFFFFFFFFFFDA})$ after tedious computation.
-Hence $\mathit{radix51}({r}_4,$ ${r}_3,$ ${r}_2,$ ${r}_1,$ ${r}_0)$ $=$ $\mathit{radix51}({x}_4,$ ${x}_3,$ ${x}_2,$ ${x}_1,$ ${x}_0)$ $+$ $2 \myprime $ $-$
-$\mathit{radix51}({y}_4,$ ${y}_3,$ ${y}_2,$ ${y}_1,$ ${y}_0)$ $\equiv$ $\mathit{radix51}({x}_4,$ ${x}_3,$ ${x}_2,$ ${x}_1,$ ${x}_0)$ $-$ $\mathit{radix51}({y}_4,$ ${y}_3,$ ${y}_2,$ ${y}_1,$ ${y}_0)$ $\mod\ \myprime$.
+Assume $\safe(\dslcode{bSub})$ holds.
+It is not hard to see that
+\[
+\begin{aligned}
+2\myprime = \mathit{radix51}_\BV (&\unsigned{0xFFFFFFFFFFFFE}, \unsigned{0xFFFFFFFFFFFFE}, \\
+          & \unsigned{0xFFFFFFFFFFFFE}, \unsigned{0xFFFFFFFFFFFFE}, \\
+          & \unsigned{0xFFFFFFFFFFFDA})
+\end{aligned}
+\]
+after tedious computation.
+Hence
+\[
+\begin{aligned}
+  & \mathit{radix51}_\BV({r}_4, {r}_3, {r}_2, {r}_1, {r}_0) \\
+= & \mathit{radix51}_\BV({x}_4, {x}_3, {x}_2, {x}_1, {x}_0) + 2 \myprime - \mathit{radix51}_\BV({y}_4, {y}_3, {y}_2, {y}_1, {y}_0) \\
+\equiv & \mathit{radix51}_\BV({x}_4, {x}_3, {x}_2, {x}_1, {x}_0) - \mathit{radix51}_\BV({y}_4, {y}_3, {y}_2, {y}_1, {y}_0) \mod\ \myprime.
+\end{aligned}
+\]
 The program in Figure~\ref{figure:dsl:subtraction} is correct.
 Characteristics of large Galois fields are regularly exploited in mathematical constructs for correctness and efficiency.
 Our domain specific language can easily model such specialized programming techniques.
 Indeed, the reason for adding constants is to prevent underflow.
 If the constants were not added, the subtraction in lines~11 to 15 could give negative and hence incorrect results.
-We will show how to prove that the program does not overflow or underflow later.
+We will show how to prove that the program does not overflow/underflow later.
 
 %{Please note that ranges are a complicated
 %  issue. The subtraction in Figure~\ref{figure:dsl:subtraction} gives results that are correct
