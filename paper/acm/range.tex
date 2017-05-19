@@ -2,11 +2,11 @@
 First define the syntax of a fragment of QF\_BV.
 In this fragment, a variable always represents a bit-vector of bit-width $\wordsize$ (the assumed wordsize).
 Let $\qExp$ and $\qPred$ respectively denote the expressions and the predicates in QF\_BV.
-An expression $e \in \qExp$ can be a constant $\bvconst(n, b)$, a variiable $v \in \Var$, an addition $\bvadd(e_1, e_2)$, a subtraction $\bvsub(e_1, e_2)$, a multiplication $\bvmul(e_1, e_2)$, a concatenation $\bvconcat(e_1, e_2)$, a zero extension $\bvext(e', i)$, a left-shifting $\bvshl(e_1, e_2)$, a logical right-shifting $\bvlshr(e_1, e_2)$, and an extraction $\bvextract(e', i, j)$ where $n, i, j \in \bbfN$, $b \in \BV^n$, and $e_1, e_2, e' \in \qExp$.
+An expression $e \in \qExp$ can be a constant $\bvconst(n, b)$, a variiable $v \in \Var$, an addition $\bvadd(e_1, e_2)$, a subtraction $\bvsub(e_1, e_2)$, a multiplication $\bvmul(e_1, e_2)$, a concatenation $\bvconcat(e_1, e_2)$, a zero extension $\bvext(e', i)$, a left-shifting $\bvshl(e_1, e_2)$, a logical right-shifting $\bvlshr(e_1, e_2)$, or an extraction $\bvextract(e', i, j)$ where $n, i, j \in \bbfN$, $b \in \BV^n$, and $e_1, e_2, e' \in \qExp$.
 A predicate $q \in \qPred$ can be an equality $e_1 = e_2$, a less-than $\bvult(e_1, e_2)$, a less-then-or-equal $\bvule(e_1, e_2)$, a negation $\neg q'$, a conjunction $q_1 \wedge q_2$, or a disjunction $q_1 \vee q_2$ where $e_1, e_2 \in \qExp$ and $q', q_1, q_2 \in \qPred$.
 An implication $q_1 \Rightarrow q_2$ is defined as $\neg q_1 \vee q_2$.
 
-Let $\max(n, m)$ returns the maximal number in $n$ and $m$.
+Let $\max(n, m)$ return the maximal number in $n$ and $m$.
 Given an expression $e \in \qExp$, $\width(e)$ denotes the maximal bit-width of $e$.
 \[
 \begin{array}{rcl}
@@ -22,7 +22,7 @@ Given an expression $e \in \qExp$, $\width(e)$ denotes the maximal bit-width of 
 \width(\bvextract(e, i, j)) & = & i -_\bbfN j +_\bbfN 1 \\
 \end{array}
 \]
-The expression $e$ is called \emph{well-formed} if $e$ is (1) a constant, a variable, a concatenation, a zero extension, a left-shifting, or a logical right-shifting, (2) an addition $\bvadd(e_1, e_2)$, a subtraction $\bvsub(e_1, e_2)$, or a multiplication $\bvmul(e_1, e_2)$ where $\width(e_1) = \width(e_2)$ and both $e_1$ and $e_2$ are well-formed, or (3) an extraction $\bvextract(e, i, j)$ where $0 \leq j \leq i < \width(e)$ and $e$ is well-formed.
+The expression $e$ is called \emph{well-formed} if $e$ is (1) a constant, a variable, a concatenation, a zero extension, a left-shifting, or a logical right-shifting, (2) an addition $\bvadd(e_1, e_2)$, a subtraction $\bvsub(e_1, e_2)$, or a multiplication $\bvmul(e_1, e_2)$ with $\width(e_1) = \width(e_2)$ and both $e_1$ and $e_2$ well-formed, or (3) an extraction $\bvextract(e', i, j)$ with $0 \leq j \leq i < \width(e')$ and $e'$ well-formed.
 A predicate $q \in \qPred$ is well-formed if all sub-expressions are well-formed.
 
 Let $\bvst \in \bvSt$ be a state.
