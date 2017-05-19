@@ -112,14 +112,14 @@ With the heuristics, all the implementations can be verified in seconds.
 \end{table*}
 
 % {range check}
-
+\hide{
 We also perform range checks and program overflow checks with the SMT solver \boolector on the
 five mathematical constructs with results shown in Table~\ref{table:arithmetic-operations}~\cite{boolector}. The most complicated case (multiplication) takes 19.82 seconds.
 % Compared to algebraic specifications, verification time for range
 % check is insignificant.
 Although our range check and program overflow check are not yet certified, low-level
 mathematical constructs in X25519 are formally verified automatically.
-
+}
 %%% Local Variables:
 %%% mode: latex
 %%% eval: (TeX-PDF-mode 1)
