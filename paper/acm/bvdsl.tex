@@ -136,7 +136,7 @@ Atomic predicates in an algebraic specification include polynomial equations $e_
 An \emph{algebraic predicate} $q_a \in \bvPreda$ is then a conjunction of atomic algebraic predicates.
 \[
 \begin{array}{rcl}
-  \bvExpa & ::= & \Var \ |\ \bbfZ \ |\ - \bvExpa \ |\ \bvExpa + \bvExpa \\
+  \bvExpa & ::= & \bbfZ \ |\ \Var \ |\ - \bvExpa \ |\ \bvExpa + \bvExpa \\
           &     & |\ \bvExpa - \bvExpa \ |\ \bvExpa \times \bvExpa \\
   \bvPreda & ::= & \top \ |\ \bvExpa = \bvExpa\ |\ \bvExpa \equiv \bvExpa \mod \bvExpa \\
            &     & |\ \bvPreda \wedge \bvPreda \\
@@ -145,12 +145,12 @@ An \emph{algebraic predicate} $q_a \in \bvPreda$ is then a conjunction of atomic
 Given a state $\bvst \in \bvSt$ and an expression $e \in \bvExpa$, $\zvalueof{e}(\bvst)$ denotes the value of $e$ on $\bvst$.
 \[
 \begin{array}{rcl}
-  \zvalueof{v} & \defn & \unsigned{\bvst(v)} \textmd{ for $v \in \Var$} \\
-  \zvalueof{n} & \defn & n \textmd{ for $n \in \bbfZ$} \\
-  \zvalueof{- e} & \defn & -_\bbfZ \zvalueof{e}(\bvst) \\
-  \zvalueof{e_1 + e_2} & \defn & \zvalueof{e_1}(\bvst) +_\bbfZ \zvalueof{e_2}(\bvst) \\
-  \zvalueof{e_1 - e_2} & \defn & \zvalueof{e_1}(\bvst) -_\bbfZ \zvalueof{e_2}(\bvst) \\
-  \zvalueof{e_1 \times e_2} & \defn & \zvalueof{e_1}(\bvst) \times_\bbfZ \zvalueof{e_2}(\bvst) \\
+  \zvalueof{n}(\bvst) & \defn & n \textmd{ for $n \in \bbfZ$} \\
+  \zvalueof{v}(\bvst) & \defn & \unsigned{\bvst(v)} \textmd{ for $v \in \Var$} \\
+  \zvalueof{- e}(\bvst) & \defn & -_\bbfZ \zvalueof{e}(\bvst) \\
+  \zvalueof{e_1 + e_2}(\bvst) & \defn & \zvalueof{e_1}(\bvst) +_\bbfZ \zvalueof{e_2}(\bvst) \\
+  \zvalueof{e_1 - e_2}(\bvst) & \defn & \zvalueof{e_1}(\bvst) -_\bbfZ \zvalueof{e_2}(\bvst) \\
+  \zvalueof{e_1 \times e_2}(\bvst) & \defn & \zvalueof{e_1}(\bvst) \times_\bbfZ \zvalueof{e_2}(\bvst) \\
 \end{array}
 \]
 For an algebraic predicate $q_a \in \bvPreda$, we write $\BV^{\wordsize} \models q_a[\bvst]$ if $q_a$ evaluates to $\btt$ using the evaluation function $\zvalueof{e}(\bvst)$ for every subexpression $e$ in $q$.
