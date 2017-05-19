@@ -1,7 +1,49 @@
 
 Consider any predicates $q_a, q_a' \in \bvPreda$, $q_r, q_r' \in \bvPredr$, and well-formed program $p \in
 \bvProg$. Let $\theta_0 (v) = 0$ for every $v \in \Var$. By
-Theorem~\ref{theorem:ssa}, \ref{theorem:bv2z}, and \ref{theorem:program-to-q-soundness}, we have
+Theorem~\ref{theorem:ssa}, \ref{theorem:bv2z}, and \ref{theorem:program-to-q-soundness}, we have a summary of translation in Figure~\ref{fig:summary}.
+\begin{figure}
+\[
+  \begin{array}{cll}
+    & \models \hoaretriple{q_a \wedge q_r}{p}{q_a' \wedge q_r'}\\
+%    \Leftrightarrow
+%    & \models
+%      \hoaretriple{q}{\textsc{SliceProg}(\textsc{VarsInPred}(q'), p)}{q'}
+%    & \textmd{ (Theorem~\ref{theorem:program-slicing})}\\
+    \Leftrightarrow
+    & \models
+      \hoaretriple{\hat{q_a} \wedge \hat{q_r}}
+      {\hat{p}}
+      {\hat{q_a'} \wedge \hat{q_r'}}
+    & \textmd{ (Theorem~\ref{theorem:ssa})}\\
+    &
+      \textmd{where } \langle \hat{\theta}, \hat{p} \rangle =
+      \textsc{SSAProg} (\theta_0, p), \\
+    & \hat{q_a} = \textsc{SSAPred}(\theta_0, q_a), \\
+    & \hat{q_r} = \textsc{SSAPred}(\theta_0, a_r), \\
+    & \hat{q_a'} = \textsc{SSAPred}(\hat{\theta}, q_a'), \textmd{ and} \\
+    & \hat{q_r'} = \textsc{SSAPred}(\hat{\theta}, q_r') \\
+    \Leftarrow
+    & \multicolumn{2}{l}{\BV^\wordsize \models \hat{q_r}[\bvst] \textmd{ implies } \textsc{ProgSafe}(\hat{p}) = \btt \textmd{ for all } \bvst \in \bvSt,} \\
+    & \models \hoaretriple{\hat{q_r}}{\hat{p}}{\hat{q_r'}}, \textmd{ and } \\
+    & \models \hoaretriple{\tilde{q_a}}{\tilde{p}}{\tilde{q_a'}}
+    & \textmd{ (Theorem~\ref{theorem:bv2z})} \\
+    & \textmd{where } \tilde{p} = \textsc{BV2ZProg}(\hat{p}), \\
+    & \tilde{q_a} = \textsc{BV2ZPred}(\hat{q_a}), \textmd{ and} \\
+    & \tilde{q_a'} = \textsc{BV2ZPred}(\hat{q_a'}) \\
+    \Leftarrow
+    & \multicolumn{2}{l}{\BV^\wordsize \models \hat{q_r}[\bvst] \textmd{ implies } \textsc{ProgSafe}(\hat{p}) = \btt \textmd{ for all } \bvst \in \bvSt,} \\
+    & \models \hoaretriple{\hat{q_r}}{\hat{p}}{\hat{q_r'}}, \textmd{ and } \\
+    & \bbfZ \models \forall \vx.
+      \Pi (\hoaretriple{\tilde{q_a}}{\tilde{p}}{\tilde{q_a'}})
+    & \textmd{ (Theorem~\ref{theorem:program-to-q-soundness})}
+  \end{array}
+\]
+  \caption{Summary of Translations}
+  \label{fig:summary}
+\end{figure}
+
+\hide{
 \begin{equation*}
   \begin{array}{cll}
     & \models \hoaretriple{q_a \wedge q_r}{p}{q_a' \wedge q_r'}\\
@@ -38,6 +80,7 @@ Theorem~\ref{theorem:ssa}, \ref{theorem:bv2z}, and \ref{theorem:program-to-q-sou
     & \textmd{ (Theorem~\ref{theorem:program-to-q-soundness})}
   \end{array}
 \end{equation*}
+}
 Observe that $\tilde{p}$ is well-formed and in static single assignment
 form (Lemma~\ref{lemma:ssa-programs} and \ref{lemma:bv2z-prog}).
 Theorem~\ref{theorem:program-to-q-soundness} is applicable in the last
