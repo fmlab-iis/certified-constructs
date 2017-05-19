@@ -7,7 +7,7 @@ static single  assignment form for any $q, q' \in \bvPred$ and $p \in
 \bvProg$.
 To avoid ambiguity, we consider \emph{well-formed} programs where
 \begin{itemize}
-\item for every statement in the program with two lvalues such as $c\ v \leftarrow a_1 + a_2 + y$ with lvalues $c$ and $v$, $v_h\ v_l \leftarrow a_1 \times a_2$ with lvalues $v_h$ and $v_l$, etc, the two lvalues are not equal; and
+\item for every statement in the program with two lvalues such as $c\ v \leftarrow a_1 + a_2 + y$ with lvalues $c$ and $v$, the two lvalues are not equal; and
 \item every non-input program variable must be assigned to a value
   before being used.
 \end{itemize}
@@ -15,7 +15,7 @@ To avoid ambiguity, we consider \emph{well-formed} programs where
 Our transformation maintains a finite mapping $\theta$ from variables to
 non-negative integers. For any variable $v$, $v^{\theta(v)}$ is
 the most recently assigned copy of $v$.
-For any atom $a$, $a^{\theta}$ is $v^{\theta(v)}$ if $a$ is a variable $v$, and otherwise is $b$ if $a$ is a constant bit-vector $b$.
+For any atom $a$, $a^{\theta}$ is $v^{\theta(v)}$ when $a$ is a variable $v$, and otherwise is $b$ when $a$ is a constant bit-vector $b$.
 Only the most recent copies of variables are referred in
 expressions. Algorithm~\ref{algorithm:ssa-expressions}
 transforms algebraic expressions with the finite mapping $\theta$ by
@@ -171,7 +171,7 @@ The function $\textsc{SSAPred}$ then transforms the algebraic part and the range
 Statement transformation is slightly more complicated
 (Algorithm~\ref{algorithm:ssa-statements}). For
 atoms and variables on the right hand side, they are transformed by the given
-finite mapping $\theta$ (Algorithm~\ref{algorithm:ssa-atoms}).
+finite mapping $\theta$.
 The algorithm of statement transformation then updates $\theta$ and
 replaces assigned variables with their latest copies.
 %In the algorithm, $\theta\mymapsto{v}{n}$ denotes updating the finite

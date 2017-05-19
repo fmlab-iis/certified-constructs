@@ -1,4 +1,4 @@
-Algebraic specifications in \bvdsl are transformed to polynomial polynomial equation entailment problems via an intermediate language \zdsl.
+Algebraic specifications in \bvdsl are transformed to modular polynomial equation entailment problems via an intermediate language \zdsl.
 A program in \zdsl is but a straight line of variable assignments on expressions.
 Consider the following syntactic classes:
 \[
@@ -158,7 +158,8 @@ Given $q, q' \in \zPred$ and $p \in \zProg$, $\hoaretriple{q}{p}{q'}$ is valid (
 }
 
 Now we are ready to describe the transformation from an algebraic specification in \bvdsl to a specification in \zdsl.
-For algebraic expressions, since $\zExpr$ subsumes $\bvExpa$, we can easily define a function \textsc{BV2ZExpr} that converts an algebraic expression $e_a \in \bvExpa$ to $\zExpr$ such that for every $\bvst \in \bvSt$ and $\zst \in \zSt$ with $|\bvst(v)| = \zst(v)$ for all variables v (written as $\bvst \simeq \zst$), $\zvalueof{e_a}(\bvst) = \zvalueof{\textsc{BV2ZExpr}(e_a)}(\zst)$.
+Given $\bvst \in \bvSt$ and $\zst \in \zSt$, write $\bvst \simeq \zst$ when $|\bvst(v)| = \zst(v)$ for all variable $v \in \Var$.
+For algebraic expressions, since $\zExpr$ subsumes $\bvExpa$, we can easily define a function \textsc{BV2ZExpr} that converts an algebraic expression $e_a \in \bvExpa$ to $\zExpr$ such that for every $\bvst \in \bvSt$ and $\zst \in \zSt$ with $\bvst \simeq \zst$, $\zvalueof{e_a}(\bvst) = \zvalueof{\textsc{BV2ZExpr}(e_a)}(\zst)$.
 Similarly, we can define a function \textsc{BV2ZPred} such that for every $q_a \in \bvPreda$, $\bvst \in \bvSt$, and $\zst \in \zSt$ with $\bvst \simeq \zst$, $\BV^{\wordsize} \models q_a[\bvst]$ if and only if $\bbfZ \models \textsc{BV2ZPred}(q_a)[\zst]$.
 Atoms are translated by the function $\textsc{BV2ZAtom}$.
 \[
