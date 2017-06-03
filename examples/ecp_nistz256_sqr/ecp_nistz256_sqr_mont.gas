@@ -1,0 +1,201 @@
+#! %rax = %%rax
+#! %rdx = %%rdx
+#! %rcx = %%rcx
+#! %rbp = %%rbp
+#! %r8 = %%r8
+#! %r9 = %%r9
+#! %r10 = %%r10
+#! %r11 = %%r11
+#! %r12 = %%r12
+#! %r13 = %%r13
+#! %r14 = %%r14
+#! %r15 = %%r15
+#! %r8  = %%r8
+#! 0x8(%rsi) = %%ea
+#! 0x10(%rsi) = %%ea
+#! 0x18(%rsi) = %%ea
+#! (%rsi) = %%ea
+#! %rsi = %%rsi
+#! -0x8a2(%rip) = %%ea
+#! -0x899(%rip) = %%ea
+
+# add $1v, $2v -> zSplit carry ($2v) (zadd (zVar ($1v)) (zVar ($2v))) (wsize)
+# add $1c, $2v -> zSplit carry ($2v) (zadd (zConst ($1c)) (zVar ($2v))) (wsize)
+# adc $1v, $2v -> zSplit carry ($2v) (zadd (zVar carry) (zadd (zVar ($1v)) (zVar ($2v)))) (wsize)
+# adc $1c, $2v -> zSplit carry ($2v) (zadd (zVar carry) (zadd (zConst ($1c)) (zVar ($2v)))) (wsize)
+# adc \$0x0, $1v -> zAssign ($1v) (zadd (zVar carry) (zVar ($1v)))
+# mul $1v -> zSplit rdx rax (zmul (zVar ($1v)) (zVar rax)) (wsize)
+# mov $1v, $2v -> ($2v) @:= zVar ($1v)
+# mov $1c, $2v -> ($2v) @:= zConst ($1c)
+# xor $1v, $1v -> ($1v) @:= zConst (0)
+# shl \$0x20, $1v -> zSplit tmp ($1v) (zmul (zVar ($1v)) (zpow2 (32%nat))) (wsize)
+# shr \$0x20, $1v -> zSplit ($1v) tmp (zVar ($1v)) (32%nat)
+
+#! add $1v, $2v -> bvAddC carry ($2v) (bvVar ($1v)) (bvVar ($2v))
+#! add $1c, $2v -> bvAddC carry ($2v) (bvConst (fromPosZ ($1c))) (bvVar ($2v))
+#! adc $1v, $2v -> bvAdcC carry ($2v) (bvVar ($1v)) (bvVar ($2v)) (carry)
+#! adc $1c, $2v -> bvAdcC carry ($2v) (bvConst (fromPosZ ($1c))) (bvVar ($2v)) (carry)
+#! adc \$0x0, $1v -> bvAdc ($1v) (bvVar ($1v)) (bvConst (fromPosZ 0%Z)) (carry)
+#! mul $1v -> bvMulf rdx rax (bvVar ($1v)) (bvVar rax)
+#! mov $1v, $2v -> bvAssign ($2v) (bvVar ($1v))
+#! mov $1c, $2v -> bvAssign ($2v) (bvConst (fromPosZ ($1c)))
+#! xor $1v, $1v -> bvAssign ($1v) (bvConst (fromPosZ 0%Z))
+#! shl \$0x20, $1v -> bvShl ($1v) (bvVar ($1v)) (fromNat 32)
+#! shr \$0x20, $1v -> bvSplit ($1v) tmp (bvVar ($1v)) (fromNat 32)
+
+#ecp_nistz256_sqr_mont:
+# %rdi = 0x7fffffffd6d0
+# %rsi = 0x62c080
+# %rdx = 0x7fffffffd7f8
+# %rcx = 0x18
+# %r8  = 0x0
+# %r9  = 0x1fffffffffffffff
+#	mov    $0x80100,%ecx
+#	and    0x204949(%rip),%ecx        # 0x62c0b4 <OPENSSL_ia32cap_P+8>#! %ea = %L0x62c0b4
+#	push   %rbp
+#	push   %rbx
+#	push   %r12
+#	push   %r13
+#	push   %r14
+#	push   %r15
+#	cmp    $0x80100,%ecx
+#	#je     0x4277a0 <ecp_nistz256_sqr_mont+64>
+	mov    (%rsi),%rax                              #! %ea = %L0x62c080
+	mov    0x8(%rsi),%r14                           #! %ea = %L0x62c088
+	mov    0x10(%rsi),%r15                          #! %ea = %L0x62c090
+	mov    0x18(%rsi),%r8                           #! %ea = %L0x62c098
+	#callq  0x4277e0 <__ecp_nistz256_sqr_montq>
+	mov    %rax,%r13
+	mul    %r14
+	mov    %rax,%r9
+	mov    %r15,%rax
+	mov    %rdx,%r10
+	mul    %r13
+	add    %rax,%r10
+	mov    %r8,%rax
+	adc    $0x0,%rdx
+	mov    %rdx,%r11
+	mul    %r13
+	add    %rax,%r11
+	mov    %r15,%rax
+	adc    $0x0,%rdx
+	mov    %rdx,%r12
+	mul    %r14
+	add    %rax,%r11
+	mov    %r8,%rax
+	adc    $0x0,%rdx
+	mov    %rdx,%rbp
+	mul    %r14
+	add    %rax,%r12
+	mov    %r8,%rax
+	adc    $0x0,%rdx
+	add    %rbp,%r12
+	mov    %rdx,%r13
+	adc    $0x0,%r13
+	mul    %r15
+	xor    %r15,%r15
+	add    %rax,%r13
+	mov    (%rsi),%rax                              #! %ea = %L0x62c080
+	mov    %rdx,%r14
+	adc    $0x0,%r14
+	add    %r9,%r9
+	adc    %r10,%r10
+	adc    %r11,%r11
+	adc    %r12,%r12
+	adc    %r13,%r13
+	adc    %r14,%r14
+	adc    $0x0,%r15
+	mul    %rax
+	mov    %rax,%r8
+	mov    0x8(%rsi),%rax                           #! %ea = %L0x62c088
+	mov    %rdx,%rcx
+	mul    %rax
+	add    %rcx,%r9
+	adc    %rax,%r10
+	mov    0x10(%rsi),%rax                          #! %ea = %L0x62c090
+	adc    $0x0,%rdx
+	mov    %rdx,%rcx
+	mul    %rax
+	add    %rcx,%r11
+	adc    %rax,%r12
+	mov    0x18(%rsi),%rax                          #! %ea = %L0x62c098
+	adc    $0x0,%rdx
+	mov    %rdx,%rcx
+	mul    %rax
+	add    %rcx,%r13
+	adc    %rax,%r14
+	mov    %r8,%rax
+	adc    %rdx,%r15
+	mov    -0x8a2(%rip),%rsi        # 0x427008      #! %ea = %L0x427008
+	mov    -0x899(%rip),%rbp        # 0x427018      #! %ea = %L0x427018
+	mov    %r8,%rcx
+	shl    $0x20,%r8
+	mul    %rbp
+	shr    $0x20,%rcx
+	add    %r8,%r9
+	adc    %rcx,%r10
+	adc    %rax,%r11
+	mov    %r9,%rax
+	adc    $0x0,%rdx
+	mov    %r9,%rcx
+	shl    $0x20,%r9
+	mov    %rdx,%r8
+	mul    %rbp
+	shr    $0x20,%rcx
+	add    %r9,%r10
+	adc    %rcx,%r11
+	adc    %rax,%r8
+	mov    %r10,%rax
+	adc    $0x0,%rdx
+	mov    %r10,%rcx
+	shl    $0x20,%r10
+	mov    %rdx,%r9
+	mul    %rbp
+	shr    $0x20,%rcx
+	add    %r10,%r11
+	adc    %rcx,%r8
+	adc    %rax,%r9
+	mov    %r11,%rax
+	adc    $0x0,%rdx
+	mov    %r11,%rcx
+	shl    $0x20,%r11
+	mov    %rdx,%r10
+	mul    %rbp
+	shr    $0x20,%rcx
+	add    %r11,%r8
+	adc    %rcx,%r9
+	adc    %rax,%r10
+	adc    $0x0,%rdx
+	xor    %r11,%r11
+	add    %r8,%r12
+	adc    %r9,%r13
+	mov    %r12,%r8
+	adc    %r10,%r14
+	adc    %rdx,%r15
+	mov    %r13,%r9
+	adc    $0x0,%r11
+#	sub    $0xffffffffffffffff,%r12
+#	mov    %r14,%r10
+#	sbb    %rsi,%r13
+#	sbb    $0x0,%r14
+#	mov    %r15,%rcx
+#	sbb    %rbp,%r15
+#	sbb    $0x0,%r11
+#	cmovb  %r8,%r12
+#	cmovb  %r9,%r13
+#	mov    %r12,(%rdi)                              #! %ea = %L0x7fffffffd6d0
+#	cmovb  %r10,%r14
+#	mov    %r13,0x8(%rdi)                           #! %ea = %L0x7fffffffd6d8
+#	cmovb  %rcx,%r15
+#	mov    %r14,0x10(%rdi)                          #! %ea = %L0x7fffffffd6e0
+#	mov    %r15,0x18(%rdi)                          #! %ea = %L0x7fffffffd6e8
+#	#repz retq 
+#	#jmp    0x4277b8 <ecp_nistz256_sqr_mont+88>
+#	mov    (%rsp),%r15                              #! %ea = %L0x7fffffffd698
+#	mov    0x8(%rsp),%r14                           #! %ea = %L0x7fffffffd6a0
+#	mov    0x10(%rsp),%r13                          #! %ea = %L0x7fffffffd6a8
+#	mov    0x18(%rsp),%r12                          #! %ea = %L0x7fffffffd6b0
+#	mov    0x20(%rsp),%rbx                          #! %ea = %L0x7fffffffd6b8
+#	mov    0x28(%rsp),%rbp                          #! %ea = %L0x7fffffffd6c0
+#	lea    0x30(%rsp),%rsp                          #! %ea = %L0x7fffffffd6c8
+#	#repz retq 
