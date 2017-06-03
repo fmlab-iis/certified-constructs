@@ -372,11 +372,11 @@ Definition nistz256_sqr_mont_post : bexp :=
        )
     ]
     [::
-       (bvrvar t0) <=r (bvposz (2^64)%Z);
-       (bvrvar t1) <=r (bvposz (2^64)%Z);
-       (bvrvar t2) <=r (bvposz (2^64)%Z);
-       (bvrvar t3) <=r (bvposz (2^64)%Z);
-       (bvrvar t4) <=r (bvposz (2^1)%Z)
+       (bvrvar t0) <r (bvposz (2^64)%Z);
+       (bvrvar t1) <r (bvposz (2^64)%Z);
+       (bvrvar t2) <r (bvposz (2^64)%Z);
+       (bvrvar t3) <r (bvposz (2^64)%Z);
+       (bvrvar t4) <r (bvposz (2^1)%Z)
     ]
       
 .
