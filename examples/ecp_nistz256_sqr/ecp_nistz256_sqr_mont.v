@@ -389,7 +389,7 @@ Definition nistz256_sqr_mont_spec :=
 Lemma valid_nistz256_sqr_mont :
   valid_bvspec (nistz256_sqr_mont_inputs, nistz256_sqr_mont_spec).
 Proof.
-  time "valid_nistz256_sqr_mont" verify_bvspec with [:: With KeepUnused ] .
+  time "valid_nistz256_sqr_mont" verify_bvspec .
 Qed.
 
 Close Scope bvdsl_scope.
