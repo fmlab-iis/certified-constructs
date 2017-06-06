@@ -69,7 +69,7 @@ def trace():
                 if ea.group(3):
                     addr += int(frame.read_register(ea.group(3))) * \
                             int(ea.group(4))
-                print("\t{0:48s}#ea = 0x{1:x}".format(mnemonic, addr))
+                print("\t{0:48s}#! EA = L0x{1:x}".format(mnemonic, addr))
             else:
                 print("\t" + mnemonic)
             gdb.execute("stepi", to_string=True)
