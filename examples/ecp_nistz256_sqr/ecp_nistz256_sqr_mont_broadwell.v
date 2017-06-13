@@ -308,10 +308,10 @@ Definition nistz256_sqr_mont_pre : bexp :=
   let  a3 := 1003 in
 bvrands
   [::
-     (bvrvar a0) <r (bvposz (2^64)%Z);
-     (bvrvar a1) <r (bvposz (2^64)%Z);
-     (bvrvar a2) <r (bvposz (2^64)%Z);
-     (bvrvar a3) <r (bvposz (2^64)%Z)
+     (bvrvar a0) <=r (bvposz (2^64)%Z);
+     (bvrvar a1) <=r (bvposz (2^64)%Z);
+     (bvrvar a2) <=r (bvposz (2^64)%Z);
+     (bvrvar a3) <=r (bvposz (2^64)%Z)
   ].
 
 Definition nistz256_sqr_mont_post : bexp :=
