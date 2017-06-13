@@ -348,14 +348,14 @@ Definition nistz256_mul_mont_pre : bexp :=
   let  b3 := 2003 in
 bvrands
   [::
-     (bvrvar a0) <r (bvposz (2^64)%Z);
-     (bvrvar a1) <r (bvposz (2^64)%Z);
-     (bvrvar a2) <r (bvposz (2^64)%Z);
-     (bvrvar a3) <r (bvposz (2^64)%Z);
-     (bvrvar b0) <r (bvposz (2^64)%Z);
-     (bvrvar b1) <r (bvposz (2^64)%Z);
-     (bvrvar b2) <r (bvposz (2^64)%Z);
-     (bvrvar b3) <r (bvposz (2^64)%Z)
+     (bvrvar a0) <=r (bvposz (2^64)%Z);
+     (bvrvar a1) <=r (bvposz (2^64)%Z);
+     (bvrvar a2) <=r (bvposz (2^64)%Z);
+     (bvrvar a3) <=r (bvposz (2^64)%Z);
+     (bvrvar b0) <=r (bvposz (2^64)%Z);
+     (bvrvar b1) <=r (bvposz (2^64)%Z);
+     (bvrvar b2) <=r (bvposz (2^64)%Z);
+     (bvrvar b3) <=r (bvposz (2^64)%Z)
   ].
 
 Definition nistz256_mul_mont_post : bexp :=
