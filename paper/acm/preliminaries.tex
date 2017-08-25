@@ -52,7 +52,7 @@ problem is to decide if $f \in I$ for a given ideal $I$ and $f
 
 Let $\BV^w$ be the set of all bit-vectors with a bit-width $w$.
 The unsigned value of $b \in \BV^w$ is denoted by $\unsigned{b}$.
-For a natural number or an integer $n$, let $\bv^w(n)$ be the two's complementation representation of $n$ in a bit-width $w$.
+For a natural number or an integer $n$, let $\bv^w(n)$ be the two's complement representation of $n$ in a bit-width $w$.
 We use the following common operators for fixed-width bit-vectors: $\BV^w +_\bvop \BV^w : \BV^w$ for addition, $\BV^w -_\bvop \BV^w : \BV^w$ for subtraction, $\BV^w \times_\bvop \BV^w : \BV^w$ for multiplication, $\BV^{w_1} ._\bvop \BV^{w_2} : \BV^{w_1 + w_2}$ for concatenation, $\BV^w \#_\bvop n : \BV^{w+n}$ for zero extension, $\BV^w \ll_\bvop n : \BV^w$ for left-shifting, $\BV^w \gg_\bvop n : \BV^w$ for logical right-shifting, and $\BV^w[i,j] : \BV^{i - j + 1}$ with $0 \leq j \leq i < w$ for bits extraction.
 Given a bit-vector $b \in \BV^{2w}$, define $\hi_\bvop(b) \defn b[2w - 1, w]$ for the extraction of higher $w$ bits, and $\lo_\bvop(b) \defn b[w - 1, 0]$ for the extraction of lower $w$ bits.
 Let $b_1$, $b_2$, and $b_3$ be bit-vectors in $\BV^{w}$, and $\bullet \in \{+_\bvop, -_\bvop, \times_\bvop\}$.

@@ -1,5 +1,5 @@
 
-In order to take advantages of computer security offered by modern 
+In order to take advantage of computer security offered by modern 
 cryptography, 
 cryptosystems must be realized by cryptographic programs where mathematical
 constructs are required to compute on the underlying algebraic
@@ -88,7 +88,7 @@ implementations of mathematical constructs in cryptographic programs
 as well as range properties about program outputs.
 Mathematical constructs by their nature perform computation on
 underlying algebraic structures. We aim to verify whether they perform
-intended algebraic computation correctly. To this end, we propose the
+the intended algebraic computation correctly. To this end, we propose the
 domain specific language \bvdsl with operations on fixed-width bit-vectors for low-level
 mathematical constructs. Algebraic pre- and post-conditions of
 programs together with range information about inputs and outputs in \bvdsl are specified as Hoare
@@ -104,8 +104,12 @@ problems computed by \singular~\cite{YC:2004:ITPPDC}.
 As range problems are hard to be solved automatically with proof assistants, the range problem and the absence of program overflows/underflows are verified by SMT (Satisfiability Modulo Theories) solvers.
 Correctness of the translation to SMT formulas is again certified by
 \coq. The results of SMT solvers however are not certified in our
-implementation. A fully certified integration of SMT solvers in \coq
-can be used to establish the missing in the future~\cite{EMT+:17:SPISS}.
+implementation.
+The trusted computing base of our approach includes SMT solvers and Coq.
+The translation to \bvdsl is also included in the base if the program to be verified is not in \bvdsl.
+A fully certified integration of SMT solvers in \coq
+can be used to reduce the tructed computing base in the future~\cite{EMT+:17:SPISS}.
+%can be used to establish the missing in the future~\cite{EMT+:17:SPISS}.
 
 
 \begin{figure}
@@ -145,7 +149,7 @@ align=center
 
 We report case studies on verifying mathematical constructs used in
 the X25519 ECDH key exchange protocol~\cite{BDL+:11:HSHSS,BDL+:12:HSHSS}.
-For each arithmetic operations
+For each arithmetic operation
 (such as addition, subtraction, and multiplication) over $\bbfGF(2^{255} - 19)$,
 their low-level real-world implementations are converted to our domain
 specific language \bvdsl manually. We specify algebraic properties

@@ -108,6 +108,9 @@ cannot be verified because the computation of Gr\"obner bases was killed by the 
 after running for days.
 With the heuristics, all the implementations can be verified in seconds.
 
+We also tried to verify buggy implementations such as the buggy implementation of multiplication mentioned in~\cite{C:14:VCS}.
+In such cases, our verification tactic in Coq just failed without giving any counterexample.
+Note that when our tactic fails to verify an implementation with unknown correctness, we cannot conclude that the implementation is buggy because our approach is sound but not complete.
 
 
 

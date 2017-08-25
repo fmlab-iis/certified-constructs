@@ -2,7 +2,7 @@
 The last step transforms any algebraic program specification in \zdsl to the
 modular polynomial equation entailment problem. For
 $q \in \zPred$, we write $q(\vx)$ to signify the free variables $\vx$
-occurred in $q$. Given $q(\vx), q'(\vx) \in \zPred$, the \emph{modular
+occurring in $q$. Given $q(\vx), q'(\vx) \in \zPred$, the \emph{modular
   polynomial equation entailment} problem decides whether
 $q(\vx) \implies q'(\vx)$ holds when $\vx$ are substituted for
 arbitrary integers. That is, we want to check if for every valuation $\zst \in \zSt$, $q(\vx)$ evaluates to $\btt$ implies $q'(\vx)$ evaluates to $\btt$ after each variable $x$ is replaced by $\zst(x)$.
@@ -139,6 +139,7 @@ constraints.
 
 The soundness of Algorithm~\ref{algorithm:polynomial-programs}
 is certified in \coq (Theorem~\ref{theorem:program-to-q-soundness}).
+It is not complete because in the transformation of the statement $\concat{v_h}{v_l} \leftarrow \dslcode{Split}(e, n)$, the polynomial equation $v_l + \dslcode{Pow}(2, n) \times v_h = e$ does not guarantee that $v_l$ exactly represents the $n$ lower bits of $e$.
 % Its proof is again certified by \coq.
 \begin{theorem}
   \label{theorem:program-to-q-soundness}

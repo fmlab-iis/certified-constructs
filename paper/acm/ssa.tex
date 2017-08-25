@@ -120,7 +120,7 @@ The function $\textsc{SSAPred}$ then transforms the algebraic part and the range
       \Case{$v \leftarrow a_1 + a_2 + y$}
         \State{$\theta' \leftarrow \theta\mymapsto{v}{\theta(v) + 1}$}
         \State{\Return $\langle \theta'$,
-                $v^{\theta'(v)} \leftarrow$ $a_1^\theta$ $+$ $a_2^\theta$ $+$ $y^{\theta'(y)}$$\rangle$}
+                $v^{\theta'(v)} \leftarrow$ $a_1^\theta$ $+$ $a_2^\theta$ $+$ $y^{\theta(y)}$$\rangle$}
       \EndCase
       \Case{$c\ v \leftarrow a_1 + a_2 + y$}
         \State{$\theta' \leftarrow \theta\mymapsto{c}{\theta(c) + 1}$}
@@ -139,8 +139,8 @@ The function $\textsc{SSAPred}$ then transforms the algebraic part and the range
                 $v^{\theta'(v)} \leftarrow$ $a_1^\theta$ $\times$ $a_2^\theta$$\rangle$}
       \EndCase
       \Case{$v_h\ v_l \leftarrow a_1 \times a_2$}
-        \State{$\theta' \leftarrow \theta\mymapsto{h}{\theta(v_h) + 1}$}
-        \State{$\theta'' \leftarrow \theta'\mymapsto{l}{\theta(v_l) + 1}$}
+        \State{$\theta' \leftarrow \theta\mymapsto{v_h}{\theta(v_h) + 1}$}
+        \State{$\theta'' \leftarrow \theta'\mymapsto{v_l}{\theta(v_l) + 1}$}
         \State{\Return $\langle \theta''$,
                 $v_h^{\theta'(v_h)} \ v_l^{\theta''(v_l)} \leftarrow$ $a_1^\theta$ $\times$ $a_2^\theta$$\rangle$}
       \EndCase
@@ -179,10 +179,11 @@ replaces assigned variables with their latest copies.
 
 It is straightforward to transform programs to static single
 assignment form (Algorithm~\ref{algorithm:ssa-programs}). Using the
-initial mapping from variables to $0$,
+initial mapping $\theta_0$ from variables to $0$,
 the algorithm starts from the first statement and obtains an
 updated mapping with the statement in static single assignment form. It
 continues to transform the next statement with the updated mapping.
+Note that our algorithm works for any initial mapping but we choose a specific one to simplify our Coq proof.
 
 \begin{figure*}
   \centering
@@ -252,8 +253,7 @@ algorithms are formally proven in \coq. We first show that
 Algorithm~\ref{algorithm:ssa-programs} preserves well-formedness and
 produces a program in static single assignment form.
 \begin{lemma}
-  Let $\theta_0(v) = 0$ for every $v \in \Var$ and $p \in \bvProg$ a
-  well-formed program. If
+  Let $p \in \bvProg$ a well-formed program. If
   $\langle \hat{\theta}, \hat{p} \rangle$ $=
   \textsc{SSAProg}(\theta_0, p)$, then
   $\hat{p}$ is well-formed and in static single assignment form.
@@ -264,8 +264,7 @@ The next theorem shows that our transformation is both sound and
 complete. That is, a specification is valid if and only if its
 corresponding specification in static single assignment form is valid.
 \begin{theorem}
-  Let $\theta_0(v) = 0$ for every $v \in \Var$. For every $q, q' \in \bvPred$
-  and $p \in \bvProg$,
+  For every $q, q' \in \bvPred$ and $p \in \bvProg$,
   \begin{center}
     $\models \hoaretriple{q}{p}{q'}$ if and only if
     $\models \hoaretriple{\textsc{SSAPred}(\theta_0, q)}
@@ -286,7 +285,7 @@ expression. After the static single assignment translation, the
 variables ${x}_i$'s, ${y}_i$'s are indexed by $0$ and
 ${r}_i$'s are indexed by $3$ for $0 \leq i \leq 4$.
 Subsequently, variables in pre- and post-conditions of the
-specification for subtraction needs to be indexed.
+specification for subtraction need to be indexed.
 Let $\hat{q}_a$ $\defn$ $\top$, $\hat{q}_r$ $\defn$ $0$ $\leq$ ${x}^0_0,$ ${x}^0_1,$ ${x}^0_2,$ ${x}^0_3,$ ${x}^0_4,$ ${y}^0_0,$ ${y}^0_1,$ ${y}^0_2,$ ${y}^0_3,$ ${y}^0_4$ $\leq$ $\bv^{64}(2^{51} +_\bbfZ 2^{15})$, $\hat{q}_a'$ $\defn$ $\mathit{radix51}_\BV({x}^0_4, {x}^0_3, {x}^0_2, {x}^0_1, {x}^0_0)$ $-$ $\mathit{radix51}_\BV({y}^0_4, {y}^0_3, {y}^0_2, {y}^0_1, {y}^0_0)$ $\equiv$ $\mathit{radix51}_\BV({r}^3_4, {r}^3_3, {r}^3_2, {r}^3_1, {r}^3_0)$ $\mod$ $\myprime$, and $q_r'$ $\defn$ $0$ $\leq$ ${r}^3_0,$ ${r}^3_1,$ ${r}^3_2,$ ${r}^3_3,$ ${r}^3_4$ $<$ $\bv^{64}(2^{54})$.
 The corresponding specification of in static single assignment form is then
 \[

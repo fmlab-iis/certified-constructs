@@ -72,7 +72,7 @@ $(\zst, \epsilon, \zst) \in \zTr^*$ and
 $(\zst, s; p, \zst'') \in \zTr^* \textmd{ if }
     \textmd{there is a } \zst' \textmd{ with }
     (\zst, s, \zst') \in \zTr$ and
-    $(\zst, p, \zst'') \in \zTr^*$.
+    $(\zst', p, \zst'') \in \zTr^*$.
 We write $\zst \goesto{p} \zst'$ when $(\zst, p, \zst') \in \zTr^*$.
 
 \hide{
@@ -169,7 +169,7 @@ Atoms are translated by the function $\textsc{BV2ZAtom}$.
   v   & \textmd{ if $a$ is a variable $v$}
   \end{array} \right.
 \]
-Let $\tilde{a}$ denote $\textsc{BV2ZAtom}(a)$ for $a \in bvAtom$.
+Let $\tilde{a}$ denote $\textsc{BV2ZAtom}(a)$ for $a \in \bvAtom$.
 Functions \textsc{BV2ZStmt} (Algorithm~\ref{algorithm:bv2z-stmt}) and \textsc{BV2ZProg} (Algorithm~\ref{algorithm:bv2z-prog}) are defined to respectively transform a statement in \bvdsl to a statement in \zdsl and a program in \bvdsl to a program in \zdsl.
 With these translation functions, the following soundness theorem holds.
 \begin{theorem}

@@ -5,7 +5,7 @@ through which information can leak to the attacker may cause the
 cryptosystem to be broken. Typically this is about timing or
 electric power used.
 In side-channel resilient implementations, the execution time
-are kept constant (as much as possible) to prevent unexpected
+is kept constant (as much as possible) to prevent unexpected
 information leakage.
 %Implementations which are not defeated through
 %such means are called ``side-channel resilient'' implementations.
@@ -19,8 +19,8 @@ thread, even when no privilege is conferred, to affect the running
 time of another -- simply by caching a sufficient amount of its own
 data in correct locations through repeated accesses, and then
 observing the running time of the other thread. The instructions in
-the other thread which uses the ``evicted'' data (to make room for the
-data of the eavesdropping thread) then has to take more time getting
+the other thread using the ``evicted'' data (to make room for the
+data of the eavesdropping thread) then have to take more time getting
 its data back to the cache~\cite{B:05:CTAA}.
 % Such attacks are quite practical.
 % \todo{insert reference in bib for D.J. Bernstein ``Cache Timing
@@ -127,7 +127,7 @@ We denote the empty program by $\epsilon$.
   \bvProg & ::= & \epsilon \ |\ \bvStmt; \bvProg
 \end{eqnarray*}
 Observe that conditional branches are not allowed in our domain specific language to prevent timing attacks.
-The semantics of a program is defined by the relation $\bvTr^* \subseteq \bvSt \times \bvProg \times \bvSt$ where $(\bvst, \epsilon, \bvst) \in \bvTr^*$ and $(\bvst, s; p, \bvst'') \in \bvTr^*$ if there is a $\bvst'$ with $(\bvst, s, \bvst') \in \bvTr$ and $(\bvst, p, \bvst'') \in \bvTr^*$.
+The semantics of a program is defined by the relation $\bvTr^* \subseteq \bvSt \times \bvProg \times \bvSt$ where $(\bvst, \epsilon, \bvst) \in \bvTr^*$ and $(\bvst, s; p, \bvst'') \in \bvTr^*$ if there is a $\bvst'$ with $(\bvst, s, \bvst') \in \bvTr$ and $(\bvst', p, \bvst'') \in \bvTr^*$.
 We write $\bvst \goesto{p} \bvst'$ when $(\bvst, p, \bvst') \in \bvTr^*$.
 
 For specifications, $\top$ denotes the Boolean value $\mathit{tt}$.
@@ -193,9 +193,8 @@ Given $q, q' \in \bvPred$ ($q,q' \in \bvPreda$, or $q,q' \in \bvPredr$) and $p \
 Less formally, $\models \hoaretriple{q}{p}{q'}$ if executing $p$ from a $q$-state always results in a $q'$-state.
 
 Given a statement $s \in \bvStmt$ and a state $\bvst \in \bvSt$, the function \textsc{StmtSafe} (Algorithm~\ref{algorithm:stmt-safe}) checks if executing $s$ from $\bvst$ neither overflows nor underflows.
-We call a statement $s \in \bvStmt$ \emph{safe}, denoted by $\safe(s)$, if for every state $\bvst \in \bvSt$, \textsc{StmtSafe}($s$, $\bvst$) evaluates to $\btt$.
-Similarly, the function \textsc{ProgSafe} (Algorithm~\ref{algorithm:prog-safe}) checks if executing a program $p \in \bvProg$ from a state $\bvst \in \bvSt$ is safe.
-A program $p \in \bvProg$ is safe, denoted by $\safe(p)$, if for every state $\bvst \in \bvSt$, \textsc{ProgSafe}($p$, $\bvst$) evaluates to $\btt$.
+We call a statement $s$ \emph{safe} at a state $\bvst$ if \textsc{StmtSafe}($s$, $\bvst$) evaluates to $\btt$.
+A program $p$ is safe at a state $\bvst$, denote by \textsc{ProgSafe}($p$, $\bvst$), if (1) $p = \epsilon$, or (2) $p = s; pp$, \textsc{StmtSafe}($s$, $\bvst$) = $\btt$, and for all $\bvst' \in \bvSt$, $\bvst \goesto{s} \bvst'$ implies \textsc{ProgSafe}($pp$, $\bvst'$).
 
 \begin{algorithm}
   \begin{algorithmic}[1]
@@ -232,18 +231,21 @@ A program $p \in \bvProg$ is safe, denoted by $\safe(p)$, if for every state $\b
   \label{algorithm:stmt-safe}
 \end{algorithm}
 
-\begin{algorithm}
-  \begin{algorithmic}[1]
-    \Function{ProgSafe}{$p$, $\bvst$}
-    \Match{$p$}
-      \Case{$\epsilon$} \Return $\btt$ \EndCase
-      \Case{$s; pp$} \Return \Call{StmtSafe}{s} $\wedge$ \Call{ProgSafe}{pp} \EndCase
-    \EndMatch
-    \EndFunction
-  \end{algorithmic}
-  \caption{Safety Test for Programs}
-  \label{algorithm:prog-safe}
-\end{algorithm}
+%\begin{algorithm}
+%  \begin{algorithmic}[1]
+%    \Function{ProgSafe}{$p$, $\bvst$}
+%    \Match{$p$}
+%      \Case{$\epsilon$} \Return $\btt$ \EndCase
+%      \Case{$s; pp$}
+%      \State{\Return \Call{StmtSafe}{$s$, $\bvst$} $\wedge$}
+%      \State{\hspace{10mm}$\forall \bvst'. \bvst \goesto{s} \bvst' \implies$\Call{ProgSafe}{$pp$, $\bvst'$}}
+%      \EndCase
+%    \EndMatch
+%    \EndFunction
+%  \end{algorithmic}
+%  \caption{Safety Test for Programs}
+%  \label{algorithm:prog-safe}
+%\end{algorithm}
 
 \begin{figure*}[ht]
   \centering

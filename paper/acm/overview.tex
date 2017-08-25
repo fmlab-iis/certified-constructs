@@ -1,24 +1,24 @@
 \begin{figure}
 \[
   \begin{array}{cll}
-    & \models \hoaretriple{q_a \wedge q_r}{p}{q_a' \wedge q_r'}\\
+    & \models \hoaretriple{q_a \andar q_r}{p}{q_a' \andar q_r'}\\
 %    \Leftrightarrow
 %    & \models
 %      \hoaretriple{q}{\textsc{SliceProg}(\textsc{VarsInPred}(q'), p)}{q'}
 %    & \textmd{ (Theorem~\ref{theorem:program-slicing})}\\
     \Leftrightarrow
     & \models
-      \hoaretriple{\hat{q}_a \wedge \hat{q}_r}
+      \hoaretriple{\hat{q}_a \andar \hat{q}_r}
       {\hat{p}}
-      {\hat{q}_a' \wedge \hat{q}_r'}
+      {\hat{q}_a' \andar \hat{q}_r'}
     & \textmd{ (Theorem~\ref{theorem:ssa})}\\
     &
       \textmd{where } \langle \hat{\theta}, \hat{p} \rangle =
       \textsc{SSAProg} (\theta_0, p), \\
-    & \hat{q}_a = \textsc{SSAPred}(\theta_0, q_a), \\
-    & \hat{q}_r = \textsc{SSAPred}(\theta_0, a_r), \\
-    & \hat{q}_a' = \textsc{SSAPred}(\hat{\theta}, q_a'), \textmd{ and} \\
-    & \hat{q}_r' = \textsc{SSAPred}(\hat{\theta}, q_r') \\
+    & \hat{q}_a = \textsc{SSAPreda}(\theta_0, q_a), \\
+    & \hat{q}_r = \textsc{SSAPredr}(\theta_0, a_r), \\
+    & \hat{q}_a' = \textsc{SSAPreda}(\hat{\theta}, q_a'), \textmd{ and} \\
+    & \hat{q}_r' = \textsc{SSAPredr}(\hat{\theta}, q_r') \\
     \Leftarrow
     & \multicolumn{2}{l}{\BV^\wordsize \models \hat{q}_r[\bvst] \textmd{ implies } \textsc{ProgSafe}(\hat{p}) = \btt \textmd{ for all } \bvst \in \bvSt,} \\
     & \models \hoaretriple{\hat{q}_r}{\hat{p}}{\hat{q}_r'}, \textmd{ and } \\
