@@ -100,10 +100,18 @@
 \newcommand{\bvlshr}{\dslcode{bvlshr}}
 \newcommand{\bvextract}{\dslcode{bvextract}}
 \newcommand{\bvconcat}{\dslcode{concat}}
+\newcommand{\bvhigh}{\dslcode{bvhigh}}
+\newcommand{\bvlow}{\dslcode{bvlow}}
 \newcommand{\bvext}{\dslcode{zero\_extend}}
 \newcommand{\bvult}{\dslcode{bvult}}
 \newcommand{\bvule}{\dslcode{bvule}}
 \newcommand{\width}{\mathit{width}}
+\newcommand{\extbvadd}{\dslcode{ext\_bvadd}}
+\newcommand{\extbvadc}{\dslcode{ext\_bvadc}}
+\newcommand{\extbvsub}{\dslcode{ext\_bvsub}}
+\newcommand{\extbvsbb}{\dslcode{ext\_bvsbb}}
+\newcommand{\extbvmul}{\dslcode{ext\_bvmul}}
+\newcommand{\concatshl}{\dslcode{concat\_shl}}
 \newcommand{\bvSucc}{\mathit{bSucc}}
 \newcommand{\zSucc}{\mathit{zSucc}}
 \makeatletter
@@ -117,7 +125,7 @@
   \OldStatex\hskip\dimexpr#1\@tempdima\relax}
 \newcommand{\StatexIndent}[1][3]{%
   \setlength\@tempdima{\algorithmicindent}%
-  \Statex\hskip\dimexpr#1\@tempdima\relax}
+  \Statex\hspace{0.5mm}\hskip\dimexpr#1\@tempdima\relax}
 \makeatother
 
 \algnewcommand\algorithmicmatch{\textbf{match}}
