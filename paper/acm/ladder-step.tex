@@ -146,8 +146,8 @@ For the range specification, the unsigned value of each limb used to represent a
 In our experiment, we replace all arithmetic computation over $\bbfF$
 with corresponding mathematical constructs (4 additions, 4 subtractions, 4 squares, 5
 multiplications, and 1 multiplication by 121666) written in \bvdsl,
-translate the above specification into an algebraic specification, a range specification, and an overflow check, and then apply our technique to verify the Ladderstep (containing 1282 statements).
-The verification takes 131 hours, including 77 hours in checking program overflow~\footnote{We verified the four equations in the algebraic specification separately and our \coq tactic checked program overflow four times. The time needed to check program overflow once is roughly 19 hours.}, 33 hours in checking range specification, 16 hours in checking algebraic specification, and the remaining hours in term rewriting, proof validation, etc.
+translate the above specification into an algebraic specification, a range specification, and a safety check, and then apply our technique to verify the Ladderstep (containing 1282 statements).
+The verification takes 131 hours, including 77 hours in safety check~\footnote{We verified the four equations in the algebraic specification separately and our \coq tactic checked the safety of the same program four times. The time needed to check program safety once is roughly 19 hours.}, 33 hours in checking range specification, 16 hours in checking algebraic specification, and the remaining hours in term rewriting, proof validation, etc.
 %The SMT solver finishes range checks on the Ladderstep in 19 minutes.
 For production releases of low-level
 mathematical constructs, we believe 5.5 days in verification time are

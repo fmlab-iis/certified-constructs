@@ -103,6 +103,44 @@ $\bbfZ \models q'[\zst']$. Less formally, $\models
 results in a $q'$-state.
 }
 
+\begin{figure*}
+  \centering
+  $
+  \begin{array}{lclcl}
+    \begin{array}{rcl}
+    \textmd{1:} && {r}^1_0 \leftarrow {x}^0_0; \\
+    \textmd{2:} && {r}^1_1 \leftarrow {x}^0_1; \\
+    \textmd{3:} && {r}^1_2 \leftarrow {x}^0_2; \\
+    \textmd{4:} && {r}^1_3 \leftarrow {x}^0_3; \\
+    \textmd{5:} && {r}^1_4 \leftarrow {x}^0_4; \\
+    \end{array}
+    &\hspace{.05\textwidth}&
+    \begin{array}{rcl}
+    \textmd{6:} &&
+      {r}^2_0 \leftarrow {r}^1_0 + {4503599627370458}; \\
+    \textmd{7:} &&
+      {r}^2_1 \leftarrow {r}^1_1 + {4503599627370494}; \\
+    \textmd{8:} &&
+      {r}^2_2 \leftarrow {r}^1_2 + {4503599627370494}; \\
+    \textmd{9:} &&
+      {r}^2_3 \leftarrow {r}^1_3 + {4503599627370494}; \\
+    \textmd{10:} &&
+      {r}^2_4 \leftarrow {r}^1_4 + {4503599627370494};\\
+    \end{array}
+    &\hspace{.05\textwidth}&
+    \begin{array}{rcl}
+    \textmd{11:} && {r}^3_0 \leftarrow {r}^2_0 - {y}^0_0; \\
+    \textmd{12:} && {r}^3_1 \leftarrow {r}^2_1 - {y}^0_1; \\
+    \textmd{13:} && {r}^3_2 \leftarrow {r}^2_2 - {y}^0_2; \\
+    \textmd{14:} && {r}^3_3 \leftarrow {r}^2_3 - {y}^0_3; \\
+    \textmd{15:} && {r}^3_4 \leftarrow {r}^2_4 - {y}^0_4;
+    \end{array}
+  \end{array}
+  $
+  \caption{Subtraction \textsc{BV2ZProg}(\dslcode{bSubSSA})}
+  \label{figure:translation:subtraction-zdsl}
+\end{figure*}
+
 The predicates $\zPred$ in \zdsl share the same syntax as the algebraic predicates in \bvdsl but are evaluated on $\zSt$ rather than on $\bvSt$.
 \[
 \begin{array}{rcl}
@@ -165,12 +203,13 @@ Atoms are translated by the function $\textsc{BV2ZAtom}$.
 \[
 \textsc{BV2ZAtom}(a) = \left\{
   \begin{array}{ll}
-  |b| & \textmd{ if $a$ is a bit-vector $b$} \\
-  v   & \textmd{ if $a$ is a variable $v$}
+  v   & \textmd{ if $a$ is a variable $v$} \\
+  |b| & \textmd{ if $a$ is a bit-vector $b$}
   \end{array} \right.
 \]
 Let $\tilde{a}$ denote $\textsc{BV2ZAtom}(a)$ for $a \in \bvAtom$.
-Functions \textsc{BV2ZStmt} (Algorithm~\ref{algorithm:bv2z-stmt}) and \textsc{BV2ZProg} (Algorithm~\ref{algorithm:bv2z-prog}) are defined to respectively transform a statement in \bvdsl to a statement in \zdsl and a program in \bvdsl to a program in \zdsl.
+The function \textsc{BV2ZStmt} (Algorithm~\ref{algorithm:bv2z-stmt}) is defined to transform a statement in \bvdsl to a statement in \zdsl.
+Define a function \textsc{BV2ZProg} recursively such that $\textsc{BV2ZProg}(\epsilon) \defn \epsilon$ and $\textsc{BV2ZProg}(s; p) \defn \textsc{BV2ZStmt}(s); \textsc{BV2ZProg}(p)$.
 With these translation functions, the following soundness theorem holds.
 \begin{theorem}
   For every $q_a, q_a' \in \bvPreda$, $q_r, q_r' \in \bvPredr$, and $p \in \bvProg$, $\models \hoaretriple{q_a \andar q_r}{p}{q_a' \andar q_r'}$ if all the following conditions hold.
@@ -183,7 +222,7 @@ With these translation functions, the following soundness theorem holds.
 \end{theorem}
 As conditions C1 and C2 involve only bit-vector operations, both conditions can be verified by translations to the QF\_BV fragment (quantifier-free formulas over the theory of fixed-size bit-vectors) of SMT (Section~\ref{subsection:solving-range-overflow-checks}).
 Condition C3 is verified by a transformation to polynomial equation entailment (Section~\ref{subsection:solving-algebraic-equations}).
-Note that the inverse implication of Theorem~\ref{theorem:bv2z} does not hold because for example, $\models \hoaretriple{q_r}{p}{q_r'}$ may require that $q_a$ holds initally but we do not consider any algebraic predicates in verifying range specifications.
+Note that the inverse implication of Theorem~\ref{theorem:bv2z} does not hold because for example, proving $\models \hoaretriple{q_r}{p}{q_r'}$ may require that $q_a$ holds initally but we do not consider any algebraic predicates in verifying range specifications.
 
 \hide{
 \begin{algorithm}
@@ -244,6 +283,7 @@ Note that the inverse implication of Theorem~\ref{theorem:bv2z} does not hold be
   \label{algorithm:bv2z-stmt}
 \end{algorithm}
 
+\hide{
 \begin{algorithm}
   \begin{algorithmic}[1]
     \Function{BV2ZProg}{$p$}
@@ -256,6 +296,7 @@ Note that the inverse implication of Theorem~\ref{theorem:bv2z} does not hold be
   \caption{Transformation from $\bvProg$ to $\zProg$}
   \label{algorithm:bv2z-prog}
 \end{algorithm}
+}
 
 The function \textsc{BV2ZProg} preserves well-formedness and static single assignment form. This is showed by the following lemma.
 
@@ -265,45 +306,6 @@ The function \textsc{BV2ZProg} preserves well-formedness and static single assig
 \end{lemma}
 
 Figure~\ref{figure:translation:subtraction-zdsl} shows the result of transforming the subtraction program \dslcode{bSubSSA} to \zdsl.
-
-\begin{figure*}
-  \centering
-  $
-  \begin{array}{lclcl}
-    \begin{array}{rcl}
-    \textmd{1:} && {r}^1_0 \leftarrow {x}^0_0; \\
-    \textmd{2:} && {r}^1_1 \leftarrow {x}^0_1; \\
-    \textmd{3:} && {r}^1_2 \leftarrow {x}^0_2; \\
-    \textmd{4:} && {r}^1_3 \leftarrow {x}^0_3; \\
-    \textmd{5:} && {r}^1_4 \leftarrow {x}^0_4; \\
-    \end{array}
-    &\hspace{.05\textwidth}&
-    \begin{array}{rcl}
-    \textmd{6:} &&
-      {r}^2_0 \leftarrow {r}^1_0 + {4503599627370458}; \\
-    \textmd{7:} &&
-      {r}^2_1 \leftarrow {r}^1_1 + {4503599627370494}; \\
-    \textmd{8:} &&
-      {r}^2_2 \leftarrow {r}^1_2 + {4503599627370494}; \\
-    \textmd{9:} &&
-      {r}^2_3 \leftarrow {r}^1_3 + {4503599627370494}; \\
-    \textmd{10:} &&
-      {r}^2_4 \leftarrow {r}^1_4 + {4503599627370494};\\
-    \end{array}
-    &\hspace{.05\textwidth}&
-    \begin{array}{rcl}
-    \textmd{11:} && {r}^3_0 \leftarrow {r}^2_0 - {y}^0_0; \\
-    \textmd{12:} && {r}^3_1 \leftarrow {r}^2_1 - {y}^0_1; \\
-    \textmd{13:} && {r}^3_2 \leftarrow {r}^2_2 - {y}^0_2; \\
-    \textmd{14:} && {r}^3_3 \leftarrow {r}^2_3 - {y}^0_3; \\
-    \textmd{15:} && {r}^3_4 \leftarrow {r}^2_4 - {y}^0_4;
-    \end{array}
-  \end{array}
-  $
-  \caption{Subtraction \textsc{BV2ZProg}(\dslcode{bSubSSA})}
-  \label{figure:translation:subtraction-zdsl}
-\end{figure*}
-
 
 \hide{
 Figure~\ref{figure:dsl:subtraction} gives a simple yet real

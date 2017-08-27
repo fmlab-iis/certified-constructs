@@ -19,7 +19,7 @@ thread, even when no privilege is conferred, to affect the running
 time of another -- simply by caching a sufficient amount of its own
 data in correct locations through repeated accesses, and then
 observing the running time of the other thread. The instructions in
-the other thread using the ``evicted'' data (to make room for the
+the other thread which use the ``evicted'' data (to make room for the
 data of the eavesdropping thread) then have to take more time getting
 its data back to the cache~\cite{B:05:CTAA}.
 % Such attacks are quite practical.
@@ -71,38 +71,6 @@ A program is a straight line of instructions over bit-vectors with bit-width $\w
 \end{array}
 \]
 
-Let $\bvSt \defn \Var \rightarrow \BV^{\wordsize}$ and $\bvst \in \bvSt$ be a \emph{state} (or \emph{valuation}).
-That is, a {state} $\bvst$ is a mapping from variables to bit-vectors in $\BV^{\wordsize}$.
-Define
-$
-\bvst\mymapsto{v}{d}(u) \defn
-\left\{
-   \begin{array}{ll}
-     d & \textmd{if $u = v$}\\
-     \bvst(u) & \textmd{otherwise}
-   \end{array}
-\right.
-$.
-Define the semantic function $\bvvalueof{\cdot}(\bvst)$ for variables and atomics as follows.
-\[
-\begin{array}{rcl}
-%\valueof{i}_{\bvst} & \defn & i \textmd{  for ${i} \in \Int$} \\
-%\valueof{b}_{\bvst} & \defn & b \textmd{  for ${b} \in \BV^{\wordsize}$} \\
-\bvvalueof{v}(\bvst) & \defn & \bvst(v) \textmd{  for ${v} \in \Var$} \\
-\bvvalueof{a}(\bvst) & \defn & \left\{
-  \begin{array}{ll}
-  \bvst(v) & \textmd{if $a$ is a variable $v$} \\
-  b & \textmd{if $a$ is a bit-vector $b$} \\
-  \end{array}
-  \right. \\
-\end{array}
-\]
-Consider the transition relation $\bvTr \subseteq \bvSt \times \bvStmt \times \bvSt$ defined in Figure~\ref{fig:semantic-function-bvdsl} where
-$\bvst \goesto{s} \bvst'$ denotes $(\bvst, s, \bvst') \in \bvTr$
-for $\bvst, \bvst' \in \bvSt$ and $s \in \bvStmt$.
-Basically, $v \leftarrow a_1 + a_2$ is addition, $c\ v \leftarrow a_1 + a_2$ is addition with carry bit placed in $c$, $v \leftarrow a_1 + a_2 + y$ is addition of atoms plus a variable $y$, $c\ v \leftarrow a_1 + a_2 + y$ is addition of atoms plus a variable $y$ with carry bit placed in $c$, $v \leftarrow a_1 - a_2$ is subtraction, $v \leftarrow a_1 \times a_2$ is multiplication, $v_h\ v_l \leftarrow a_1 \times a_2$ is full multiplication, $v \leftarrow a \ll n$ is left-shifting, $v_h\ v_l \leftarrow a @ n$ is splitting at position $n$, and $v_h\ v_l \leftarrow (a_1 . a_2) \ll n$ is left-shifting of $n$ higher bits from $a_2$ to $a_1$.
-The variable $y$ in $v \leftarrow a_1 + a_2 + y$ and $c\ v \leftarrow a_1 + a_2 + y$ is intended but not restricted to be carry bits.
-
 \begin{figure*}
 $
 \begin{array}{rcl}
@@ -120,6 +88,38 @@ $
 $
 \caption{Transition relation $\bvTr$ for \bvdsl. \label{fig:semantic-function-bvdsl}}
 \end{figure*}
+
+Let $\bvSt \defn \Var \rightarrow \BV^{\wordsize}$ and $\bvst \in \bvSt$ be a \emph{state} (or \emph{valuation}).
+That is, a {state} $\bvst$ is a mapping from variables to bit-vectors in $\BV^{\wordsize}$.
+Define
+$
+\bvst\mymapsto{v}{d}(u) \defn
+\left\{
+   \begin{array}{ll}
+     d & \textmd{if $u = v$}\\
+     \bvst(u) & \textmd{otherwise}
+   \end{array}
+\right.
+$.
+Define the semantic function $\bvvalueof{\cdot}(\bvst)$ for variables and atoms as follows.
+\[
+\begin{array}{rcl}
+%\valueof{i}_{\bvst} & \defn & i \textmd{  for ${i} \in \Int$} \\
+%\valueof{b}_{\bvst} & \defn & b \textmd{  for ${b} \in \BV^{\wordsize}$} \\
+\bvvalueof{v}(\bvst) & \defn & \bvst(v) \textmd{  for ${v} \in \Var$} \\
+\bvvalueof{a}(\bvst) & \defn & \left\{
+  \begin{array}{ll}
+  \bvst(v) & \textmd{if $a$ is a variable $v$} \\
+  b & \textmd{if $a$ is a bit-vector $b$} \\
+  \end{array}
+  \right. \\
+\end{array}
+\]
+Consider the transition relation $\bvTr \subseteq \bvSt \times \bvStmt \times \bvSt$ defined in Figure~\ref{fig:semantic-function-bvdsl} where
+$\bvst \goesto{s} \bvst'$ denotes $(\bvst, s, \bvst') \in \bvTr$
+for $\bvst, \bvst' \in \bvSt$ and $s \in \bvStmt$.
+Basically, $v \leftarrow a_1 + a_2$ is addition, $c\ v \leftarrow a_1 + a_2$ is addition with carry bit placed in $c$, $v \leftarrow a_1 + a_2 + y$ is addition of atoms plus a variable $y$, $c\ v \leftarrow a_1 + a_2 + y$ is addition of atoms plus a variable $y$ with carry bit placed in $c$, $v \leftarrow a_1 - a_2$ is subtraction, $v \leftarrow a_1 \times a_2$ is multiplication, $v_h\ v_l \leftarrow a_1 \times a_2$ is full multiplication, $v \leftarrow a \ll n$ is left-shifting, $v_h\ v_l \leftarrow a @ n$ is splitting at position $n$, and $v_h\ v_l \leftarrow (a_1 . a_2) \ll n$ is left-shifting of higher $n$ bits from $a_2$ to $a_1$.
+The variable $y$ in $v \leftarrow a_1 + a_2 + y$ and $c\ v \leftarrow a_1 + a_2 + y$ is intended but not restricted to be carry bits.
 
 A \emph{program} is a sequence of statements.
 We denote the empty program by $\epsilon$.
@@ -171,83 +171,15 @@ A \emph{range predicate} $q_r \in \bvPredr$ is a conjunction of atomic range pre
 \end{array}
 \]
 We use $a_l \circ a_1, a_2, \ldots, a_n \bullet a_r$ as a shorthand of the conjunction of $a_l \circ a_1 \wedge a_l \circ a_2 \wedge \cdots \wedge a_l \circ a_n$ and $a_1 \bullet a_r \wedge a_2 \bullet a_r \wedge \cdots \wedge a_n \bullet a_r$ where $\circ, \bullet \in \{<, \leq\}$.
-We write $\BV^{\wordsize} \models q_r[\bvst]$ if one of the following holds.
+For $q_r \in \bvPredr$ and $\bvst \in \bvSt$, we write $\BV^{\wordsize} \models q_r[\bvst]$ if one of the following holds.
 \begin{itemize}
   \item $q$ is $\top$.
   \item $q$ is $a_1 < a_2$ and $\bvvalueof{a_1}(\bvst) <_\bvop \bvvalueof{a_2}(\bvst)$.
   \item $q$ is $a_1 \leq a_2$ and $\bvvalueof{a_1}(\bvst) \leq_\bvop \bvvalueof{a_2}(\bvst)$.
-  \item $q$ is $q_1 \wedge q_2$, $\BV^{\wordsize} \models q_1$, and $\BV^{\wordsize} \models q_2$.
+  \item $q$ is $q_1 \wedge q_2$, $\BV^{\wordsize} \models q_1[\bvst]$, and $\BV^{\wordsize} \models q_2[\bvst]$.
 \end{itemize}
 
-A \emph{predicate} $q \in \bvPred$ consists of an algebraic predicate and a range predicate.
-\[
-\begin{array}{rcl}
-  \bvPred & ::= & \bvPreda \andar \bvPredr \\
-  \bvSpec & ::= & \cond{\bvPred} \bvProg \cond{\bvPred}
-\end{array}
-\]
-For $\bvst \in \bvSt$ and $q \in \bvPred$, we write $\BV^{\wordsize} \models q[\bvst]$ if $q$ evaluates to $\btt$; $\bvst$ is called a \emph{$q$-state}.
-We follow Hoare's formalism in specifications of mathematical constructs~\cite{H:69:ABCP} and call $\hoaretriple{q}{p}{q'}$ a \emph{specification} if $q,q' \in \bvPred$, an \emph{algebraic specification} if $q,q' \in \bvPreda$, and a \emph{range specification} if $q,q' \in \bvPredr$.
-In $\hoaretriple{q}{p}{q'}$, $q$ and $q'$ are the \emph{pre}- and \emph{post-conditions} of $p$ respectively.
-Given $q, q' \in \bvPred$ ($q,q' \in \bvPreda$, or $q,q' \in \bvPredr$) and $p \in \bvProg$, $\hoaretriple{q}{p}{q'}$ is \emph{valid} (written $\models \hoaretriple{q}{p}{q'}$) if for every $\bvst, \bvst' \in \bvSt$, $\BV^{\wordsize} \models q[\bvst]$ and $\bvst \goesto{p} \bvst'$ imply $\BV^{\wordsize} \models q'[\bvst']$.
-Less formally, $\models \hoaretriple{q}{p}{q'}$ if executing $p$ from a $q$-state always results in a $q'$-state.
-
-Given a statement $s \in \bvStmt$ and a state $\bvst \in \bvSt$, the function \textsc{StmtSafe} (Algorithm~\ref{algorithm:stmt-safe}) checks if executing $s$ from $\bvst$ neither overflows nor underflows.
-We call a statement $s$ \emph{safe} at a state $\bvst$ if \textsc{StmtSafe}($s$, $\bvst$) evaluates to $\btt$.
-A program $p$ is safe at a state $\bvst$, denote by \textsc{ProgSafe}($p$, $\bvst$), if (1) $p = \epsilon$, or (2) $p = s; pp$, \textsc{StmtSafe}($s$, $\bvst$) = $\btt$, and for all $\bvst' \in \bvSt$, $\bvst \goesto{s} \bvst'$ implies \textsc{ProgSafe}($pp$, $\bvst'$).
-
-\begin{algorithm}
-  \begin{algorithmic}[1]
-    \Function{StmtSafe}{$s$, $\bvst$}
-    \Match{$s$}
-      \Case{$v \leftarrow a$} \Return $\btt$ \EndCase
-      \Case{$v \leftarrow a_1 + a_2$}
-        \State{\Return $\hi_\BV(\bvvalueof{a_1}(\bvst) +_\BV^\# \bvvalueof{a_2}(\bvst)) = \bv^\wordsize(0)$}
-      \EndCase
-      \Case{$c\ v \leftarrow a_1 + a_2$} \Return $\btt$ \EndCase
-      \Case{$v \leftarrow a_1 + a_2 + y$}
-        \State{\Return $\hi_\BV(\bvvalueof{a_1}(\bvst) +_\BV^\# \bvvalueof{a_2}(\bvst) +_\BV^\# \bvvalueof{y}(\bvst))$}
-        \StatexIndent [2] $= \bv^\wordsize(0)$
-      \EndCase
-      \Case{$c\ v \leftarrow a_1 + a_2 + y$} \Return $\btt$ \EndCase
-      \Case{$v \leftarrow a_1 - a_2$}
-        \State{\Return $\bvvalueof{a_2}(\bvst) \leq_\BV \bvvalueof{a_1}(\bvst)$}
-      \EndCase
-      \Case{$v \leftarrow a_1 \times a_2$}
-        \State{\Return $\hi_\BV(\bvvalueof{a_1}(\bvst) \times_\BV^\# \bvvalueof{a_2}(\bvst)) = \bv^\wordsize(0)$}
-      \EndCase
-      \Case{$v_h\ v_l \leftarrow a_1 \times a_2$} \Return $\btt$ \EndCase
-      \Case{$v \leftarrow a \ll n$}
-        \State{\Return $\bvvalueof{a}(\bvst) <_\BV (\bv^\wordsize(1) \ll_\BV (\wordsize - n))$}
-      \EndCase
-      \Case{$v_h\ v_l \leftarrow a @ n$} \Return $\btt$ \EndCase
-      \Case{$v_h\ v_l \leftarrow (a_1.a_2) \ll n$}
-        \State{\Return $\bvvalueof{a_1}(\bvst) <_\BV (\bv^\wordsize(1) \ll_\BV (\wordsize - n))$}
-      \EndCase
-    \EndMatch
-    \EndFunction
-  \end{algorithmic}
-  \caption{Safety Test for Statements}
-  \label{algorithm:stmt-safe}
-\end{algorithm}
-
-%\begin{algorithm}
-%  \begin{algorithmic}[1]
-%    \Function{ProgSafe}{$p$, $\bvst$}
-%    \Match{$p$}
-%      \Case{$\epsilon$} \Return $\btt$ \EndCase
-%      \Case{$s; pp$}
-%      \State{\Return \Call{StmtSafe}{$s$, $\bvst$} $\wedge$}
-%      \State{\hspace{10mm}$\forall \bvst'. \bvst \goesto{s} \bvst' \implies$\Call{ProgSafe}{$pp$, $\bvst'$}}
-%      \EndCase
-%    \EndMatch
-%    \EndFunction
-%  \end{algorithmic}
-%  \caption{Safety Test for Programs}
-%  \label{algorithm:prog-safe}
-%\end{algorithm}
-
-\begin{figure*}[ht]
+\begin{figure*}
   \centering
   $
   \begin{array}{lclcl}
@@ -284,6 +216,76 @@ A program $p$ is safe at a state $\bvst$, denote by \textsc{ProgSafe}($p$, $\bvs
   \caption{Subtraction \dslcode{bSub}}
   \label{figure:dsl:subtraction}
 \end{figure*}
+
+A \emph{predicate} $q \in \bvPred$ consists of an algebraic predicate and a range predicate.
+\[
+\begin{array}{rcl}
+  \bvPred & ::= & \bvPreda \andar \bvPredr \\
+  \bvSpec & ::= & \cond{\bvPred} \bvProg \cond{\bvPred}
+\end{array}
+\]
+For $\bvst \in \bvSt$ and $q \in \bvPred$, we write $\BV^{\wordsize} \models q[\bvst]$ if $q$ evaluates to $\btt$; $\bvst$ is called a \emph{$q$-state}.
+We follow Hoare's formalism in specifications of mathematical constructs~\cite{H:69:ABCP} and call $\hoaretriple{q}{p}{q'}$ a \emph{specification} if $q,q' \in \bvPred$, an \emph{algebraic specification} if $q,q' \in \bvPreda$, and a \emph{range specification} if $q,q' \in \bvPredr$.
+In $\hoaretriple{q}{p}{q'}$, $q$ and $q'$ are the \emph{pre}- and \emph{post-conditions} of $p$ respectively.
+Given $q, q' \in \bvPred$ ($q,q' \in \bvPreda$, or $q,q' \in \bvPredr$) and $p \in \bvProg$, $\hoaretriple{q}{p}{q'}$ is \emph{valid} (written $\models \hoaretriple{q}{p}{q'}$) if for every $\bvst, \bvst' \in \bvSt$, $\BV^{\wordsize} \models q[\bvst]$ and $\bvst \goesto{p} \bvst'$ imply $\BV^{\wordsize} \models q'[\bvst']$.
+Less formally, $\models \hoaretriple{q}{p}{q'}$ if executing $p$ from a $q$-state always results in a $q'$-state.
+
+Given a statement $s \in \bvStmt$ and a state $\bvst \in \bvSt$, the function \textsc{StmtSafe} (Algorithm~\ref{algorithm:stmt-safe}) checks if executing $s$ from $\bvst$ neither overflows nor underflows.
+We call a statement $s$ \emph{safe} at a state $\bvst$ if \textsc{StmtSafe}($s$, $\bvst$) evaluates to $\btt$.
+A program $p$ is safe at a state $\bvst$, denote by \textsc{ProgSafe}($p$, $\bvst$), if (1) $p = \epsilon$, or (2) $p = s; pp$, \textsc{StmtSafe}($s$, $\bvst$) = $\btt$, and for all $\bvst' \in \bvSt$, $\bvst \goesto{s} \bvst'$ implies \textsc{ProgSafe}($pp$, $\bvst'$).
+A program is safe if it is safe at every state.
+
+\begin{algorithm}
+  \begin{algorithmic}[1]
+    \Function{StmtSafe}{$s$, $\bvst$}
+    \Match{$s$}
+      \Case{$v \leftarrow a$} \Return $\btt$ \EndCase
+      \Case{$v \leftarrow a_1 + a_2$}
+        \State{\Return $\hi_\BV(\bvvalueof{a_1}(\bvst) +_\BV^\# \bvvalueof{a_2}(\bvst)) = \bv^\wordsize(0)$}
+      \EndCase
+      \Case{$c\ v \leftarrow a_1 + a_2$} \Return $\btt$ \EndCase
+      \Case{$v \leftarrow a_1 + a_2 + y$}
+        \State{\Return $\hi_\BV(\bvvalueof{a_1}(\bvst) +_\BV^\# \bvvalueof{a_2}(\bvst) +_\BV^\# \bvvalueof{y}(\bvst))$}
+        \StatexIndent [2] $= \bv^\wordsize(0)$
+      \EndCase
+      \Case{$c\ v \leftarrow a_1 + a_2 + y$} \Return $\btt$ \EndCase
+      \Case{$v \leftarrow a_1 - a_2$}
+        \State{\Return $\hi_\BV(\bvvalueof{a_1}(\bvst) -_\BV^\# \bvvalueof{a_2}(\bvst)) = \bv^\wordsize(0)$}
+      \EndCase
+      \Case{$v \leftarrow a_1 \times a_2$}
+        \State{\Return $\hi_\BV(\bvvalueof{a_1}(\bvst) \times_\BV^\# \bvvalueof{a_2}(\bvst)) = \bv^\wordsize(0)$}
+      \EndCase
+      \Case{$v_h\ v_l \leftarrow a_1 \times a_2$} \Return $\btt$ \EndCase
+      \Case{$v \leftarrow a \ll n$}
+        \State{\Return $\bvvalueof{a}(\bvst) <_\BV (\bv^\wordsize(1) \ll_\BV (\wordsize -_\bbfN |n|))$}
+      \EndCase
+      \Case{$v_h\ v_l \leftarrow a @ n$} \Return $\btt$ \EndCase
+      \Case{$v_h\ v_l \leftarrow (a_1.a_2) \ll n$}
+        \State{\Return $\bvvalueof{a_1}(\bvst) <_\BV (\bv^\wordsize(1) \ll_\BV (\wordsize -_\bbfN |n|)) \wedge$}
+        \StatexIndent [2] $|n| \leq_\bbfN \wordsize$
+      \EndCase
+    \EndMatch
+    \EndFunction
+  \end{algorithmic}
+  \caption{Safety Test for Statements}
+  \label{algorithm:stmt-safe}
+\end{algorithm}
+
+%\begin{algorithm}
+%  \begin{algorithmic}[1]
+%    \Function{ProgSafe}{$p$, $\bvst$}
+%    \Match{$p$}
+%      \Case{$\epsilon$} \Return $\btt$ \EndCase
+%      \Case{$s; pp$}
+%      \State{\Return \Call{StmtSafe}{$s$, $\bvst$} $\wedge$}
+%      \State{\hspace{10mm}$\forall \bvst'. \bvst \goesto{s} \bvst' \implies$\Call{ProgSafe}{$pp$, $\bvst'$}}
+%      \EndCase
+%    \EndMatch
+%    \EndFunction
+%  \end{algorithmic}
+%  \caption{Safety Test for Programs}
+%  \label{algorithm:prog-safe}
+%\end{algorithm}
 
 Figure~\ref{figure:dsl:subtraction} gives a simple yet real implementation of subtraction over $\bbfGF(\myprime)$ with a bit-width $64$.
 In the figure, a constant bit-vector is written in hexadecimal format starting with the prefix $0x$ and a number in $\bbfGF(\varrho)$ is represented by five bit-vectors each with value less than or equal to $2^{51} +_\bbfZ 2^{15}$.
@@ -326,7 +328,7 @@ Characteristics of large Galois fields are regularly exploited in mathematical c
 Our domain specific language can easily model such specialized programming techniques.
 Indeed, the reason for adding constants is to prevent underflow.
 If the constants were not added, the subtraction in lines~11 to 15 could give negative and hence incorrect results.
-We will show how to prove that the program does not overflow/underflow later.
+We will show how to prove that the program is safe later.
 
 %{Please note that ranges are a complicated
 %  issue. The subtraction in Figure~\ref{figure:dsl:subtraction} gives results that are correct

@@ -9,76 +9,11 @@ arbitrary integers. That is, we want to check if for every valuation $\zst \in \
 We write $\bbfZ \models \forall \vx. q(\vx) \implies q'(\vx)$ if it is indeed the case.
 
 Programs in static single assignment form can easily be transformed to
-conjunctions of polynomial equations. An assignment statement is
-translated to a polynomial equation with a variable on the left hand side.
-A $\dslcode{Split}$ statement is transformed to an
-equation with a linear expression of the assigned variables on the
-left hand side (Algorithm~\ref{algorithm:polynomial-statements}).
-\begin{algorithm}
-  \begin{algorithmic}[1]
-    \Function{StmtToPolyEQ}{$s$}
-    \Match{$s$}
-      \Case{$v \leftarrow e$}
-        \Return $v = e$
-      \EndCase
-      \Case{$\concat{v_h}{v_l} \leftarrow \dslcode{Split}(e, n)$}
-        \State{\Return $v_l + \dslcode{Pow}(2, n) \times v_h = e$}
-      \EndCase
-    \EndMatch
-    \EndFunction
-  \end{algorithmic}
-  \caption{Polynomial Equation Transformation for Statements}
-  \label{algorithm:polynomial-statements}
-\end{algorithm}
-
-A program in static single assignment form is transformed to the
-conjunction of polynomial equations corresponding to its statements
-(Algorithm~\ref{algorithm:polynomial-programs}).
-
-\begin{algorithm}
-  \begin{algorithmic}[1]
-    \Function{ProgToPolyEQ}{$p$}
-    \Match{$p$}
-      \Case{$\epsilon$} \Return $\top$ \EndCase
-      \Case{$s; pp$}
-        \State{\Return \Call{StmtToPolyEQ}{$s$} $\wedge$ \Call{ProgToPolyEQ}{$pp$}}
-      \EndCase
-    \EndMatch
-    \EndFunction
-  \end{algorithmic}
-  \caption{Polynomial Equation Transformation for Programs}
-  \label{algorithm:polynomial-programs}
-\end{algorithm}
-
-Algorithm~\ref{algorithm:polynomial-statements}
-and~\ref{algorithm:polynomial-programs} are specified straightforwardly
-in \gallina. We use the proof assistant \coq to prove properties
-about the algorithms. Note that $\textsc{ProgToPolyEQ}(p) \in
-\zPred$ for every $p \in \zProg$. The following theorem shows that any
-behavior of the program $p$ is a solution to the system of polynomial
-equations $\textsc{ProgToPolyEQ}(p)$. In other words,
-$\textsc{ProgToPolyEQ}(p)$ gives an abstraction of the program $p$.
-
-\begin{theorem}
-  Let $p \in \zProg$ be a well-formed program in static single assignment
-  form. For every $\zst, \zst' \in \zSt$ with $\zst \goesto{p} \zst'$,
-  we have $\bbfZ \models \textsc{ProgToPolyEQ}(p) [\zst']$.
-\end{theorem}
-
-Definition~\ref{definition:program-entailment} gives the modular
-polynomial equation entailment problem corresponding to an algebraic
-program specification.
-\begin{definition}
-  For $q, q' \in \zPred$ and $p \in \zProg$ in static single assignment
-  form, define
-  \begin{eqnarray*}
-    \Pi(\hoaretriple{q}{p}{q'}) & \defn &
-    q(\vx) \wedge \varphi(\vx) \implies q'(\vx)
-  \end{eqnarray*}
-  where $\varphi(\vx) =
-  \textsc{ProgToPolyEQ}(p)$.
-  \label{definition:program-entailment}
-\end{definition}
+conjunctions of polynomial equations.
+The function \textsc{StmtToPolyEq} (Algorithm~\ref{algorithm:polynomial-statements}) translates (1) an assignment statement to a polynomial equation with a variable on the left hand side and (2) a $\dslcode{Split}$ statement to an equation with a linear expression of the assigned variables on the
+left hand side.
+A program in static single assignment form is then transformed to the
+conjunction of polynomial equations corresponding to its statements by the function \textsc{ProgToPolyEq}, which is recursively defined such that $\textsc{ProgToPolyEq}(\epsilon) \defn \top$ and $\textsc{ProgToPolyEq}(s; p) \defn \textsc{StmtToPolyEq}(s) \wedge \textsc{ProgToPolyEq}(p)$.
 
 \begin{figure*}
   \centering
@@ -124,6 +59,68 @@ program specification.
   \label{figure:translation:subtraction-polynomial}
 \end{figure*}
 
+\begin{algorithm}
+  \begin{algorithmic}[1]
+    \Function{StmtToPolyEQ}{$s$}
+    \Match{$s$}
+      \Case{$v \leftarrow e$}
+        \Return $v = e$
+      \EndCase
+      \Case{$\concat{v_h}{v_l} \leftarrow \dslcode{Split}(e, n)$}
+        \State{\Return $v_l + \dslcode{Pow}(2, n) \times v_h = e$}
+      \EndCase
+    \EndMatch
+    \EndFunction
+  \end{algorithmic}
+  \caption{Polynomial Equation Transformation for Statements}
+  \label{algorithm:polynomial-statements}
+\end{algorithm}
+
+\hide{
+\begin{algorithm}
+  \begin{algorithmic}[1]
+    \Function{ProgToPolyEQ}{$p$}
+    \Match{$p$}
+      \Case{$\epsilon$} \Return $\top$ \EndCase
+      \Case{$s; pp$}
+        \State{\Return \Call{StmtToPolyEQ}{$s$} $\wedge$ \Call{ProgToPolyEQ}{$pp$}}
+      \EndCase
+    \EndMatch
+    \EndFunction
+  \end{algorithmic}
+  \caption{Polynomial Equation Transformation for Programs}
+  \label{algorithm:polynomial-programs}
+\end{algorithm}
+}
+The functions \textsc{StmtToPolyEq} and \textsc{ProgToPolyEq} are specified straightforwardly
+in \gallina. We use the proof assistant \coq to prove properties
+about the functions. Note that $\textsc{ProgToPolyEQ}(p)$ $\in$
+$\zPred$ for every $p \in \zProg$. The following theorem shows that any
+behavior of the program $p$ is a solution to the system of polynomial
+equations $\textsc{ProgToPolyEQ}(p)$. In other words,
+$\textsc{ProgToPolyEQ}(p)$ gives an abstraction of the program $p$.
+
+\begin{theorem}
+  Let $p \in \zProg$ be a well-formed program in static single assignment
+  form. For every $\zst, \zst' \in \zSt$ with $\zst \goesto{p} \zst'$,
+  we have $\bbfZ \models \textsc{ProgToPolyEQ}(p) [\zst']$.
+\end{theorem}
+
+Definition~\ref{definition:program-entailment} gives the modular
+polynomial equation entailment problem corresponding to an algebraic
+program specification.
+\begin{definition}
+  For $q, q' \in \zPred$ and $p \in \zProg$ in static single assignment
+  form, define
+  \begin{eqnarray*}
+    \Pi(\hoaretriple{q}{p}{q'}) & \defn &
+    q(\vx) \wedge \varphi(\vx) \implies q'(\vx)
+  \end{eqnarray*}
+  where $\varphi(\vx) =
+  \textsc{ProgToPolyEQ}(p)$.
+  \label{definition:program-entailment}
+\end{definition}
+
 \noindent
 \emph{Example}.
 The modular polynomial equation entailment problem corresponding to the
@@ -137,9 +134,9 @@ We want to know if $\mathit{radix51}_\bbfZ({r}^3_4, {r}^3_3, {r}^3_2,
 {y}^0_3, {y}^0_2, {y}^0_1, {y}^0_0)$ in $\bbfGF(\varrho)$ under the
 constraints.
 
-The soundness of Algorithm~\ref{algorithm:polynomial-programs}
+The soundness of \textsc{ProgToPolyEq}
 is certified in \coq (Theorem~\ref{theorem:program-to-q-soundness}).
-It is not complete because in the transformation of the statement $\concat{v_h}{v_l} \leftarrow \dslcode{Split}(e, n)$, the polynomial equation $v_l + \dslcode{Pow}(2, n) \times v_h = e$ does not guarantee that $v_l$ exactly represents the $n$ lower bits of $e$.
+It is not complete because in the transformation of the statement $\concat{v_h}{v_l} \leftarrow \dslcode{Split}(e, n)$, the polynomial equation $v_l + \dslcode{Pow}(2, n) \times v_h = e$ does not guarantee that $v_l$ exactly represents the lower $n$ bits of $e$.
 % Its proof is again certified by \coq.
 \begin{theorem}
   \label{theorem:program-to-q-soundness}

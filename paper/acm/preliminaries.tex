@@ -59,7 +59,7 @@ We also assume comparison operators $<_\bvop$ and $\leq_\bvop$ between unsigned 
 Given a bit-vector $b \in \BV^{2w}$, define $\hi_\bvop(b) \defn b[2w - 1, w]$ for the extraction of higher $w$ bits, and $\lo_\bvop(b) \defn b[w - 1, 0]$ for the extraction of lower $w$ bits.
 For operations $\bullet \in \{+_\bvop, -_\bvop, \times_\bvop\}$, we define their extended version $\bullet^\#$ which performs the original operation after doubling the width of operands by zero extension.
 In the extended operations, the width of operands is doubled only once.
-For example, for $b_1, b_2, b_3 \in \BV^{w}$, we have $b_1$ $+_\bvop^\#$ $b_1$ $\defn$ $(b_1$ $\#_\bvop$ $w)$ $+_\bvop$ $(b_2$ $\#_\bvop$ $w)$ and $b_1$ $+_\bvop^{\#}$ $b_2$ $+_\bvop^{\#}$ $b_3$ $\defn$ $(b_1$ $\#_\bvop$ $w)$ $+_\bvop$ $(b_2$ $\#_\bvop$ $w)$ $+_\bvop$ $(b_3$ $\#_\bvop$ $w)$.
+For example, given $b_1, b_2, b_3 \in \BV^{w}$, we have $b_1$ $+_\bvop^\#$ $b_1$ $\defn$ $(b_1$ $\#_\bvop$ $w)$ $+_\bvop$ $(b_2$ $\#_\bvop$ $w)$ and $b_1$ $+_\bvop^{\#}$ $b_2$ $+_\bvop^{\#}$ $b_3$ $\defn$ $(b_1$ $\#_\bvop$ $w)$ $+_\bvop$ $(b_2$ $\#_\bvop$ $w)$ $+_\bvop$ $(b_3$ $\#_\bvop$ $w)$.
 
 %Define six more operations which takes high bits or low bits after $\bullet^{\#}$ operation.
 %\[

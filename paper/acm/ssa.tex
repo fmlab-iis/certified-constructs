@@ -7,7 +7,7 @@ static single  assignment form for any $q, q' \in \bvPred$ and $p \in
 \bvProg$.
 To avoid ambiguity, we consider \emph{well-formed} programs where
 \begin{itemize}
-\item for every statement in the program with two lvalues such as $c\ v \leftarrow a_1 + a_2 + y$ with lvalues $c$ and $v$, the two lvalues are not equal; and
+\item for every statement in the program with two lvalues such as $c\ v \leftarrow a_1 + a_2 + y$ with lvalues $c$ and $v$, the two lvalues are different variables; and
 \item every non-input program variable must be assigned to a value
   before being used.
 \end{itemize}
@@ -177,14 +177,6 @@ replaces assigned variables with their latest copies.
 %In the algorithm, $\theta\mymapsto{v}{n}$ denotes updating the finite
 %mapping $\theta$ by abusing the notation.
 
-It is straightforward to transform programs to static single
-assignment form (Algorithm~\ref{algorithm:ssa-programs}). Using the
-initial mapping $\theta_0$ from variables to $0$,
-the algorithm starts from the first statement and obtains an
-updated mapping with the statement in static single assignment form. It
-continues to transform the next statement with the updated mapping.
-Note that our algorithm works for any initial mapping but we choose a specific one to simplify our Coq proof.
-
 \begin{figure*}
   \centering
   $
@@ -226,6 +218,14 @@ Note that our algorithm works for any initial mapping but we choose a specific o
   \label{figure:translation:subtraction-ssa}
 \end{figure*}
 
+It is straightforward to transform programs to static single
+assignment form (Algorithm~\ref{algorithm:ssa-programs}). Using the
+initial mapping $\theta_0$ from variables to $0$,
+the algorithm starts from the first statement and obtains an
+updated mapping with the statement in static single assignment form. It
+continues to transform the next statement with the updated mapping.
+Note that our algorithm works for any initial mapping but we choose $\theta_0$ to simplify our \coq proof.
+
 \begin{algorithm}
   \begin{algorithmic}[1]
     \Function{SSAProg}{$\theta$, $p$}
@@ -253,8 +253,8 @@ algorithms are formally proven in \coq. We first show that
 Algorithm~\ref{algorithm:ssa-programs} preserves well-formedness and
 produces a program in static single assignment form.
 \begin{lemma}
-  Let $p \in \bvProg$ a well-formed program. If
-  $\langle \hat{\theta}, \hat{p} \rangle$ $=
+  Let $\theta_0(v) = 0$ for every $v \in \Var$ and $p \in \bvProg$ a well-formed program.
+  If $\langle \hat{\theta}, \hat{p} \rangle$ $=
   \textsc{SSAProg}(\theta_0, p)$, then
   $\hat{p}$ is well-formed and in static single assignment form.
   \label{lemma:ssa-programs}
@@ -264,6 +264,7 @@ The next theorem shows that our transformation is both sound and
 complete. That is, a specification is valid if and only if its
 corresponding specification in static single assignment form is valid.
 \begin{theorem}
+  Let $\theta_0(v) = 0$ for every $v \in \Var$.
   For every $q, q' \in \bvPred$ and $p \in \bvProg$,
   \begin{center}
     $\models \hoaretriple{q}{p}{q'}$ if and only if

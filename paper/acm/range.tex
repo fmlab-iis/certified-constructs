@@ -13,8 +13,8 @@ Based on the basic expressions, we define two shorthands for extracting the high
 \bvlow(e) & \defn & \bvextract(e, \wordsize - 1, 0) \\
 \end{array}
 \]
-Similar to the bit-vector operations $+_\bvop$, $-_\bvop$, and $\times_\bvop$ extended with zero extension in Section~\ref{section:preliminaries}, we define the extended versions in QF\_BV for $\bullet \in \{\bvadd, \bvsub, \bvmul\}$.
-For example, $\bvadd^{\#}$$(e_1,$ $e_2)$ $\defn$ $\bvadd(\bvext(e_1, \wordsize),$ $\bvext(e_2, \wordsize))$ and $\bvadd^{\#}$$(e_1,$ $e_2,$ $e_3)$ $\defn$ $\bvadd($$\bvadd($$\bvext(e_1,$ $\wordsize),$ $\bvext(e_2, \wordsize)),$ $\bvext(e_3,$ $\wordsize))$.
+Similar to the bit-vector operations $+_\bvop$, $-_\bvop$, and $\times_\bvop$ extended with zero extension in Section~\ref{section:preliminaries}, for $\bullet \in \{\bvadd, \bvsub, \bvmul\}$, we define their extended versions $\bullet^\#$.
+For example, $\bvadd^{\#}($$e_1,$ $e_2)$ $\defn$ $\bvadd(\bvext(e_1, \wordsize),$ $\bvext(e_2, \wordsize))$ and $\bvadd^{\#}($$e_1,$ $e_2,$ $e_3)$ $\defn$ $\bvadd($$\bvadd($$\bvext(e_1,$ $\wordsize),$ $\bvext(e_2, \wordsize)),$ $\bvext(e_3,$ $\wordsize))$.
 
 Let $\max(n, m)$ return the maximal number in $n$ and $m$.
 Given an expression $e \in \qExp$, $\width(e)$ denotes the maximal bit-width of $e$.
@@ -33,10 +33,10 @@ Given an expression $e \in \qExp$, $\width(e)$ denotes the maximal bit-width of 
 \end{array}
 \]
 The expression $e$ is called \emph{well-formed} if $e$ is (1) a constant, a variable, a concatenation, a zero extension, a left-shifting, or a logical right-shifting, (2) an addition $\bvadd(e_1, e_2)$, a subtraction $\bvsub(e_1, e_2)$, or a multiplication $\bvmul(e_1, e_2)$ with $\width(e_1) = \width(e_2)$ and both $e_1$ and $e_2$ well-formed, or (3) an extraction $\bvextract(e', i, j)$ with $0 \leq j \leq i < \width(e')$ and $e'$ well-formed.
-A predicate $q \in \qPred$ is well-formed if all sub-expressions are well-formed.
+A predicate $q \in \qPred$ is well-formed if all subexpressions are well-formed.
 
 Let $\bvst \in \bvSt$ be a state.
-Define the semantic function $\bvvalueof{e}(\bvst)$ for well-formed expressions $e$.
+Define the semantic function $\bvvalueof{e}(\bvst)$ for well-formed expressions $e \in \qExp$.
 For a predicate $q \in \qPred$, we write $\BV^{\wordsize} \models q[\bvst]$ if $q$ evaluates to $\btt$ using the evaluation function $\bvvalueof{e}(\bvst)$ for every subexpression $e$ in $q$, using $<_\BV$ for $\bvult$, and using $\leq_\BV$ for $\bvule$.
 \[
 \begin{array}{rcl}
@@ -59,10 +59,10 @@ Both an safety check ($\BV^\wordsize \models q_r[\bvst]$ implies $\textsc{ProgSa
 To show that, we first define functions to transform the program $p$, the predicates $q_r$ and $q_r'$, and the safety check to QF\_BV formulas.
 
 Define $\overline{a}$ as $v$ when the atom $a$ is a variable $v$ and otherwise $\bvconst(w, b)$ when $a$ is a constant $b$.
-The function $\textsc{StmtQFBV}(s)$ (Algorithm~~\ref{algorithm:stmt-to-qfbv}) transforms a statement to a QF\_BV formula.
-Recursively define the function $\textsc{ProgQFBV}$ for programs such that $\textsc{ProgQFBV}(\epsilon)$ $\defn$ $\top$ and $\textsc{ProgQFBV}$$(s;$ $p)$ $\defn$ $\textsc{StmtQFBV}($$s)$ $\land$ $\textsc{ProgQFBV}($$p)$.
-Note that the formulas returned by $\textsc{StmtQFBV}(s)$ and $\textsc{ProgQFBV}(p)$ are well-formed QF\_BV formulas.
-The following theorem states the soundness of the transformation from $\bvProg$ to QF\_BV formulas.
+The function $\textsc{StmtQFBV}$ (Algorithm~~\ref{algorithm:stmt-to-qfbv}) transforms a statement in $\bvStmt$ to a QF\_BV formula.
+Recursively define the function $\textsc{ProgQFBV}$ for programs in $\bvProg$ such that $\textsc{ProgQFBV}(\epsilon)$ $\defn$ $\top$ and $\textsc{ProgQFBV}$$(s;$ $p)$ $\defn$ $\textsc{StmtQFBV}($$s)$ $\land$ $\textsc{ProgQFBV}($$p)$.
+Note that the formulas returned by $\textsc{StmtQFBV}$ and $\textsc{ProgQFBV}$ are well-formed QF\_BV formulas.
+The following theorem states that $\textsc{ProgQFBV}(p)$ gives an abstraction of the program $p$.
 
 \begin{theorem}
 Let $p \in \bvProg$ be a well-formed program in static single assignment form.
@@ -112,7 +112,7 @@ Then, for all $\bvst, \bvst' \in \bvSt$, $\bvst \goesto{p} \bvst'$ implies $\BV^
   \label{algorithm:stmt-to-qfbv}
 \end{algorithm}
 
-For the transformation from range predicates to QF\_BV formulas, recursively define a function $\textsc{PredrQFBV}$ such that $\textsc{PredrQFBV}($$\top)$ $=$ $\top$, $\textsc{PredrQFBV}($$a_1$ $<$ $a_2)$ $=$ $\bvult($$\overline{a_1},$ $\overline{a_2})$, $\textsc{PredrQFBV}($$a_1$ $\leq$ $a_2)$ $=$ $\bvule($$\overline{a_1},$ $\overline{a_2})$, and $\textsc{PredrQFBV}($$p_1$ $\wedge$ $p_2)$ $=$ $\textsc{PredrQFBV}($$p_1)$ $\wedge$ $\textsc{PredrQFBV}($$p_2)$.
+For the transformation from range predicates to QF\_BV formulas, recursively define a function $\textsc{PredrQFBV}$ such that $\textsc{PredrQFBV}($$\top)$ $\defn$ $\top$, $\textsc{PredrQFBV}($$a_1$ $<$ $a_2)$ $\defn$ $\bvult($$\overline{a_1},$ $\overline{a_2})$, $\textsc{PredrQFBV}($$a_1$ $\leq$ $a_2)$ $\defn$ $\bvule($$\overline{a_1},$ $\overline{a_2})$, and $\textsc{PredrQFBV}($$p_1$ $\wedge$ $p_2)$ $\defn$ $\textsc{PredrQFBV}($$p_1)$ $\wedge$ $\textsc{PredrQFBV}($$p_2)$.
 We have the following theorem for the transformation of range predicates.
 
 \begin{theorem}
@@ -159,7 +159,8 @@ Given two range predicates $q_r, q_r' \in \bvPredr$ and a well-formed program $p
       \Case{$v_h\ v_l \leftarrow (a_1.a_2) \ll n$}
         \State{$\mathit{one} \leftarrow \bvconst(\wordsize, \bv^\wordsize(1))$}
         \State{$m \leftarrow \bvconst(\wordsize, \bv^\wordsize(\wordsize - |n|))$}
-        \State{\Return $\bvult(\overline{a_1}, \bvshl(\mathit{one}, m))$}
+        \State{\Return $\bvult(\overline{a_1}, \bvshl(\mathit{one}, m)) \wedge$}
+        \StatexIndent [2] $\bvule(\bvconst(\wordsize, n), \bvconst(\wordsize, \bv^\wordsize(\wordsize)))$
       \EndCase
     \EndMatch
     \EndFunction

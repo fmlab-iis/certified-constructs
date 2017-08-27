@@ -73,7 +73,7 @@ $\bbfF$.
   \begin{tabular}{|c|c|c|c|c|c|c|c|c|}
     \hline
     \multirow{3}{*}{} & \multirow{3}{*}{number of lines} & \multicolumn{6}{|c|}{time (seconds)} & \multirow{3}{*}{remark} \\ \cline{3-8}
-    & & \multirow{2}{*}{overflow} & \multirow{2}{*}{range} & \multicolumn{2}{|c|}{without heuristics} & \multicolumn{2}{|c|}{with heuristics} & \\ \cline{5-8}
+    & & \multirow{2}{*}{safe} & \multirow{2}{*}{range} & \multicolumn{2}{|c|}{without heuristics} & \multicolumn{2}{|c|}{with heuristics} & \\ \cline{5-8}
     & & & & algebraic & total & algebraic & total & \\
     \hline
     addition                 & 10  & 0.162 & 0.249 & 30.545 & 41.55 & 0.401 & 4.14 & $a \Fplus b$ \\
@@ -98,10 +98,10 @@ codes to our domain specific language, specified their algebraic and range
 properties, and performed certified verification with our technique.
 Table~\ref{table:arithmetic-operations} summarizes the results
 without and with applying the two heuristics in Section~\ref{subsection:solving-algebraic-equations}.
-The column ``overflow'' shows the time used by the SMT solver \boolector to verify if the input program overflows.
+The column ``safe'' shows the time used by the SMT solver \boolector to verify if the input program is safe.
 The column ``range'' shows the time used by \boolector to verify the range specification of the input program.
 The columns ``algebraic'' show the time used by \singular to verify the algebraic specification of the input program.
-The columns ``total'' show the total verification time including overflow check, verification of range and algebraic specifications, rewriting, proof certification, etc.
+The columns ``total'' show the total verification time including safety check, verification of range and algebraic specifications, rewriting, proof certification, etc.
 The columns ``without heuristics'' and ``with heuristics'' respectively show the time information without and with the two heuristics.
 The results show that without the two heuristics, multiplication and square
 cannot be verified because the computation of Gr\"obner bases was killed by the OS
@@ -109,8 +109,8 @@ after running for days.
 With the heuristics, all the implementations can be verified in seconds.
 
 We also tried to verify buggy implementations such as the buggy implementation of multiplication mentioned in~\cite{C:14:VCS}.
-In such cases, our verification tactic in Coq just failed without giving any counterexample.
-Note that when our tactic fails to verify an implementation with unknown correctness, we cannot conclude that the implementation is buggy because our approach is sound but not complete.
+In such cases, our verification tactic in \coq just failed without giving any counterexample.
+Note that when our tactic fails to verify a program, we cannot conclude that the program is buggy because our approach is sound but not complete.
 
 
 
