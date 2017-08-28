@@ -3,7 +3,8 @@
 \emph{Related Work}.
 Low-level implementations of mathematical constructs have been formalized and manually proved in proof assistants~\cite{Aff13,ANY12,AM07,MG07,M:13:PPVB}.
 A semi-automatic approach~\cite{C:14:VCS} has successfully verified a hand-optimized assembly implementation of the Montgomery Ladderstep with SMT solvers, manual program annotation, and a few \coq proofs.
-A C implementation of the Montgomery Ladderstep has been automatically verified with \gfverif~\cite{BS:16:GFEV}.
+A C implementation of the Montgomery Ladderstep has been automatically verified with \gfverif~\cite{BS:16:GFEV}, which implements a specialized range analysis and translates verification problems to polynomial equations later solved by the Sage computer-algebra system~\cite{SAGE:17:SAGE}.
+Both the range analysis and the translation in \gfverif are uncertified.
 Re-implementations of mathematical constructs in F*~\cite{project:everest} have been verified using a combination of SMT solving and manual proofs.
 Vale~\cite{B:17:VVHP} provides a meta language for defining syntax and semantics of assembly code.
 Several algorithms have been implemented in Vale and verified using SMT solvers with the help of manually constructed lemmas.
